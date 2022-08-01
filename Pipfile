@@ -9,6 +9,7 @@ numpy = "*"
 citylearn = {editable = true, ref = "citylearn_2022", git = "https://github.com/intelligent-environments-lab/CityLearn.git"}
 
 [dev-packages]
+ipykernel = "*"
 
 [requires]
 python_version = "3.9"
