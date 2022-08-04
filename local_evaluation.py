@@ -12,7 +12,7 @@ from agents.orderenforcingwrapper import OrderEnforcingAgent
 from citylearn.citylearn import CityLearnEnv
 
 class Constants:
-    episodes = 3
+    episodes = 1
     schema_path = './data/citylearn_challenge_2022_phase_1/schema.json'
 
 def action_space_to_dict(aspace):
