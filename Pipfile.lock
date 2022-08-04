@@ -19,7 +19,7 @@
         "citylearn": {
             "editable": true,
             "git": "https://github.com/intelligent-environments-lab/CityLearn.git",
-            "ref": "95457746c96f7a16805620089b4e9dfb64c29c28"
+            "ref": "0ccaaefe2273c18a64d53e3cc78f55b6c49bb071"
         },
         "cloudpickle": {
             "hashes": [
@@ -744,11 +744,11 @@
         },
         "setuptools": {
             "hashes": [
-                "sha256:273b6847ae61f7829c1affcdd9a32f67aa65233be508f4fbaab866c5faa4e408",
-                "sha256:d5340d16943a0f67057329db59b564e938bb3736c6e50ae16ea84d5e5d9ba6d0"
+                "sha256:d36f579e989a90e8106b9061599c707d912e9cd296b30d62cb6b4dd3567a5ddc",
+                "sha256:db49784825568c9340e45e3322b8b8aed4ca598ce9bbf5277dcae95cc04dc469"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==63.3.0"
+            "version": "==63.4.0"
         },
         "six": {
             "hashes": [
