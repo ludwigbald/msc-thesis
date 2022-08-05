@@ -11,7 +11,7 @@ def rbc_policy(observation, action_space):
     action = 0.0
     if 16 <= hour <= 20:
         # Afternoon (high prices): release/sell all stored energy
-        action = 0.2
+        action = -0.2
     elif (1 <= hour <= 15) or (21 <= hour <= 24):
         # Rest of Day: store enough solar power to get the battery near full
         action = 0.6*solar/6.4 # where 6.4 kWh is battery capacity
