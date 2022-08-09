@@ -72,6 +72,7 @@ def evaluate():
                 episode_metrics.append(metrics)
                 print(f"Episode complete: {episodes_completed} | Latest episode metrics: {metrics}", )
 
+                np.savetxt("soc.csv", env.buildings[0].electrical_storage.soc, delimiter=",")
                 obs_dict = env_reset(env)
 
                 step_start = time.perf_counter()

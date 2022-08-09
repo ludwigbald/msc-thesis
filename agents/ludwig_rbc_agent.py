@@ -14,13 +14,16 @@ def rbc_policy(observation, action_space):
 
     if (16 <= hour <= 24) or (1 <= hour <= 10):
         # Afternoon (high prices 16-20): try to use up the stored energy
-        action = min(1, max((solar-load)/6.4, -1))
+        action = min(1,
+                     max((solar-load)/6.4,
+                          -1
+                        ))
     elif (11 <= hour <= 15):
         # Rest of Day: store enough solar power to get the battery near full
         action = min(1,
                      max((solar-load)/6.4,
-                         0.25#0.6 * solar/6.4
-                         ))
+                          0.25
+                        ))
     
 
 
