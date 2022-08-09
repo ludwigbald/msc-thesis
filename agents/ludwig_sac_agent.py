@@ -2,25 +2,20 @@ import numpy as np
 
 def rbc_policy(observation, action_space):
     """
-    complicated rule based policy based on day or night time
+    Simple rule based policy based on day or night time
     """
     hour = observation[2] # Hour index is 2 for all observations
     solar = observation[21] # solar generation in kWh
     load = observation[20] # non-shiftable load
-    price = observation[24]
-
 
     action = 0.0
-
-    if (16 <= hour <= 24) or (1 <= hour <= 10):
-        # Afternoon (high prices 16-20): try to use up the stored energy
-        action = min(1, max((solar-load)/6.4, -1))
-    elif (11 <= hour <= 15):
+    if 16 <= hour <= 20:
+        # Afternoon (high prices): release/sell all stored energy
+        action = -0.2
+    elif (1 <= hour <= 15) or (21 <= hour <= 24):
         # Rest of Day: store enough solar power to get the battery near full
-        action = min(1,
-                     max((solar-load)/6.4,
-                         0.25#0.6 * solar/6.4
-                         ))
+        action = 0.6*solar/6.4 # where 6.4 kWh is battery capacity
+        # action should be the share of battery size (which is given in kWh)
     
 
 
