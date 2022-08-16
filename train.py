@@ -2,10 +2,7 @@ import numpy as np
 import time
 
 """
-Please do not make changes to this file. 
-This is only a reference script provided to allow you 
-to do local evaluation. The evaluator **DOES NOT** 
-use this script for orchestrating the evaluations. 
+This is the training loop for my reinforcement learning agent. (adapted from local_evaluation.py)
 """
 
 from agents.orderenforcingwrapper import OrderEnforcingAgent
@@ -37,8 +34,8 @@ def env_reset(env):
                 "observation": observations }
     return obs_dict
 
-def evaluate():
-    print("Starting local evaluation")
+def train():
+    print("Starting training")
     
     env = CityLearnEnv(schema=Constants.schema_path)
     agent = OrderEnforcingAgent()
@@ -57,10 +54,6 @@ def evaluate():
     episode_metrics = []
     try:
         while True:
-            
-            ### This is only a reference script provided to allow you 
-            ### to do local evaluation. The evaluator **DOES NOT** 
-            ### use this script for orchestrating the evaluations. 
 
             observations, _, done, _ = env.step(actions)
             if done:
@@ -90,7 +83,7 @@ def evaluate():
             if episodes_completed >= Constants.episodes:
                 break
     except KeyboardInterrupt:
-        print("========================= Stopping Evaluation =========================")
+        print("========================= Stopping Training =========================")
         interrupted = True
     
     if not interrupted:
@@ -105,5 +98,5 @@ def evaluate():
 
 if __name__ == '__main__':
     complete_start = time.perf_counter()
-    evaluate()
-    print("The entire evaluation took: {elapsed}s".format(elapsed = (time.perf_counter()- complete_start)))
+    train()
+    print("The entire training took: {elapsed}s".format(elapsed = (time.perf_counter()- complete_start)))

@@ -7,7 +7,6 @@ def rbc_policy(observation, action_space):
     hour = observation[2] # Hour index is 2 for all observations
     solar = observation[21] # solar generation in kWh
     load = observation[20] # non-shiftable load
-    price = observation[24]
 
 
     action = 0.0

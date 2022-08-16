@@ -1,18 +1,15 @@
-import numpy as np
-import torch
-from torch import nn, optim
-
 from typing import List
 import numpy as np
 from citylearn.agents.rbc import RBC, BasicRBC, OptimizedRBC
 from citylearn.agents.rlc import RLC
 from citylearn.rl import PolicyNetwork, ReplayBuffer, SoftQNetwork
 
-
-# This class implements SAC for gym, and for CityLearn specifically.
-# The training will happen in a separate script train.py
-
-# code copied from citylearn's SAC implementation
+try:
+    import torch
+    import torch.nn as nn
+    import torch.optim as optim
+except (ModuleNotFoundError, ImportError) as e:
+    raise Exception("This functionality requires you to install torch. You can install torch by : pip install torch torchvision, or for more detailed instructions please visit https://pytorch.org.")
 
 
 class SAC(RLC):
@@ -415,22 +412,3 @@ class SACOptimizedRBC(SACBasicRBC):
 
         super().__init__(*args, **kwargs)
         self.rbc = OptimizedRBC(action_space=self.action_space, hour_index=hour_index)
-
-class LudwigSACAgent:
-
-    def __init__(self):
-        self.action_space = {}
-        self.the_agent = SAC
-
-    def set_action_space(self, agent_id, action_space):
-        self.action_space[agent_id] = action_space
-
-        # params_agent = {'building_ids':["Building_"+str(i) for i in [1,2,3,4,5,6,7,8,9]],
-        #                 'buildings_states_actions':'buildings_state_action_space.json', 
-        #                 'building_info':building_info,
-        #                 'observation_spaces':observations_spaces, 
-        #                 'action_spaces':actions_spaces}
-
-    def compute_action(self, observation, agent_id):
-        """Get observation return action"""
-        return self.action_space[agent_id].sample()
