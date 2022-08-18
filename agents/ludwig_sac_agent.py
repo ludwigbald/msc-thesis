@@ -420,7 +420,7 @@ class LudwigSACAgent:
 
     def __init__(self):
         self.action_space = {}
-        self.the_agent = SAC
+        self.the_agent = SAC()
 
     def set_action_space(self, agent_id, action_space):
         self.action_space[agent_id] = action_space
@@ -431,6 +431,10 @@ class LudwigSACAgent:
         #                 'observation_spaces':observations_spaces, 
         #                 'action_spaces':actions_spaces}
 
+    def add_to_buffer(state, action, reward, next_state, done, coordination_vars, coordination_vars_next):
+        self.the_agent.add_to_buffer(state, action, reward, next_state, done, coordination_vars, coordination_vars_next)
+
     def compute_action(self, observation, agent_id):
         """Get observation return action"""
-        return self.action_space[agent_id].sample()
+        actions = self.the_agent.select_actions(observations)
+        return actions[agent_id]

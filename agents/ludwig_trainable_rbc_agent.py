@@ -44,4 +44,4 @@ class LudwigRBCAgent:
 
     def compute_action(self, observation, agent_id):
         """Get observation return action"""
-        return rbc_policy(observation, self.action_space[agent_id])
+        return policy(observation, self.action_space[agent_id])

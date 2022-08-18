@@ -24,9 +24,6 @@ def rbc_policy(observation, action_space):
                      max((solar-load)/6.4,
                           0.24
                         ))
-    
-
-
 
     action = np.array([action], dtype=action_space.dtype)
     assert action_space.contains(action)

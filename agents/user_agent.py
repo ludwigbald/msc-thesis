@@ -9,4 +9,4 @@ from agents.ludwig_sac_agent import LudwigSACAgent
 ###################################################################
 
 # UserAgent = RandomAgent
-UserAgent = LudwigRBCAgent
+UserAgent = LudwigSACAgent
