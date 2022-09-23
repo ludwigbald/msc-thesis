@@ -4,10 +4,12 @@ def rbc_policy(observation, action_space):
     """
     complicated rule based policy based on day or night time
     """
+    # all observations are from the last timestep. in particular, solar-load is the last timestep's electricity use!
     hour = observation[2] # Hour index is 2 for all observations
     solar = observation[21] # solar generation in kWh
     load = observation[20] # non-shiftable load
-    price = observation[24]
+    #price = observation[24]
+    #net_electricity = observation[23]
 
 
     action = 0.0

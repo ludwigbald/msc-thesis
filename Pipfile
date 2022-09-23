@@ -7,6 +7,7 @@ name = "pypi"
 torch = "*"
 numpy = "*"
 citylearn = {editable = true, ref = "citylearn_2022", git = "https://github.com/intelligent-environments-lab/CityLearn.git"}
+sklearn = "*"
 
 [dev-packages]
 ipykernel = "*"

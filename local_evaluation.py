@@ -55,6 +55,7 @@ def evaluate():
     num_steps = 0
     interrupted = False
     episode_metrics = []
+    rewards = []
     try:
         while True:
             
@@ -62,7 +63,9 @@ def evaluate():
             ### to do local evaluation. The evaluator **DOES NOT** 
             ### use this script for orchestrating the evaluations. 
 
-            observations, _, done, _ = env.step(actions)
+            observations, reward, done, _ = env.step(actions)
+            rewards.append(reward)
+
             if done:
                 episodes_completed += 1
                 metrics_t = env.evaluate()
@@ -71,6 +74,7 @@ def evaluate():
                     raise ValueError("Episode metrics are nan, please contant organizers")
                 episode_metrics.append(metrics)
                 print(f"Episode complete: {episodes_completed} | Latest episode metrics: {metrics}", )
+                print(np.mean(rewards, axis=0)/2, np.mean(rewards)/2)
 
                 np.savetxt("soc.csv", env.buildings[0].electrical_storage.soc, delimiter=",")
                 obs_dict = env_reset(env)
