@@ -8,10 +8,12 @@ torch = "*"
 numpy = "*"
 citylearn = {editable = true, ref = "citylearn_2022", git = "https://github.com/intelligent-environments-lab/CityLearn.git"}
 sklearn = "*"
+gym = "0.25"
 
 [dev-packages]
 ipykernel = "*"
 notebook = "*"
+jupyter = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"
