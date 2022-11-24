@@ -8,5 +8,5 @@ from agents.ludwig_rbc_agent import LudwigRBCAgent
 #####                Specify your agent here                  #####
 ###################################################################
 
-UserAgent = RandomAgent
-#UserAgent = LudwigRBCAgent
+#UserAgent = RandomAgent
+UserAgent = LudwigRBCAgent

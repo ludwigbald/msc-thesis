@@ -1,0 +1,7 @@
+{
+"agent": "DQN",
+"seed": 1,
+"episodes": 5,
+"data_path": "data/citylearn_challenge_2022_phase_1",
+"dry_run": false
+}

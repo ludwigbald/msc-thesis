@@ -18,7 +18,7 @@ class Constants:
 def action_space_to_dict(aspace):
     """ Only for box space """
     return { "high": aspace.high,
-             "low": aspace.low,
+             "low": aspace.low, 
              "shape": aspace.shape,
              "dtype": str(aspace.dtype)
     }

@@ -121,7 +121,6 @@ class DQN:
         self.target_network = network(self.env.observation_space, self.env.action_space.n).to(self.device)
         self.target_network.load_state_dict(self.network.state_dict())
         self.optimizer = optim.Adam(self.network.parameters(), lr=self.learning_rate, eps=self.adam_epsilon)
-        self.n_falls = 0
 
         # Parameters to save to log file
         self.train_parameters = {
@@ -156,7 +155,7 @@ class DQN:
             self.logger = Logger(self.log_folder_details, self.train_parameters)
 
         # Initialize the state
-        states = [torch.as_tensor(obs) for obs in self.env.reset()]
+        states = [torch.as_tensor(obs, dtype=torch.float) for obs in self.env.reset()]
         score = 0
         t1 = time.time()
 
@@ -170,7 +169,7 @@ class DQN:
             actions=[]
             for state in states:
                 # Select action
-                actions.append(self.act(state.to(self.device).float(), is_training_ready=is_training_ready))
+                actions.append(self.act(state.float().to(self.device), is_training_ready=is_training_ready))
 
             # Update epsilon
             self.update_epsilon(timestep)
@@ -199,8 +198,6 @@ class DQN:
                     self.logger.add_scalar('Episode_score', score, timestep)
                 states = [torch.as_tensor(obs) for obs in self.env.reset()]
                 score = 0
-                if self.logging:
-                    self.logger.add_scalar('Number of falls', self.n_falls, timestep)
 
                 t1 = time.time()
                 self.this_episode_time = 0

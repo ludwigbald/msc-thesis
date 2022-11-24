@@ -290,7 +290,7 @@
         "type": "citylearn.energy_model.PV",
         "autosize": false,
         "attributes": {
-          "nominal_power": 5.0
+          "nominal_power": 4.0
         }
       }
     },
