@@ -271,13 +271,22 @@ class DQN:
         """
         Returns action to be performed with an epsilon-greedy policy
         """
-        if is_training_ready and random.uniform(0, 1) >= self.epsilon:
-            # Action that maximizes Q
-            action = self.predict(state)
-        else:
-            # Random action
-            action = np.random.randint(0, self.env.action_space.n)
-        return action
+        # if is_training_ready and random.uniform(0, 1) >= self.epsilon:
+        #     # Action that maximizes Q
+        #     action = self.predict(state)
+        # else:
+        #     # Random action
+        #     action = np.random.randint(0, self.env.action_space.n)
+        with torch.no_grad():
+            weights = torch.nn.Softmax()(self.network(state))
+
+        r = random.uniform(0,1)
+        for i, weight in enumerate(weights):
+            if r < weight:
+                return i
+            else:
+                r = r-weight
+        # return action
 
     def update_epsilon(self, timestep):
         """

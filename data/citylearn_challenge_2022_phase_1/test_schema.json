@@ -7,11 +7,11 @@
   "seconds_per_time_step": 3600,
   "observations": {
     "month": {
-      "active": true,
+      "active": false,
       "shared_in_central_agent": true
     },
     "day_type": {
-      "active": true,
+      "active": false,
       "shared_in_central_agent": true
     },
     "hour": {
@@ -75,7 +75,7 @@
       "shared_in_central_agent": true
     },
     "direct_solar_irradiance_predicted_6h": {
-      "active": false,
+      "active": true,
       "shared_in_central_agent": true
     },
     "direct_solar_irradiance_predicted_12h": {
@@ -127,11 +127,11 @@
       "shared_in_central_agent": false
     },
     "net_electricity_consumption": {
-      "active": true,
+      "active": false,
       "shared_in_central_agent": false
     },
     "electricity_pricing": {
-      "active": true,
+      "active": false,
       "shared_in_central_agent": false
     },
     "electricity_pricing_predicted_6h": {

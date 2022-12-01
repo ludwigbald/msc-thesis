@@ -56,6 +56,8 @@ def evaluate():
     interrupted = False
     episode_metrics = []
     rewards = []
+    actionss = []
+    obss = []
     try:
         while True:
             
@@ -65,6 +67,8 @@ def evaluate():
 
             observations, reward, done, _ = env.step(actions)
             rewards.append(reward)
+            actionss.append(actions[0])
+            obss.append(observations[0])
 
             if done:
                 episodes_completed += 1
@@ -77,6 +81,9 @@ def evaluate():
                 print(np.mean(rewards, axis=0)/2, np.mean(rewards)/2)
 
                 np.savetxt("soc.csv", env.buildings[0].electrical_storage.soc, delimiter=",")
+                np.savetxt("actions.csv", actionss, delimiter=",")
+                np.savetxt("rewards.csv", [r[0] for r in rewards], delimiter=",")
+                np.savetxt("obs.csv", obss, delimiter=",")
                 obs_dict = env_reset(env)
 
                 step_start = time.perf_counter()

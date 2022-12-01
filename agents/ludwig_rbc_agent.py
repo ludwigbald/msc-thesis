@@ -28,6 +28,10 @@ def rbc_policy(observation, action_space):
                         ))
 
     action = np.array([action], dtype=action_space.dtype)
+
+    #uncomment to discretize the action in 9 possible values:
+    action = np.round(action * 4)/4
+
     assert action_space.contains(action)
     return action
 

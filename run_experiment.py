@@ -27,6 +27,7 @@ from agents.common.networks.mlp import MLP
 
 from citylearn.citylearn import CityLearnEnv
 from discrete_citylearn import DiscreteSingle
+from discrete_citylearn import OneHotHour
 
 
 
@@ -55,6 +56,7 @@ class Constants:
 
     test_schema_path = os.path.join(args["data_path"], "test_schema.json")
     n_discrete = args["n_discrete"]
+    hour_index=0
 
 # save experiment parameters
 if args["dry_run"]:
@@ -78,9 +80,9 @@ def action_space_to_dict(aspace):
              "dtype": str(aspace.dtype)
     }
 
-def create_env(schema_path=Constants.schema_path, n_discrete=Constants.n_discrete):
+def create_env(schema_path=Constants.schema_path, n_discrete=Constants.n_discrete, hour_index=Constants.hour_index):
     base_env = CityLearnEnv(schema_path)
-    return DiscreteSingle(base_env, n_discrete)
+    return gym.wrappers.NormalizeObservation(OneHotHour(DiscreteSingle(base_env, n_discrete), hour_index))
 
 def env_reset(env):
     observations = env.reset()
@@ -114,11 +116,13 @@ def evaluate():
     episode_metrics = []
     rewards = []
     actionss = []
+    obss = []
     while True:
 
         observations, reward, done, _ = env.step(actions)
         rewards.append(reward)
         actionss.append(actions)
+        obss.append(observations[0])
 
         if done:
             episodes_completed += 1
@@ -128,9 +132,12 @@ def evaluate():
                 raise ValueError("Episode metrics are nan, please contant organizers")
             episode_metrics.append(metrics)
             print(f"Episode complete: {episodes_completed} | Latest episode metrics: {metrics}" )
+            print(np.mean(rewards, axis=0)/2, np.mean(rewards)/2)
 
             np.savetxt("soc.csv", env.buildings[0].electrical_storage.soc, delimiter=",")
             np.savetxt("actions.csv", actionss, delimiter=",")
+            np.savetxt("rewards.csv", rewards, delimiter=",")
+            np.savetxt("obs.csv", obss, delimiter=",")
             observations=env.reset()
 
             step_start = time.perf_counter()
@@ -169,12 +176,12 @@ if __name__ == '__main__':
                     replay_start_size=256,
                     replay_buffer_size=10000,
                     gamma=0.99,
-                    update_target_frequency=50,
+                    update_target_frequency=10,
                     minibatch_size=256,
-                    learning_rate=3e-4,
+                    learning_rate=1e-4,
                     initial_exploration_rate=1,
                     final_exploration_rate=0.02,
-                    final_exploration_step=8760,#1000
+                    final_exploration_step=25600,#8760,#1000
                     adam_epsilon=1e-8,
                     update_frequency=1,
                     logging=True,
@@ -185,25 +192,25 @@ if __name__ == '__main__':
                     notes=notes)
     elif (args["agent"] == "UADQN"):
         agent = UADQN( env,
-                MLP,
-                n_quantiles=20,
-                weight_scale=3,
-                noise_scale=1,
-                epistemic_factor=1,
-                aleatoric_factor=0,
-                kappa=10,
-                replay_start_size=256,
-                replay_buffer_size=50000,
-                gamma=0.99,
-                update_target_frequency=50,
-                minibatch_size=256,
-                learning_rate=1e-3,
-                adam_epsilon=1e-8,
-                update_frequency=1,
-                logging=True,
-                log_folder_details="CityLearn-UADQN",
-                seed = args["seed"],
-                notes=notes)
+                        MLP,
+                        n_quantiles=20,
+                        weight_scale=3,
+                        noise_scale=1,
+                        epistemic_factor=1,
+                        aleatoric_factor=0.5,
+                        kappa=10,
+                        replay_start_size=256,
+                        replay_buffer_size=10000,
+                        gamma=0.99,
+                        update_target_frequency=50,
+                        minibatch_size=256,
+                        learning_rate=3e-4,
+                        adam_epsilon=1e-8,
+                        update_frequency=1,
+                        logging=True,
+                        log_folder_details="CityLearn-UADQN",
+                        seed = args["seed"],
+                        notes=notes)
     else:
         print("This agent does not exist: ", args["agent"])
 
