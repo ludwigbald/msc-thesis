@@ -139,7 +139,7 @@ cython_debug/
 
 *.zip
 
-*.pickle
+.pickle
 .vscode
 .DS_Store
 
