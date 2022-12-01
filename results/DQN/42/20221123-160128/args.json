@@ -1,8 +1,0 @@
-{
-"agent": "DQN",
-"seed": 42,
-"episodes": 1,
-"data_path": "data/citylearn_challenge_2022_phase_1",
-"dry_run": false,
-"n_discrete": 10
-}
