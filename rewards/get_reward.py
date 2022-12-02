@@ -35,7 +35,7 @@ def get_reward(electricity_consumption: List[float], carbon_emission: List[float
         # breakpoint()
         # we need to normalize by the total values, if we would not make use of the battery.
 
-        total_co2_no_battery = np.array([1117.6211690517193, 1043.3168421031762, 707.0223402007878, 967.9933801771755, 791.53366612883]).mean() /8760
+        total_co2_no_battery = np.array([1117.6211690517193, 1043.3168421031762, 707.0223402007878, 1080.9376721533065, 791.53366612883]).mean() /8760
         total_cost_no_battery = np.array([2250.8700563860034, 1966.1250130131689, 1315.5171066205235, 1707.2781431365536, 1540.8814011827963]).mean() /8760
 
         carbon_emission   = np.array(carbon_emission  ).clip(min=0) / total_co2_no_battery
