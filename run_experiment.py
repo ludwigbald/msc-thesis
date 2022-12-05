@@ -56,6 +56,8 @@ parser.add_argument("--adam_epsilon", dest="adam_epsilon", type=float, default=1
                     help="Epsilon for the Adam Optimizer")
 parser.add_argument("--epsilon_final", dest="epsilon_final", type=float, default=0.02, required=False,
                     help="Final Epsilon for e-greedy Action Selection")
+parser.add_argument("--run_id", dest="run_id", type=int, default=0, required=False,
+                    help="unique identifier for this run")
 
 args = vars(parser.parse_args())
 
@@ -198,7 +200,7 @@ if __name__ == '__main__':
                     adam_epsilon=args["adam_epsilon"],
                     update_frequency=1,
                     logging=True,
-                    log_folder_details="CityLearn-DQN"+args["seed"],
+                    log_folder_details="CityLearn-DQN"+str(args["run_id"]),
                     render = False,
                     loss='mse',
                     seed=args["seed"],
@@ -221,7 +223,7 @@ if __name__ == '__main__':
                         adam_epsilon=args["adam_epsilon"],
                         update_frequency=1,
                         logging=True,
-                        log_folder_details="CityLearn-UADQN"+args["seed"],
+                        log_folder_details="CityLearn-UADQN"+str(args["run_id"]),
                         seed = args["seed"],
                         notes=notes)
     else:
