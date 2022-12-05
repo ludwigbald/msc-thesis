@@ -34,6 +34,7 @@
 #c) Execute the code
 ####
 
+source $HOME/.bashrc
 
 conda activate citylearn
 python3 run_experiment.py $(head -${SLURM_ARRAY_TASK_ID} experiments/tuning/tuning.txt | tail -1)
