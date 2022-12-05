@@ -1,0 +1,22 @@
+-i https://pypi.org/simple
+-e git+https://github.com/intelligent-environments-lab/CityLearn.git@3c12f30ce7b5ed0ac75a551d4e62c380f77ade0d#egg=citylearn
+cloudpickle==2.2.0; python_version >= '3.6'
+contourpy==1.0.6; python_full_version >= '3.7.0'
+cycler==0.11.0; python_version >= '3.6'
+fonttools==4.38.0; python_full_version >= '3.7.0'
+gym==0.24.1
+gym-notices==0.0.8
+kiwisolver==1.4.4; python_full_version >= '3.7.0'
+matplotlib==3.6.2; python_version >= '3.8'
+numpy==1.21.6
+packaging==21.3; python_version >= '3.6'
+pandas==1.3.5; python_full_version >= '3.7.1'
+pillow==9.2.0; python_full_version >= '3.7.0'
+pyparsing==3.0.9; python_full_version >= '3.6.8'
+python-dateutil==2.8.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+pytz==2022.6
+simplejson==3.17.6; python_version >= '2.5' and python_version not in '3.0, 3.1, 3.2, 3.3'
+six==1.16.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+sklearn==0.0.post1
+torch==1.13.0
+typing-extensions==4.4.0; python_full_version >= '3.7.0'
