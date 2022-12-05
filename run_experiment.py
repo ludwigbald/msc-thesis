@@ -73,7 +73,7 @@ class Constants:
 # # save experiment parameters
 # if args["dry_run"]:
 #     print("Proceeding experiment without keeping logs. Variables:")
-#     print(args)
+print(args)
 # else:
 #     timestamp=time.strftime("%Y%m%d-%H%M%S")
 #     results_path=os.path.join("results", str(args["agent"]), str(args["seed"]), timestamp)
