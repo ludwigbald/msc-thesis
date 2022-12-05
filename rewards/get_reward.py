@@ -41,6 +41,6 @@ def get_reward(electricity_consumption: List[float], carbon_emission: List[float
         carbon_emission   = np.array(carbon_emission  ).clip(min=0) / total_co2_no_battery
         electricity_price = np.array(electricity_price).clip(min=0) / total_cost_no_battery
 
-        reward = (carbon_emission + electricity_price)*-1
+        reward = 2+ (carbon_emission + electricity_price)*-1
         # ************** END ***************
         return reward

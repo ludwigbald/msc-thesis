@@ -72,6 +72,7 @@ class DQN:
         loss="huber",
         seed=None,
         adam_epsilon=1e-8,
+        action_selection="egreedy",
         initial_exploration_rate=1,
         final_exploration_rate=0.1,
         final_exploration_step=1000000,
@@ -99,6 +100,7 @@ class DQN:
             except KeyError:
                 raise ValueError("loss must be 'huber', 'mse' or a callable")
         self.seed = random.randint(0, 1e6) if seed is None else seed
+        self.action_selection = action_selection
         self.adam_epsilon = adam_epsilon
         self.initial_exploration_rate = initial_exploration_rate
         self.final_exploration_rate = final_exploration_rate
@@ -134,6 +136,7 @@ class DQN:
                     'minibatch_size': minibatch_size,
                     'learning_rate': learning_rate,
                     'update_frequency': update_frequency,
+                    'action_selection' : action_selection,
                     'initial_exploration_rate': initial_exploration_rate,
                     'final_exploration_rate': final_exploration_rate,
                     'weight_scale': self.network.weight_scale,
@@ -271,22 +274,25 @@ class DQN:
         """
         Returns action to be performed with an epsilon-greedy policy
         """
-        # if is_training_ready and random.uniform(0, 1) >= self.epsilon:
-        #     # Action that maximizes Q
-        #     action = self.predict(state)
-        # else:
-        #     # Random action
-        #     action = np.random.randint(0, self.env.action_space.n)
-        with torch.no_grad():
-            weights = torch.nn.Softmax()(self.network(state))
-
-        r = random.uniform(0,1)
-        for i, weight in enumerate(weights):
-            if r < weight:
-                return i
+        if self.action_selection == "egreedy":
+            if is_training_ready and random.uniform(0, 1) >= self.epsilon:
+                # Action that maximizes Q
+                action = self.predict(state)
             else:
-                r = r-weight
-        # return action
+                # Random action
+                action = np.random.randint(0, self.env.action_space.n)
+            return action
+
+        elif self.action_selection == "softmax":
+            with torch.no_grad():
+                weights = torch.nn.Softmax()(self.network(state))
+
+            r = random.uniform(0,1)
+            for i, weight in enumerate(weights):
+                if r < weight:
+                    return i
+                else:
+                    r = r-weight
 
     def update_epsilon(self, timestep):
         """

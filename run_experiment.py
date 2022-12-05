@@ -33,17 +33,29 @@ from discrete_citylearn import OneHotHour
 
 parser = argparse.ArgumentParser(description='Run Experiment on CityLearn')
 parser.add_argument('--agent', dest="agent", type=str, required=False, default="DQN",
-                    help='the agent.') #TODO: how to specify agent? runscript?
+                    help='the agent.')
+parser.add_argument('--action_selection', dest="action_selection", type=str, required=False, default="softmax",
+                    help='for DQN: select actions using "softmax" or "egreedy" ')
 parser.add_argument('--seed', dest="seed", type=int, required=False, default=42,
                     help='random seed for the training process')
-parser.add_argument('--episodes', dest="episodes", type=int, required=False, default=1,
+parser.add_argument('--episodes', dest="episodes", type=int, required=False, default=100,
                     help='number of episodes to train for')                    
 parser.add_argument('--data-path', dest="data_path", type=str, required=False, default="data/citylearn_challenge_2022_phase_1",
                     help='path to dataset')
 parser.add_argument("--dry-run", dest="dry_run", action="store_true", required=False,
                     help="if set, don't save anything")
-parser.add_argument("--n_discrete", dest="n_discrete", type=int, default=7, required=False,
+parser.add_argument("--n_discrete", dest="n_discrete", type=int, default=9, required=False,
                     help="the number of discrete actions possible")
+parser.add_argument("--update_target", dest="update_target", type=int, default=10, required=False,
+                    help="how many steps between target network updates")
+parser.add_argument("--lr", dest="lr", type=float, default=3e-4, required=False,
+                    help="Learning Rate")
+parser.add_argument("--batch_size", dest="batch_size", type=int, default=256, required=False,
+                    help="Batch Size")
+parser.add_argument("--adam_epsilon", dest="adam_epsilon", type=float, default=1e-8, required=False,
+                    help="Epsilon for the Adam Optimizer")
+parser.add_argument("--epsilon_final", dest="epsilon_final", type=float, default=0.02, required=False,
+                    help="Final Epsilon for e-greedy Action Selection")
 
 args = vars(parser.parse_args())
 
@@ -58,17 +70,17 @@ class Constants:
     n_discrete = args["n_discrete"]
     hour_index=0
 
-# save experiment parameters
-if args["dry_run"]:
-    print("Proceeding experiment without keeping logs. Variables:")
-    print(args)
-else:
-    timestamp=time.strftime("%Y%m%d-%H%M%S")
-    results_path=os.path.join("results", str(args["agent"]), str(args["seed"]), timestamp)
-    os.makedirs(results_path, exist_ok=True)
-    with open(os.path.join(results_path,"args.json"), mode="w") as f:
-        json.dump(args, f, indent="")
-    print("Saved experimental conditions")
+# # save experiment parameters
+# if args["dry_run"]:
+#     print("Proceeding experiment without keeping logs. Variables:")
+#     print(args)
+# else:
+#     timestamp=time.strftime("%Y%m%d-%H%M%S")
+#     results_path=os.path.join("results", str(args["agent"]), str(args["seed"]), timestamp)
+#     os.makedirs(results_path, exist_ok=True)
+#     with open(os.path.join(results_path,"args.json"), mode="w") as f:
+#         json.dump(args, f, indent="")
+#     print("Saved experimental conditions")
 
 
 
@@ -164,7 +176,7 @@ def evaluate():
 # run experiment (save intermediary checkpoints)
 if __name__ == '__main__':
     # set up environment:
-    notes = "This is a test run"
+    notes = "This is a tuning run, executed on a single building."
     env = create_env(Constants.train_schema_path)
 
     nb_steps = 8760*args["episodes"]
@@ -173,19 +185,20 @@ if __name__ == '__main__':
     if (args["agent"] == "DQN"):
         agent = DQN( env,
                     MLP,
-                    replay_start_size=256,
+                    replay_start_size=args["batch_size"],
                     replay_buffer_size=10000,
                     gamma=0.99,
-                    update_target_frequency=10,
-                    minibatch_size=256,
-                    learning_rate=1e-4,
+                    update_target_frequency=args["update_target"],
+                    minibatch_size=args["batch_size"],
+                    learning_rate=args["lr"],
+                    action_selection = "softmax", #|"egreedy", # | 
                     initial_exploration_rate=1,
                     final_exploration_rate=0.02,
-                    final_exploration_step=25600,#8760,#1000
-                    adam_epsilon=1e-8,
+                    final_exploration_step=1000,#8760,#1000
+                    adam_epsilon=args["adam_epsilon"],
                     update_frequency=1,
                     logging=True,
-                    log_folder_details="CityLearn-DQN",
+                    log_folder_details="tuning/CityLearn-DQN",
                     render = False,
                     loss='mse',
                     seed=args["seed"],
@@ -194,21 +207,21 @@ if __name__ == '__main__':
         agent = UADQN( env,
                         MLP,
                         n_quantiles=20,
-                        weight_scale=3,
+                        weight_scale=np.sqrt(2),
                         noise_scale=1,
                         epistemic_factor=1,
-                        aleatoric_factor=0.5,
+                        aleatoric_factor=0, #risk aversion, 0 means risk-neutral
                         kappa=10,
-                        replay_start_size=256,
+                        replay_start_size=args["batch_size"],
                         replay_buffer_size=10000,
                         gamma=0.99,
-                        update_target_frequency=50,
-                        minibatch_size=256,
-                        learning_rate=3e-4,
-                        adam_epsilon=1e-8,
+                        update_target_frequency=args["update_target"],
+                        minibatch_size=args["batch_size"],
+                        learning_rate=args["lr"],
+                        adam_epsilon=args["adam_epsilon"],
                         update_frequency=1,
                         logging=True,
-                        log_folder_details="CityLearn-UADQN",
+                        log_folder_details="tuning/CityLearn-UADQN",
                         seed = args["seed"],
                         notes=notes)
     else:
