@@ -198,7 +198,7 @@ if __name__ == '__main__':
                     adam_epsilon=args["adam_epsilon"],
                     update_frequency=1,
                     logging=True,
-                    log_folder_details="CityLearn-DQN",
+                    log_folder_details="CityLearn-DQN"+args["seed"],
                     render = False,
                     loss='mse',
                     seed=args["seed"],
@@ -221,7 +221,7 @@ if __name__ == '__main__':
                         adam_epsilon=args["adam_epsilon"],
                         update_frequency=1,
                         logging=True,
-                        log_folder_details="CityLearn-UADQN",
+                        log_folder_details="CityLearn-UADQN"+args["seed"],
                         seed = args["seed"],
                         notes=notes)
     else:
