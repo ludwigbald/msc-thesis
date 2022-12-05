@@ -38,7 +38,7 @@ parser.add_argument('--action_selection', dest="action_selection", type=str, req
                     help='for DQN: select actions using "softmax" or "egreedy" ')
 parser.add_argument('--seed', dest="seed", type=int, required=False, default=42,
                     help='random seed for the training process')
-parser.add_argument('--episodes', dest="episodes", type=int, required=False, default=100,
+parser.add_argument('--n_episodes', dest="episodes", type=int, required=False, default=100,
                     help='number of episodes to train for')                    
 parser.add_argument('--data-path', dest="data_path", type=str, required=False, default="data/citylearn_challenge_2022_phase_1",
                     help='path to dataset')
