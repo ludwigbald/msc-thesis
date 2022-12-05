@@ -191,7 +191,7 @@ if __name__ == '__main__':
                     update_target_frequency=args["update_target"],
                     minibatch_size=args["batch_size"],
                     learning_rate=args["lr"],
-                    action_selection = "softmax", #|"egreedy", # | 
+                    action_selection = args["action_selection"], #"softmax"|"egreedy"
                     initial_exploration_rate=1,
                     final_exploration_rate=0.02,
                     final_exploration_step=1000,#8760,#1000
