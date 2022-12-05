@@ -35,8 +35,9 @@
 ####
 
 
-pipenv install
+conda activate citylearn
 python3 run_experiment.py $(head -${SLURM_ARRAY_TASK_ID} experiments/tuning/tuning.txt | tail -1)
+conda deactivate
 
 
 echo DONE!
