@@ -16,7 +16,7 @@
 #SBATCH --time=02:00:00
 # the maximum time the scripts needs to run
 # "hours:minutes:seconds"
-#SBATCH --array=1-2
+#SBATCH --array=416-417
 
 #SBATCH --error=job.%J.err
 #SBATCH --output=job.%J.out
