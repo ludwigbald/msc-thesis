@@ -1,0 +1,17 @@
+Warning: Gym version v0.24.1 has a number of critical issues with `gym.make` such that environment observation and action spaces are incorrectly evaluated, raising incorrect errors and warning . It is recommend to downgrading to v0.23.1 or upgrading to v0.25.1
+/home/ludwig/lbald47/.conda/envs/citylearn/lib/python3.10/site-packages/gym/spaces/box.py:112: UserWarning: [33mWARN: Box bound precision lowered by casting to float32[0m
+  logger.warn(f"Box bound precision lowered by casting to {self.dtype}")
+/home/ludwig/lbald47/.conda/envs/citylearn/lib/python3.10/site-packages/gym/core.py:200: DeprecationWarning: [33mWARN: Function `env.seed(seed)` is marked as deprecated and will be removed in the future. Please use `env.reset(seed=seed)` instead.[0m
+  deprecation(
+Traceback (most recent call last):
+  File "/mnt/qb/home/ludwig/lbald47/msc-thesis/run_experiment.py", line 238, in <module>
+    evaluate()
+  File "/mnt/qb/home/ludwig/lbald47/msc-thesis/run_experiment.py", line 125, in evaluate
+    actions = [agent.predict(torch.Tensor(obs)) for obs in observations]
+  File "/mnt/qb/home/ludwig/lbald47/msc-thesis/run_experiment.py", line 125, in <listcomp>
+    actions = [agent.predict(torch.Tensor(obs)) for obs in observations]
+  File "/home/ludwig/lbald47/.conda/envs/citylearn/lib/python3.10/site-packages/torch/autograd/grad_mode.py", line 27, in decorate_context
+    return func(*args, **kwargs)
+  File "/mnt/qb/home/ludwig/lbald47/msc-thesis/agents/uadqn/uadqn.py", line 404, in predict
+    net = self.network(state.to(device)).view(self.env.action_space.n, self.n_quantiles)
+NameError: name 'device' is not defined
