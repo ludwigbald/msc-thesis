@@ -353,10 +353,10 @@ class UADQN:
         with estimates provided by the two posterior networks
         """
 
-        net = self.network(state).view(self.env.action_space.n, self.n_quantiles)
+        net = self.network(state.to(self.device)).view(self.env.action_space.n, self.n_quantiles)
 
-        posterior1 = self.posterior1(state).view(self.env.action_space.n, self.n_quantiles)
-        posterior2 = self.posterior2(state).view(self.env.action_space.n, self.n_quantiles)
+        posterior1 = self.posterior1(state.to(self.device)).view(self.env.action_space.n, self.n_quantiles)
+        posterior2 = self.posterior2(state.to(self.device)).view(self.env.action_space.n, self.n_quantiles)
 
         mean_action_values = torch.mean(net, dim=1)
 
