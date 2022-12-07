@@ -401,7 +401,7 @@ class UADQN:
         """
         Returns action with the highest Q-value
         """
-        net = self.network(state.to(device)).view(self.env.action_space.n, self.n_quantiles)
+        net = self.network(state.to(self.device)).view(self.env.action_space.n, self.n_quantiles)
         mean_action_values = torch.mean(net, dim=1)
         action = mean_action_values.argmax().item()
 

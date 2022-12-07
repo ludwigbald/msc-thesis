@@ -309,7 +309,7 @@ class DQN:
         """
         Returns action with the highest Q-value
         """
-        action = self.network(state.to(device)).argmax().item()
+        action = self.network(state.to(self.device)).argmax().item()
         return action
 
     def save(self, timestep=None):
