@@ -277,7 +277,7 @@ class DQN:
         if self.action_selection == "egreedy":
             if is_training_ready and random.uniform(0, 1) >= self.epsilon:
                 # Action that maximizes Q
-                action = self.predict(state)
+                action = self.predict(state.to(self.device))
             else:
                 # Random action
                 action = np.random.randint(0, self.env.action_space.n)
@@ -285,7 +285,7 @@ class DQN:
 
         elif self.action_selection == "softmax":
             with torch.no_grad():
-                weights = torch.nn.Softmax()(self.network(state))
+                weights = torch.nn.Softmax()(self.network(state.to(self.device)))
 
             r = random.uniform(0,1)
             for i, weight in enumerate(weights):
