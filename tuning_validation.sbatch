@@ -16,7 +16,7 @@
 #SBATCH --time=02:00:00
 # the maximum time the scripts needs to run
 # "hours:minutes:seconds"
-#SBATCH --array=1-2
+#SBATCH --array=1-30
 
 #SBATCH --error=job.%J.err
 #SBATCH --output=job.%J.out
@@ -37,7 +37,7 @@
 source $HOME/.bashrc
 
 conda activate citylearn
-python3 run_experiment.py --agent=UADQN --action_selection=softmax --n_episodes=1 --lr=7e-05 --batch_size=2 --adam_epsilon=0.001 --update_target=16 --seed=1 --run_id ${SLURM_ARRAY_TASK_ID}
+python3 run_experiment.py $(head -${SLURM_ARRAY_TASK_ID} experiments/tuning/tuning_validation.txt | tail -1) --run_id ${SLURM_ARRAY_TASK_ID}
 conda deactivate
 
 
