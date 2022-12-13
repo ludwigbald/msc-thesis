@@ -150,6 +150,7 @@ class DQN:
         self.n_events = 0  # Number of times an important event is flagged in the info
         self.this_episode_time = 0
         self.timestep = 0
+        self.non_greedy_actions = 0
 
         self.train_parameters['train_steps'] = timesteps
         pprint.pprint(self.train_parameters)
@@ -201,6 +202,12 @@ class DQN:
                     self.logger.add_scalar('Episode_score', score, timestep)
                 states = [torch.as_tensor(obs) for obs in self.env.reset()]
                 score = 0
+
+                if self.logging:
+                    non_greedy_fraction = self.non_greedy_actions/self.this_episode_time
+                    self.logger.add_scalar('Non Greedy Fraction', non_greedy_fraction, timestep)
+
+                self.non_greedy_actions = 0
 
                 t1 = time.time()
                 self.this_episode_time = 0
@@ -275,13 +282,13 @@ class DQN:
         Returns action to be performed with an epsilon-greedy policy
         """
         if self.action_selection == "egreedy":
+            action = None
             if is_training_ready and random.uniform(0, 1) >= self.epsilon:
                 # Action that maximizes Q
                 action = self.predict(state.to(self.device))
             else:
                 # Random action
                 action = np.random.randint(0, self.env.action_space.n)
-            return action
 
         elif self.action_selection == "softmax":
             with torch.no_grad():
@@ -290,9 +297,15 @@ class DQN:
             r = random.uniform(0,1)
             for i, weight in enumerate(weights):
                 if r < weight:
-                    return i
+                    action = i
                 else:
                     r = r-weight
+                    
+        # track non-greedy fraction
+        if action != self.predict(state.to(self.device)):
+            self.non_greedy_actions += 1
+
+        return action
 
     def update_epsilon(self, timestep):
         """
