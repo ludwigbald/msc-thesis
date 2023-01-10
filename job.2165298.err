@@ -1,0 +1,13 @@
+Warning: Gym version v0.24.1 has a number of critical issues with `gym.make` such that environment observation and action spaces are incorrectly evaluated, raising incorrect errors and warning . It is recommend to downgrading to v0.23.1 or upgrading to v0.25.1
+/home/ludwig/lbald47/.conda/envs/citylearn/lib/python3.10/site-packages/gym/spaces/box.py:112: UserWarning: [33mWARN: Box bound precision lowered by casting to float32[0m
+  logger.warn(f"Box bound precision lowered by casting to {self.dtype}")
+/home/ludwig/lbald47/.conda/envs/citylearn/lib/python3.10/site-packages/gym/core.py:200: DeprecationWarning: [33mWARN: Function `env.seed(seed)` is marked as deprecated and will be removed in the future. Please use `env.reset(seed=seed)` instead.[0m
+  deprecation(
+Traceback (most recent call last):
+  File "/mnt/qb/home/ludwig/lbald47/msc-thesis/run_experiment.py", line 234, in <module>
+    agent.learn(timesteps=nb_steps, verbose=True)
+  File "/mnt/qb/home/ludwig/lbald47/msc-thesis/agents/dqn/dqn.py", line 158, in learn
+    self.logger = Logger(self.log_folder_details, self.train_parameters)
+  File "/mnt/qb/home/ludwig/lbald47/msc-thesis/agents/common/logger.py", line 33, in __init__
+    os.mkdir(directory)
+FileNotFoundError: [Errno 2] No such file or directory: 'results/2022-12-12-122143-CityLearn-DQN18'
