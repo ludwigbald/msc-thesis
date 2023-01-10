@@ -1,0 +1,147 @@
+\chapter{Approach}
+    \label{approach}
+    
+\todo[inline]{
+Roughly 1/3 of thesis}
+\done[inline]{- restate the research question, and how I set out to answer it.
+
+
+Plan for this chapter:
+- introduce CityLearn and motivate the choice
+    - mention citylearn challenge.
+- Introduce and explain the UADQN algorithm and motivate the choice (other algorithms have been tried)
+- Explain Experiment Setup, High-level overview to implementation details each.
+    1. Hand-Engineered Benchmark agent and Discretization Experiment
+    2. Hyperparameter Tuning Setup:
+        - High-Level Overview of Experiments
+        - Design decisions of Tuning Experiment
+        - Implementation details (all the way down to hardware)
+    3. Test performance of Tuned Agents
+        - High-Level Overview of Experiment, motivated by story
+        - Investigate performance of Tuned Agents
+            - High-Level Overview of Investigation
+
+}
+
+
+
+
+
+In order to efficiently control electricity demand, one needs to act with foresight on uncertain information.
+I aim to find out whether existing approaches can benefit from explicitly modelling various uncertainties.
+In order to do so, I introduce CityLearn, a sample control environment and model its uncertainties. I model CityLearn from different perspectives.
+Drawing from the theoretical background, I then construct an uncertainty-aware RL model to solve CityLearn.
+I compare this uncertainty-aware model empirically against existing baselines.
+An uncertainty-aware model can have additional benefits, like risk-awareness. I explore these. 
+
+\todo[inline]{- Divide it into subquestions, and treat each subquestion separately.}
+
+\section{RL for Demand Response}
+- Let's focus in on Automated Demand Response in buildings:
+    - Mention incentive-based behavior-change models, but ML models can do better!
+    - Define the setting:
+        - Focus on buildings, they need lots of energy and the physical processes are comparably simple, standardized and predictable.
+        - Ignore industrial DR programs.
+        - decentralized (why?)
+- What is the state of the art for Automated Demand Response?
+- How else can we implement Automated DR?
+
+
+- Introduce CityLearn and alternatives
+
+
+\subsection{CityLearn: Applying RL for Demand Response}
+\todo[inline]{This section of the approach/background introduces the CityLearn Framework, so I can later mention it. It motivates the choice while highlighting alternative options. It introduces the data, modelling limitations and setting, but not the exact experimental setup.}
+
+CityLearn as a model for building-based demand response:
+    - Model description (data, available observations and actions, rationale)
+    - Success measures, cost function design
+    - CityLearn challenge
+    - limitations: modelling errors/simplifications and how much they matter
+        - CityLearn was built to assess the general usefulness of RL for DR, not for my specific question.
+        - Battery efficiency
+        - Weather Forecasts are perfect oracles
+        - Only available action is battery charging/discharging.
+        - Other processes are assumed to be fixed (at least in 2022 challenge). Automatic Washing Machine starting.
+        - Human behavior can not be influenced (models humans as inflexible)
+        - Hourly control instead of continuous -> Makes perfect control more difficult
+        - Energy can not be sold to the grid, not even to the microgrid. -> unrealistic
+        - 2022 challenge: initially did not encourage cooperation.
+    - Strengths: For what tasks is this environment adequate?
+        - Makes it possible to apply RL to DR without expensive computational overload*
+        - Test Multi-Agent behavior and cooperation in the DR context, as opposed to only single-building frameworks
+        - Enables comparison of different approaches as a benchmark
+    - Formal treatment of the CityLearn environment
+        - Why? What kind of formal treatment?
+    
+Alternatives to CityLearn
+    
+
+
+\section{Theoretical approach}
+\subsection{Setting the scene}
+\todo[inline]{- start with a theoretical approach:
+    - formal model of the environment,}
+In order to develop our uncertainty-aware approach to demand side management, we need to have a good understanding of the information environment.
+Let's formalize all relevant goals, available information and uncertainties.
+
+The idea of Demand Side Management was introduced to enable a more efficient usage of the grid.
+Depending on who implements Demand Side Management, different incentives and information infrastructure might evolve.
+In our model of demand response, consumers themselves are empowered to make decisions about their electricity demand.
+
+
+\todo[inline]{    - !!! where does uncertainty come from in CityLearn !!!,}
+- forecasting problems:
+    - uncertainty about future occupant behavior (electricity demand)
+    - uncertainty about future solar power production (weather forecasts)
+    - uncertainty about future costs (price forecasts)
+- measurement uncertainty:
+    - observations might be imprecise
+- coordination uncertainty:
+    - uncertainty about other actors' strategy and current actions
+- reward uncertainty:
+    - uncertainty about the consequences of actions
+    - the observed reward might be imprecise
+    - the observed reward might not be the actual desired reward ???
+    
+Which uncertainties need to be specially treated?
+
+\todo[inline]{What advantages would an uncertainty-aware strategy have?}
+- better risk management (possibly)
+- better performance (possibly)
+- better interpretability and robustness (possibly)
+
+
+\subsection{Developing the approach}
+\todo[inline]{    - developing the algorithm (this is important. Maybe it includes some actual theoretical work and insight!),}
+\todo[inline]{        - build off approaches that are cited in background.}
+\todo[inline]{    - explain and motivate decisions.}
+
+\section{Practical Approach}
+\subsection{Implementation Details}
+\todo[inline]{- high-level overview of the practical approach and setup}
+- describe hand-engineered strategy
+
+- Train one single agent that works for all buildings independently
+
+Adaptations from the Risk and Uncertainty Paper algorithm:
+- make it work with continuous action space (discretize)
+- make it work for the single-agent case.
+
+\todo[inline]{- describe implementation details
+    - (of my algorithm and of CityLearn)
+    - I found/fixed CityLearn Bugs
+    - I engineered the Reward Function}
+    
+    
+\subsection{Experimental Setup}
+\todo[inline]{- Design/select an algorithm that is fit for the task. Run the experiment and investigate results (in separate chapter)}
+
+- Data?
+    - CityLearn.
+
+- I want to test the performance of different strategies:
+    - doing nothing as baseline
+    - basic rule-based controller as improved baseline
+    - various risk-aware strategies
+

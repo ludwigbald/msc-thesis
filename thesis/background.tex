@@ -1,0 +1,237 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Grundlagen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Background}
+  \label{background}
+  \todo[inline]{Give all the necessary background that is needed to justify and understand the problem and the approach.
+  - comment on employed hardware and software
+  - describe methods and techniques that build the basis of your work
+  - review related work(!)
+  - roughly 1/3 of thesis
+  }
+
+\todo[inline]{
+    - flesh out beginning from introduction, support general argument
+
+    1. supply side rigidity (plot of different energieträger over time)
+    2. status quo demand side rigidity
+    3. ansatzpunkte für Flexibilität in Demand Side mit RL oder so, konkrete Beispiele
+    
+    4. RL ...
+
+}
+
+
+
+\missingfigure{Show reliability of renewables over a day}
+
+
+
+
+
+
+
+
+------- Erster Entwurf below ------
+
+\section{The Electricity Grid: A Technical and Structural Overview}
+In places with a well-managed electricity grid, consumers know electricity as a reliable resource that is always available, in whatever quantity needed.
+This is a remarkable feat of engineering and cooperation between a number of different actors, who I will briefly introduce in this section.
+Each actor acts according to their own interests.
+
+\todo[inline]{diagram that explains the grid. Physical, technical, market abstractions. Include the environment and politics.}
+
+\todo[inline]{move electricity grid to introuction, and make it much shorter}
+
+\subsection{Consumers}
+- private: expect electricity for convenience and safety
+- industrial: need electricity for economic activity
+- now also Producers, "Prosumers"
+- are electrifying more and more processes: Transportation, heating, appliances, etc.
+- risks: Price risks; running out of electricity; producing more than they are able to sell,.
+
+\subsection{Utility Companies}
+- buy electricity on the markets
+
+\subsection{Electricity Markets}
+- electricity lake
+- buy/sell contracts
+- different timescales and area scales.
+
+- decoupled from the actual power transmission grid.
+
+\subsection{Electricity Producers}
+- define: renewable (solar, wind, maybe others?) vs conventional (nuclear, coal, gas)
+
+\subsection{Transmission System Operators}
+- manage transmission and electricity flow
+- are responsible for keeping the grid synchronized
+- can request electricity production if there is not enough power
+
+
+\subsection{Local Grid Operators / Utility companies}
+- manage local grid, responsible for getting power to consumers
+
+\subsection{Politics / Society?}
+- guarantees comfort for consumers
+- international relations
+- pressure to save CO2
+- designs and oversees the system's mechanisms
+
+\subsection{Environment}
+- provides energy as fossil fuels, renewables, other.
+- Has Limits to the CO2 it can absorb
+- can be responsibly exploited
+
+\subsection{Challenges for the Grid/ Sustainable transition}
+- Political tensions, global dependence
+- Ecological dependence on the environment
+- Green transition: Renewables are much less reliable
+- Prosumers: power at new places in the grid
+- Electrification of everything (heat pumps, transport, industry) --> Need much more capacity, quickly
+
+- Programs to cope with this (alternatives/complements to Demand Response):
+    - increasing grid and production capacity
+    - increasing storage capacity to smooth out renewable production
+    - increase grid efficiency (better grid management)
+    - 
+    - ... TODO Research
+
+\subsection{Flexibility (/Demand Response)}
+\todo[inline]{This section introduces the notion of flexibility and therefore motivates demand response.
+It should also maybe talk about conflicts of interest, and incentives.
+
+need to be defined before this section:
+- conventional power
+- renewable power
+- supply/demand vs production/use}
+
+
+- flexibility is needed both in the market layer and in the physical layer
+
+Renewable electricity is less flexible than conventional electricity production, therefore there is a need for more flexibility elsewhere in the system.
+Electricity production and electricity use must always match. If there is more or less electricity used than is available, the entire grid is no longer stable.
+Partly, this coordination problem between producers and consumers is solved by the electricity market:
+An electricity producer will produce and feed to the grid only as much electricity as they can sell.
+This system works fine if the electricity producer can freely regulate how much power they produce based on the market.
+
+This is not true for renewable energy, where production capacity is both determined by external factors and harder to predict.
+Renewable sources of electricity are therefore less flexible.
+In order to keep production and consumption in balance, there needs to be a system component with enough flexibility to respond to sudden changes in electricity supply and demand.
+This can be a hydroelectric or grid-scale battery storage system which can both produce and consume electricity.
+It can also be a conventional power plant that's kept in spinning reserve\todo{define}, to take over when there's less renewable electricity than needed. This causes carbon emissions.
+Often, renewable power plants can't feed all of their production into the grid, because they can't find a flexible buyer for unexpected production.
+This motivates the need for flexibility on the demand side.
+
+
+
+\subsection{Demand Response}
+- a scheme to operate the grid more efficiently as demand rises quickly.
+- breaks with one of the central guarantees: electricity is freely available, accepting that renewable energy is much less reliable.
+- Mechanism: Incentivize consumers to use electricity when there's capacity.
+- implementations: TODO examples (Large-scale AC cuts, incentive programs, etc.)
+- already in place for large industrial consumers who buy electricity on the markets. (TODO: Is that true?)
+    - some industrial consumers are paid for providing flexibility, they can stop their processes if there's not enough electricity being produced.
+- more difficult for private consumers, who don't want to think about efficiency all the time. Solution: Automate where possible.
+
+
+\section{Reinforcement Learning}
+
+\subsection{Fundamentals: Markov Decision Process}
+Many animals are able to learn complex behaviors by performing an action, observing the results and - if the action got them closer to their goal - repeating the action when facing a similar situation.
+For example, consider a food-dispensing lever in a hamster's cage. At first, the hamster might not notice the lever. But sooner or later, by accident or out of curiosity, the hamster will push the lever, dispensing an item of food. After a few repetitions, the hamster will know to walk towards the lever, and push the lever when it wants food.
+Our hamster uses a biological implementation of \textit{Reinforcement Learning (RL)}.
+In an RL environment, an \textit{agent} is able to repeatedly perform an \textit{action}, observe the consequences and be rewarded or punished.
+RL therefore is an adaptive approach to solve feedback-based control problems.
+
+Formally, RL environments are \textit{Markov Decision Processes (MDP)}:
+$$ \text{MDP} = (S, A, p)$$
+where $S$ is the set of possible states the environment can be in, $A$ is the set of actions available to the agent,
+and the transition distribution $p(s', r \mid s, a)$ specifies the environment dynamics, giving the joint probability of transitioning from state $s \in S$ to state $s'\in S$ after performing action $a \in A$, and getting reward $r \in \mathbb{R}$.
+
+Interacting with the MDP, an agent first observes the environment's state $s$, then takes an action $a$, and then the next state $s'$ of the environment is sampled from $p$.
+There are no further restrictions placed on the structure of state and action spaces. They can be merely labelled or ordered, finite or infinite, single- or multidimensional.
+Usually the agent observes a collection of variables and chooses an action along one or several dimensions.
+
+Crucially, the states have the \textit{Markov Property}: The probability of transitioning to state $s'$ only depends on the current state $s$ and action $a$.
+The history of past states does not matter, and there are no hidden facts that could change the probabilities.
+In practice, this is a simplifying modelling assumption.
+Returning to our hamster: In reality, the food-dispensing mechanism runs out of food after being activated a number of times. However, modelling the situation as an MDP, we do not keep track of history, so we can't tell in advance whether pushing the lever will actually produce food. Instead, we assume there's a certain probability of the action being unsuccessful, that is $p(s', \text{food} \mid s, \text{lever pushed}) < 1$.
+One generalization of the MDP that does enable us to model such hidden variables is the Partially Observable MDP, which I will cover in more detail later on \todo{cite section}.
+
+\subsection{Reinforcement Learning}
+\todo[inline]{introduce RL terms and algorithms}
+
+Let's now turn to the question how to solve a Markov Decision Process. Solving an MDP usually means finding the sequence of actions that maximize the expected total reward over all future time steps.
+
+todo:
+
+- episode
+- policy
+- value function
+- exploration vs exploitation
+- Bellmann Update
+
+
+Baseline algorithm: \todo{which one? depends on my treatment of uncertainty in the other one, so on the approach}
+- One RL algorithm, which I use as a baseline, is ???
+- Explain algorithm
+
+
+
+\section{Uncertainty in Reinforcement Learning}
+\todo[inline]{Introduce Uncertainty terms and formalisms from different perspectives. Then apply to RL.}
+There is a rich body of work on uncertainty. Mathematical and statistical notions of uncertainty, perspectives from economics for decision making under uncertainty.
+
+Notes:
+
+- Motivation: Most information is uncertain to some extent. Making good decisions under uncertainty requires an awareness of the uncertainty.
+- Uncertainty vs Risk: Uncertainty is a measure of the information content of a random variable or an observation???, Risk is the cost associated with different situations.
+- formal framework (maybe borrow from Econ: When to buy or sell a given asset?)
+- Decision making under uncertainty
+    - which objective (Expected value vs risk metrics)
+- different types of uncertainty (e.g. aleatoric vs epistemic)
+    - there are different types of uncertainty: Some uncertainty can be reduced by learning more about the problem, other uncertainty can not.
+    - this stems from the formulation of RL as a stochastic MDP
+    - for example, a biased coin. You will be able to learn something about it, but not actually predict the outcome ???
+
+Uncertainty in RL: (maybe this should already be in approach?)
+- How is Uncertainty commonly modelled?
+    - epistemic uncertainty in the observations: not explicitly modelled, somewhat represented in state-value function
+    - stochasticity in the environment dynamics (+consequences of actions): accepted in the MDP. learned as transition probabilities in model-based RL, subsumed in e.g. Q-function in model-free RL.
+    - epistemic uncertainty in the environment dynamics: modelled as transition probabilities
+    - stochasticity in the reward function: not usually explicitly modelled
+    - epistemic uncertainty in the reward function: modelled implicitly in the state-value function
+    - uncertainty about causality? - probably not really relevant? should I discuss it somewhere else?
+- Adaptations for explicit treatment of uncertainty:
+    - Formalism for non-perfect observations: POMDP (usually there are hidden variables) -> Usually solved by estimating an MDP, solving that.
+        - POMDP does not assume the Markov property on observations, but does assume a hidden MDP
+    - ???
+    - RL from human preferences? (for learning a reward function)
+- Benefits of explicit treatment of uncertainty/Motivation:
+    - Risk-aware strategies
+    - better performance (maybe? TODO: Test this)
+    - more rubustness (possibly? TODO: support this or not)
+    - better interpretability (possibly?)
+    - TODO: other
+- Drawbacks:
+    - more complex models require more training data
+    - less efficient algorithms
+    - not as well understood theoretically
+    - might perform worse than just learning everything implicitly!
+    
+Risk-aware strategies:
+    - can either specify a risk tolerance at time of inference or during training
+    - during training: change reward function
+    - at time of inference: requires model of the environment (I think) or a Q-function
+    - more robust: can hand over control to e.g. humans when uncertain
+    
+Uncertainty in Multi-Agent Learning: (maybe exclude this completely)
+    - Multi-Agent Environments are characterized by simultaneous actions by multiple agents, who each learn and act according to their own rewards.
+    - More realistic and resilient than centralized control
+    - absent trust, might be stuck in a suboptimal equilibrium
+
+
+
+  
