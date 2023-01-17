@@ -3,7 +3,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Background}
-  \label{background}
   \todo[inline]{Give all the necessary background that is needed to justify and understand the problem and the approach.
   - comment on employed hardware and software
   - describe methods and techniques that build the basis of your work
@@ -22,12 +21,199 @@
 
 }
 
+\section{The Electrical Grid and Flexibility}
+\todo[inline]{
+    1. Describe the goals and the structure of the Electrical Grid
+        - Provide reliable energy to consumers and industry
+        - Describe the changes caused by the energy transition
+        - History: Only fossil fuels and Water has been used, later nuclear.
+    2. Describe Challenges posed by the energy transition
+        - Electrification of processes causes more load, but building more transmission lines is costly
+            - But Cars can also be used as flexible electricity storage
+        - Specifically, last-mile grids are not built to handle peak solar production (is this true?)
+        - Phasing out reliable fossil fuel and nuclear plants causes less reliability
+        - Building renewable energy plants causes intermittent and unreliable energy supply
+        - Give number for how much flexibility we need (maybe ?)
+        - Grid storage
+            - Spinning reserve
+            - Pumped Water Storage
+            - Large-scale Battery storage systems
+            - Hydrogen
+            --> all together, not enough (support claim!)
+    3. Demand Side Flexibility
+        - Incentive-based demand reduction in industry
+            - (shutoffs in case of severe grid instability)
+        - Incentive-based demand shifting
+            - Shifting industrial processes
+            - private consumers (day/night-tariffs, flexible pricing)
+                - Challenge: Electricity is cheap and reliable, incentives need to be very large, mental load
+                    - Consumers are unflexible in their use of appliances like kitchen stoves and lighting.
+                    - examples for incentive programs!
+                - solar producing prosumers already sometimes care. (because of the "pricing model". They get their own solar power at cost, basically for free.)
+        - Smart Electrification makes more flexibility and efficiency available:
+            - Electric cars and home batteries can intelligently decide when to charge
+            - Electric (heat-pump) Heating and cooling can somewhat flexibly happen when electricity is cheap
+            - This amounts to a control problem and a coordination problem.
+            - Mention ways in which this problem has been tried to solve:
+                - Rule-based controllers
+                - Market mechanisms
+                - RL
+                - ...?
+}
+
+% 1. Describe the goals and the structure of the Electrical Grid
+The electrical grid is basic infrastructure that enables the function of our modern society.
+It connects electricity consumers, from private consumers to heavy industry, with producers.
+Historically, the entire system has been built for reliable large-scale power generation, overwhelmingly fuelled by coal and natural gas, together accounting for 67\% of Germany's electricity consumption in 1985, with 27\% provided by nuclear energy \cite{ritchie2022Energy}.
+
+Climate change and the exit from nuclear power requires a radical increase in the share of renewable electricity. As of 2021, renewable energy accounts for 40\% of electricity consumption in Germany \cite{ritchie2022Energy}.
+An overview of the historical development is shown in figure \ref{fig:electricity_mix}
+
+\begin{figure}
+    \frame{\includegraphics[width=\linewidth]{figures/electricity_mix.png}}
+    \caption{The share of renewable electricity has risen significantly from 1985 to 2021, while nuclear and fossil fuels have declined.}
+    \label{fig:electricity_mix}
+\end{figure}
+
+While conventional energy generation can flexibly respond to demand, renewable energy depends on the weather.
+It is therefore intermittent and harder to predict, see figure \ref{fig:flexibility}. In order to be able to meet demand, there is a new need for flexible backup power.
+Natural gas plants are more environmentally friendly than coal plants and can be flexibly turned on and off in a matter of minutes.
+As a result, the share of electricity powered by natural gas has risen along with renewables.
+
+\begin{figure}
+    \includegraphics[width = \linewidth]{figures/flexible_renewables.png}
+    \caption{Renewable electricity is intermittent and hard to predict precisely. As the share of renewable electricity increases, other sources of electricity need to respond flexibly in order to meet demand.}
+    \label{fig:flexibility}
+\end{figure}
 
 
-\missingfigure{Show reliability of renewables over a day}
+% 2. Describe Challenges posed by the energy transition
+Another aspect of the energy transition is the electrification of many processes which previously used fossil fuels directly.
+Internal combustion engine cars are being replaced by more efficient battery-powered electric cars and heating units that use natural gas or oil are being replaced by much more efficient electric heat pumps.
+Many heat pumps can also be run in reverse to cool a building, which climate change makes more and more necessary, but this enables additional electricity demand in the summer.
+
+The ongoing energy transition puts a lot of pressure on the grid.
+On the one hand the electricity supply is becoming less reactive, while on the other hand many polluting processes are being electrified, causing additional demand.\todo{maybe give specific number}
+During large future demand spikes, the total load on the grid could exceed current capacity. In order to cope, new transmission lines are being built, a costly and complicated process.
+
+In order to both reduce reliance on fossil fuels and to keep total load below grid capacity, there is a need for additional flexibility in the system.
+A traditional source of flexibility has been pumped hydropower storage.
+When there's unused electricity, it can be stored by pumping water uphill.
+When needed, water can be released and used to generate electricity. 
+Hydropower depends almost entirely on geography. There is almost no potential to develop more hydropower storage.
+
+A different large-scale method of energy storage is batteries, which have only found limited use due to their cost. Hydrogen can also be used as a way to store and even transport energy, with a number of chemical processes currently being explored.
+However, this method is also costly, and any produced hydrogen is probably worth more as a crucial chemical than as pure electricity storage.\todo{rephrase, cite}
+
+As flexibility in electricity supply decreases, and centralized storage facilities remain too expensive, electricity demand needs to become more flexible.
 
 
+\section{Demand Response}
+% 3. Demand Side Flexibility
+\todo[inline]{       
+- Demand side flexibility is a good idea.
+- what does demand respond to?
 
+- Incentive-based demand reduction in industry
+- (shutoffs in case of severe grid instability)
+- Incentive-based demand shifting
+- Shifting industrial processes
+- private consumers (day/night-tariffs, flexible pricing)
+    - Challenge: Electricity is cheap and reliable, incentives need to be very large, mental load
+        - Consumers are unflexible in their use of appliances like kitchen stoves and lighting.
+        - examples for incentive programs!
+    - solar producing prosumers already sometimes care. (because of the "pricing model". They get their own solar power at cost, basically for free.)
+- Smart Electrification makes more flexibility and efficiency available:
+- Electric cars and home batteries can intelligently decide when to charge
+- Electric (heat-pump) Heating and cooling can somewhat flexibly happen when electricity is cheap
+- This amounts to a control problem and a coordination problem.
+- Mention ways in which this problem has been tried to solve:
+    - Rule-based controllers
+    - Market mechanisms
+    - RL
+    - ...?
+}
+Both the inflexibility in renewable power generation and the limited capacity for centralized flexible energy storage leave one component of the electric system: In a renewable-dominated grid, Demand needs to flexibly respond to changes in available supply.
+In order to stabilize the grid, grid operators employ schemes to curb demand in case of exceptionally large pressure on the grid.
+Large industrial consumers are paid in advance for shutting off their processes if needed.
+As a matter of last resort, rolling blackouts are introduced to curb demand when electricity production can not keep up with consumption.
+An electric grid designed for renewable energy needs more fine-grained coordination across a larger fraction of demand.
+
+In order to implement demand response, electricity consumers needs to be incentivized and able to adapt their processes to available supply.
+Proposed incentive schemes for demand response include market-based solutions that feature a flexible electricity price and solutions of centralized control that pay out flat rewards for participation, as well as combinations of the two. \todo{cite}
+In order to be able to react to changes in demand, electricity-consuming processes need to be aware of the current and future available supply.
+This can be a human in the loop, deciding to shift a process to a time with cheaper electricity, or this can be automated.
+For example, a private prosumer that produces solar electricity might prefer to run their washing machine only on sunny days when electricity is free to them.
+However, this means the human needs to keep track of the weather and is put under additional cognitive load when planning this.
+
+As stated before, the process of heating is being electrified.
+While this increases load on the electric grid, it is also a chance to provide flexibility:
+When equipped with an intelligent and connected control system, the heating system can flexibly react to changes in price, using hot water tanks or the building itself as heat storage.
+Similarly, when intelligently automated, the charging process of an electric car or a home battery can somewhat react to market conditions.
+\todo{somehow mention coordination goals}
+
+Technologically, this amounts to a control problem:
+The controller's goals are to meet certain demands (like ensuring a comfortable living temperature) while minimizing cost. In the context of the larger system, there is the shared goal of coordination between different electricity consuming processes.
+This involves both an understanding of the dynamics of the controlled system, and an understanding of how prices are likely to change.
+Different technological approaches can be employed for this.
+When system dynamics are known, and prices change predictably, for example with fixed rates for day and night, an optimal rule-based controller can be derived. \todo{cite}
+A rule-based controller has the advantage of being transparent and reliable, but it's not flexible enough to react to changing system and pricing dynamics.
+A number of adaptive control algorithms have been proposed for use in demand response. \todo{List some and cite}
+\missingfigure{illustrate control problem}
+\todo[inline]{
+    notes on this section:
+        - focus more on buildings
+        - use the following review paper:
+        - \cite{li2021EnergyFlexibilityResidential}, a review paper about energy flexibility in residential buildings
+}
+
+
+\section{Reinforcement Learning}
+Unless otherwise stated, this section is based on \cite{sutton2018ReinforcementLearningIntroduction}, and I follow their notation.
+
+\todo[inline]{
+    1. Explain RL Fundamentals
+        1. Markov Decision Process
+            1. Highlight stochasticity of transition and Reward functions
+            2. Reward function?
+            3. Mention generalizations: POMDP, (Multi-Agent MDP?), Non-stationary MDP
+        2. Value Learning
+            - Introduce the notion of a state value
+            - Bellman updates
+            - Q-Learning
+            - Mention Policy Gradient methods
+        3. Deep Q-Learning
+            - introduce Fundamentals of Deep Learning? Deep RL is somewhat like using a POMDP?
+            - Introduce further tricks employed by DQN
+                - Replay Buffer
+                - Dueling Q-Networks?
+                - TD-Learning / Target Network
+        4. Importance of Action Selection and Exploration strategies
+            - Exploration vs. Exploitation Dilemma
+            - Convergence guarantees
+    2. Related Work
+        1. Uncertainty-Aware Reinforcement Learning: Related Work
+            - Uncertainty-Aware Machine Learning Methods: Distributions instead of estimators
+                - Explicitly model input uncertainty.
+                    - Assume a distribution, model parameters
+                    - e.g. Discrete distribution, normal distribution, beta distribution, or general distribution parameterized by quantiles.
+                    - Example in RL: POMDP
+                    - Algorithms: Bayesian NN, Gaussian Processes, Variational Autoencoders (uncertainty about deep representation)
+                    - Advantages: More robust
+                    - Disadvantages: More expensive, need to model data generation process
+                - Explicitly model output uncertainty.
+                    - In classification: Confidence score (discrete distribution), class probabilities
+                    - In regression: Again, model distribution and parameters
+                    - Examples: Bayesian NN, Ensemble models, Distribution Learning, *UA-DQN*
+                    - Advantages: More trustworthy and more useful for risk-aware decision-making, more robust, can be more sample-efficient
+                    - Disadvantages: more expensive, more complex, less robust
+            - Examples of Uncertainty-aware RL applications:
+                - TODO
+        2. Reinforcement Learning for Consumer Building Demand Response
+            1. Mention Frameworks, available data, including CityLearn, real-life applications
+            2. Mention related work: applied algorithms and their results
+                - 
+}
 
 
 
@@ -42,7 +228,7 @@ Each actor acts according to their own interests.
 
 \todo[inline]{diagram that explains the grid. Physical, technical, market abstractions. Include the environment and politics.}
 
-\todo[inline]{move electricity grid to introuction, and make it much shorter}
+\todo[inline]{move electricity grid to introduction, and make it much shorter}
 
 \subsection{Consumers}
 - private: expect electricity for convenience and safety
@@ -212,7 +398,7 @@ Uncertainty in RL: (maybe this should already be in approach?)
 - Benefits of explicit treatment of uncertainty/Motivation:
     - Risk-aware strategies
     - better performance (maybe? TODO: Test this)
-    - more rubustness (possibly? TODO: support this or not)
+    - more robustness (possibly? TODO: support this or not)
     - better interpretability (possibly?)
     - TODO: other
 - Drawbacks:
