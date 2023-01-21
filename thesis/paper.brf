@@ -1,3 +1,6 @@
-\backcite {SaaSchTue97}{{ii}{(document)}{Doc-Start}}
-\backcite {AgentbasedModelsEconomy}{{ii}{(document)}{Doc-Start}}
-\backcite {canteli2020MultiagentReinforcementLearning}{{ii}{(document)}{Doc-Start}}
+\backcite {ritchie2022Energy}{{5}{2.1}{section.2.1}}
+\backcite {ritchie2022Energy}{{5}{2.1}{section.2.1}}
+\backcite {li2021EnergyFlexibilityResidential}{{9}{2.2}{section*.31}}
+\backcite {sutton2018ReinforcementLearningIntroduction}{{9}{2.3}{section.2.3}}
+\backcite {vazquez-canteli2019CityLearnV1OpenAI}{{16}{3.2}{section*.44}}
+\backcite {narayanamurthyGridIntegrationZero}{{16}{3.2.1}{subsection.3.2.1}}

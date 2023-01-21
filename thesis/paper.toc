@@ -1,40 +1,34 @@
-\contentsline {chapter}{List of Figures}{vii}{chapter*.4}%
-\contentsline {chapter}{List of Tables}{ix}{chapter*.5}%
-\contentsline {chapter}{List of Abbreviations}{xi}{chapter*.6}%
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
 \contentsline {chapter}{\numberline {2}Background}{5}{chapter.2}%
-\contentsline {section}{\numberline {2.1}The Electricity Grid: A Technical and Structural Overview}{5}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Consumers}{6}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Utility Companies}{6}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}Electricity Markets}{6}{subsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.1.4}Electricity Producers}{6}{subsection.2.1.4}%
-\contentsline {subsection}{\numberline {2.1.5}Transmission System Operators}{6}{subsection.2.1.5}%
-\contentsline {subsection}{\numberline {2.1.6}Local Grid Operators / Utility companies}{6}{subsection.2.1.6}%
-\contentsline {subsection}{\numberline {2.1.7}Politics / Society?}{6}{subsection.2.1.7}%
-\contentsline {subsection}{\numberline {2.1.8}Environment}{7}{subsection.2.1.8}%
-\contentsline {subsection}{\numberline {2.1.9}Challenges for the Grid/ Sustainable transition}{7}{subsection.2.1.9}%
-\contentsline {subsection}{\numberline {2.1.10}Flexibility (/Demand Response)}{7}{subsection.2.1.10}%
-\contentsline {subsection}{\numberline {2.1.11}Demand Response}{8}{subsection.2.1.11}%
-\contentsline {section}{\numberline {2.2}Reinforcement Learning}{8}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Fundamentals: Markov Decision Process}{8}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Reinforcement Learning}{9}{subsection.2.2.2}%
-\contentsline {section}{\numberline {2.3}Uncertainty in Reinforcement Learning}{9}{section.2.3}%
-\contentsline {chapter}{\numberline {3}Approach}{11}{chapter.3}%
-\contentsline {section}{\numberline {3.1}RL for Demand Response}{11}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}CityLearn: Applying RL for Demand Response}{12}{subsection.3.1.1}%
-\contentsline {section}{\numberline {3.2}Theoretical approach}{12}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Setting the scene}{12}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Developing the approach}{13}{subsection.3.2.2}%
-\contentsline {section}{\numberline {3.3}Practical Approach}{13}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Implementation Details}{13}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Experimental Setup}{14}{subsection.3.3.2}%
-\contentsline {chapter}{\numberline {4}Results}{15}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Exploratory Analysis of the Environment}{15}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Patterns in the Training Data}{15}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Discretization}{15}{subsection.4.1.2}%
-\contentsline {section}{\numberline {4.2}Hyperparameter Tuning}{15}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Comparison of different algorithms}{16}{section.4.3}%
-\contentsline {chapter}{\numberline {5}Discussion and Outlook}{17}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{19}{chapter.6}%
-\contentsline {chapter}{\numberline {A}Further Tables and Figures}{21}{appendix.A}%
-\contentsline {chapter}{Bibliography}{23}{table.caption.55}%
+\contentsline {section}{\numberline {2.1}The Electrical Grid and Flexibility}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Demand Response}{8}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Reinforcement Learning}{9}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Flexibility (/Demand Response)}{10}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Demand Response}{11}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Reinforcement Learning}{11}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Fundamentals: Markov Decision Process}{11}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Reinforcement Learning}{12}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}Uncertainty in Reinforcement Learning}{13}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Methods and Approach}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Uncertainty-Aware Deep Q-Network}{16}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Environment}{16}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Data}{16}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Environment Details}{17}{subsection.3.2.2}%
+\contentsline {subsubsection}{Observation Space}{17}{section*.46}%
+\contentsline {subsubsection}{Action Space}{17}{section*.48}%
+\contentsline {subsubsection}{Reward Function}{17}{section*.49}%
+\contentsline {subsection}{\numberline {3.2.3}Implementation Details}{18}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Experiments}{18}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Baseline Rule-Based-Controller}{18}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Discretization}{20}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Hyperparameter Tuning}{20}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Comparison of Tuned Algorithms}{21}{subsection.3.3.4}%
+\contentsline {chapter}{\numberline {4}Results}{23}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Rule-Based Controller}{23}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Discretization}{23}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Hyperparameter Tuning}{23}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Comparison of Tuned Algorithms}{24}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Discussion and Outlook}{29}{chapter.5}%
+\contentsline {subsubsection}{Known Limitations of the RL environment}{30}{section*.64}%
+\contentsline {chapter}{\numberline {6}Conclusion}{31}{chapter.6}%
+\contentsline {chapter}{Bibliography}{33}{section*.65}%

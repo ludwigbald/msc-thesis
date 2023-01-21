@@ -44,3 +44,31 @@ Outlook can become an extra chapter.
     - Application in a real life system
     - 
 }
+
+\todo{mention that e-greedy epsilon was not tuned, but it definitely should have been!}
+- Tuning: Initialization might have been different for different algorithms
+
+- What would a good setting for the risk-aversion parameter even be?
+
+\subsubsection{Known Limitations of the RL environment} %TODO maybe this should be in Discussion only?
+- data: Weather forecasts are not real forecasts
+- energy model: Battery charging speed is symmetric
+- market model: No selling the electricity
+- Coordination goals: Were introduced later in the challenge, not used here.
+    - Only single building.
+
+CityLearn as a model for building-based demand response:
+- limitations: modelling errors/simplifications and how much they matter
+    - CityLearn was built to assess the general usefulness of RL for DR, not for my specific question.
+    - Battery efficiency
+    - Weather Forecasts are perfect oracles
+    - Only available action is battery charging/discharging.
+    - Other processes are assumed to be fixed (at least in 2022 challenge). Automatic Washing Machine starting.
+    - Human behavior can not be influenced (models humans as inflexible)
+    - Hourly control instead of continuous -> Makes perfect control more difficult
+    - Energy can not be sold to the grid, not even to the microgrid. -> unrealistic
+    - 2022 challenge: initially did not encourage cooperation.
+- Strengths: For what tasks is this environment adequate?
+    - Makes it possible to apply RL to DR without expensive computational overload*
+    - Test Multi-Agent behavior and cooperation in the DR context, as opposed to only single-building frameworks
+    - Enables comparison of different approaches as a benchmark

@@ -1,96 +1,17 @@
-\chapter{Approach}
+\chapter{Methods and Approach}
     \label{approach}
     
 \todo[inline]{
 Roughly 1/3 of thesis}
-\done[inline]{- restate the research question, and how I set out to answer it.
 
-
-Plan for this chapter:
-- introduce CityLearn and motivate the choice
-    - mention citylearn challenge.
-- Introduce and explain the UADQN algorithm and motivate the choice (other algorithms have been tried)
-- Explain Experiment Setup, High-level overview to implementation details each.
-    1. Hand-Engineered Benchmark agent and Discretization Experiment
-    2. Hyperparameter Tuning Setup:
-        - High-Level Overview of Experiments
-        - Design decisions of Tuning Experiment
-        - Implementation details (all the way down to hardware)
-    3. Test performance of Tuned Agents
-        - High-Level Overview of Experiment, motivated by story
-        - Investigate performance of Tuned Agents
-            - High-Level Overview of Investigation
-
+\todo[inline]{
+0. Short summary of the whole experiment.
+    - restate the research question, and how I set out to answer it.
+    - Mention goal, algorithms, methodology.
+    - Make the connection from work mentioned in background chapter.
 }
 
-
-
-
-
-In order to efficiently control electricity demand, one needs to act with foresight on uncertain information.
-I aim to find out whether existing approaches can benefit from explicitly modelling various uncertainties.
-In order to do so, I introduce CityLearn, a sample control environment and model its uncertainties. I model CityLearn from different perspectives.
-Drawing from the theoretical background, I then construct an uncertainty-aware RL model to solve CityLearn.
-I compare this uncertainty-aware model empirically against existing baselines.
-An uncertainty-aware model can have additional benefits, like risk-awareness. I explore these. 
-
-\todo[inline]{- Divide it into subquestions, and treat each subquestion separately.}
-
-\section{RL for Demand Response}
-- Let's focus in on Automated Demand Response in buildings:
-    - Mention incentive-based behavior-change models, but ML models can do better!
-    - Define the setting:
-        - Focus on buildings, they need lots of energy and the physical processes are comparably simple, standardized and predictable.
-        - Ignore industrial DR programs.
-        - decentralized (why?)
-- What is the state of the art for Automated Demand Response?
-- How else can we implement Automated DR?
-
-
-- Introduce CityLearn and alternatives
-
-
-\subsection{CityLearn: Applying RL for Demand Response}
-\todo[inline]{This section of the approach/background introduces the CityLearn Framework, so I can later mention it. It motivates the choice while highlighting alternative options. It introduces the data, modelling limitations and setting, but not the exact experimental setup.}
-
-CityLearn as a model for building-based demand response:
-    - Model description (data, available observations and actions, rationale)
-    - Success measures, cost function design
-    - CityLearn challenge
-    - limitations: modelling errors/simplifications and how much they matter
-        - CityLearn was built to assess the general usefulness of RL for DR, not for my specific question.
-        - Battery efficiency
-        - Weather Forecasts are perfect oracles
-        - Only available action is battery charging/discharging.
-        - Other processes are assumed to be fixed (at least in 2022 challenge). Automatic Washing Machine starting.
-        - Human behavior can not be influenced (models humans as inflexible)
-        - Hourly control instead of continuous -> Makes perfect control more difficult
-        - Energy can not be sold to the grid, not even to the microgrid. -> unrealistic
-        - 2022 challenge: initially did not encourage cooperation.
-    - Strengths: For what tasks is this environment adequate?
-        - Makes it possible to apply RL to DR without expensive computational overload*
-        - Test Multi-Agent behavior and cooperation in the DR context, as opposed to only single-building frameworks
-        - Enables comparison of different approaches as a benchmark
-    - Formal treatment of the CityLearn environment
-        - Why? What kind of formal treatment?
-    
-Alternatives to CityLearn
-    
-
-
-\section{Theoretical approach}
-\subsection{Setting the scene}
-\todo[inline]{- start with a theoretical approach:
-    - formal model of the environment,}
-In order to develop our uncertainty-aware approach to demand side management, we need to have a good understanding of the information environment.
-Let's formalize all relevant goals, available information and uncertainties.
-
-The idea of Demand Side Management was introduced to enable a more efficient usage of the grid.
-Depending on who implements Demand Side Management, different incentives and information infrastructure might evolve.
-In our model of demand response, consumers themselves are empowered to make decisions about their electricity demand.
-
-
-\todo[inline]{    - !!! where does uncertainty come from in CityLearn !!!,}
+\todo[inline]{    - !!! where does uncertainty come from in CityLearn !!!,
 - forecasting problems:
     - uncertainty about future occupant behavior (electricity demand)
     - uncertainty about future solar power production (weather forecasts)
@@ -105,43 +26,201 @@ In our model of demand response, consumers themselves are empowered to make deci
     - the observed reward might not be the actual desired reward ???
     
 Which uncertainties need to be specially treated?
-
+}
 \todo[inline]{What advantages would an uncertainty-aware strategy have?}
 - better risk management (possibly)
 - better performance (possibly)
 - better interpretability and robustness (possibly)
 
+\section{Uncertainty-Aware Deep Q-Network} % the new method I want to evaluate. Maybe this should be in the background section too!
+\todo[inline]{
+1. Introduce and explain UA-DQN
+    - High-level idea, and significance
+        - Very good performance in original paper
+        - With energy, you need to make risk-aware decisions
+    - Explain idea, compared to DQN
+        - Start with Learning the Distribution instead of Q-Values
+        - There are two uncertainties: aleatoric and epistemic.
+            - explain their significance
+        - How to estimate uncertainties
+        - How does action selection work?
+        - Explain algorithm parameters:
+            - "Risk aversion" exposes the exploration vs exploitation dilemma directly
+    - Implementation Details:
+        - Implementation taken from the original paper
+            - Mention Network size
+            - Weight Scale changed
+            - Initialization fixed
+        - Mention all tricks used by the algorithm
+            - replay buffer etc.
+}
 
-\subsection{Developing the approach}
-\todo[inline]{    - developing the algorithm (this is important. Maybe it includes some actual theoretical work and insight!),}
-\todo[inline]{        - build off approaches that are cited in background.}
-\todo[inline]{    - explain and motivate decisions.}
+\section{Environment}
+The Reinforcement Learning environment used by the experiments in this thesis is based on the 2022 CityLearn Challenge.\todo{cite}
+The environment provides a simulation of building energy systems, along with hourly data on electricity price, usage, solar production and weather data.
+The task is to control the storage and release of electricity in an electrical battery, with the objective of jointly reducing total per-building cost and carbon emissions.
+In contrast to the complete challenge setup, the experiments described in this thesis only use one building.
 
-\section{Practical Approach}
+The simulation framework used by both the challenge and this thesis is CityLearn \cite{vazquez-canteli2019CityLearnV1OpenAI}.
+
+\subsection{Data}
+The Dataset provided for the 2022 CityLearn challenge setup contains a year of hourly observations of a number of variables that describe the energy system of a building.
+At it's core, it supplies real-world per-building measurements of electricity use and photovoltaic solar power generation from five model buildings set up by the Electric Power Research Institute (EPRI) in Fontana, California as part of the research described in \cite{narayanamurthyGridIntegrationZero}.
+These are coupled with weather variables (Outdoor Temperature, Relative Humidity, Diffuse and Direct Solar Radiation).
+Future weather data is also provided as part of the data, with an offset of 6, 12 and 24 hours into the future.
+The data also contains carbon intensity and price of electricity provided by the grid.
+Time variables included are hour of the day, day of the week, month and whether there is a holiday.
+The source for the non-building data is unfortunately not given by the challenge organizers.
+
+\todo[inline]{
+- Description: How does the data look? Show graphs, or reference graphs in appendix.
+
+- Maybe: show a sample week of building data
+- Maybe: show a sample week of weather and CO2 data
+- Maybe: show seasonal variations
+}
+\subsection{Environment Details}
+\subsubsection{Observation Space}
+For this research, I make available a subset of the provided dimensions, given in table \ref{tab:observations}. Observations are dynamically normalized to zero mean and unit variance.
+
+\begin{table}[h]
+    \caption{The observation space available in the experiments} \label{tab:observations}
+    \centering
+    \begin{tabular}{l|c}
+        Variable & Unit \\ \hline
+        Hour & 1-hot encoding 0-24 \\
+        Direct Solar Irradiance (predicted 6h) & $W/m^2$ \\
+        Carbon Intensity & $kg/kWh$ \\
+        Building Electric Load & $kW$\\
+        Building Solar Generation & $kW$\\
+        Building Battery State of Charge & $kWh$\\
+    \end{tabular}
+\end{table}
+
+\subsubsection{Action Space}
+The action space provided by CityLearn is the continuous real interval $[-1,1]$, where negative actions are an attempt to discharge, and positive actions are an attempt to charge the battery.
+The action is scaled in units of the battery's capacity, so -1 means an attempt to discharge the whole battery.
+
+The actual resulting charging and discharging speeds are limited by CityLearn's energy model and depend on the battery's state of charge.
+
+The studied Reinforcement Learning algorithms require a discrete action space.
+I discretize the action space into a number of discrete actions. The number of discrete actions is determined with the experiment described in section \ref{sec:discretization}.
+
+\subsubsection{Reward Function}
+The reward function is designed to match the initial challenge objective as closely as possible.
+The per-building reward at time step $t$ is given by
+$$r_t = - \frac{\text{cost}_t}{\text{cost}_\text{no battery total}}
+    - \frac{\text{carbon emissions}_t}{\text{carbon emissions}_\text{no battery total}} \cdot 8760,$$
+where $\text{cost}_\text{no battery total}$ and $\text{carbon emissions}_\text{no battery total}$ are the total dollar cost and carbon emissions observed over one year in a control situation where the battery is never used.
+The reward is always negative.
+
 \subsection{Implementation Details}
-\todo[inline]{- high-level overview of the practical approach and setup}
-- describe hand-engineered strategy
+During the 2022 CityLearn Challenge, I contributed to the CityLearn environment.
+I found and proposed a fix for an implementation error that meant that the environment would recompute the entire episode history at every time step $t$.
+My fix\footnote{\url{https://github.com/intelligent-environments-lab/CityLearn/pull/23}} instead reuses the result of the preceding time step $t-1$, which changes the per-step complexity from $O(t^2)$ to $O(1)$, roughly leading to a 100x-speedup over the course of an episode.
+I also contributed to finding a bug\footnote{\url{https://github.com/intelligent-environments-lab/CityLearn/issues/37}} in the battery model.
+These efforts were rewarded with the Community Contribution Prize.
 
-- Train one single agent that works for all buildings independently
+The software environment for all experiments uses Python 3.10.9, PyTorch 1.13.0, openAI gym 0.24.1, and CityLearn 1.3.6.
 
-Adaptations from the Risk and Uncertainty Paper algorithm:
-- make it work with continuous action space (discretize)
-- make it work for the single-agent case.
+The hardware used was a 2020 Macbook Air M1 for the discretization pre-experiment. Tuning and subsequent evaluation runs used the ML-Cloud\todo{how do I describe this?} Slurm cluster, using CUDA on a single Nvidia GTX 2080 GPU per run. The Slurm job scheduling file is included in the attached code repository.
 
-\todo[inline]{- describe implementation details
-    - (of my algorithm and of CityLearn)
-    - I found/fixed CityLearn Bugs
-    - I engineered the Reward Function}
-    
-    
-\subsection{Experimental Setup}
-\todo[inline]{- Design/select an algorithm that is fit for the task. Run the experiment and investigate results (in separate chapter)}
+\section{Experiments} % How I plan to evaluate it
+\todo[inline]{
+TODO:
+2. Explain the experiment details
+    - Experiment goal: Test UA-DQN against DQN and my baseline in this environment.
+    - Metrics: Number of Episodes until convergence, performance at convergence.
+    - introduce challenge setup and data split used in this experiment
+}
+\subsection{Baseline Rule-Based-Controller}
+In order to be able to evaluate the performance of the Reinforcement Learning agent, I establish a rule-based controller as baseline.
+Using insights gained from exploratory data analysis, I construct a simple control policy with the goal of minimizing dollar cost.
 
-- Data?
-    - CityLearn.
+The basis of the policy is that prices vary predictably.
+Throughout every day, electricity price is at one of two levels.
+From 16:00 to 20:00, it is substantially higher than during the rest of the day.
+In parts of the year, the price level also varies between different days of the week, but the daily pattern still applies.
+Since battery energy losses are very low, it is therefore worth it to buy and store electricity while it's cheap, and avoid having to buy expensive electricity in the afternoon.
 
-- I want to test the performance of different strategies:
-    - doing nothing as baseline
-    - basic rule-based controller as improved baseline
-    - various risk-aware strategies
+In addition to the electrical grid, the agent also has access to a free, but less predictable source of electricity: solar power.
+The environment does not allow the agent to sell electricity for a profit.
+This means any produced solar electricity should either be directly used or stored, since any excess is simply wasted. Directly using solar electricity is more efficient than storing and releasing it at a later time.
+Putting these basic ideas together, I arrive at a policy that first uses available solar electricity to meet demand.
+It always stores excess solar electricity, and additionally buys just enough cheap electricity in order to fill up the battery for the more expensive afternoon.
+
+This strategy leaves open one question:
+When exactly should the battery be charged with electricity from the grid?
+If it is filled too early, the agent is not able to store excess solar electricity generated during the day.
+If battery charging starts too late, there is not enough time left to fully charge the battery. Therefore, the battery is charged as late as possible.
+Lastly, if the battery has remaining charge after the period of high prices, the leftover charge is used as needed, ensuring the battery is free in the morning to store any excess solar power.
+The final policy is described in algorithm \ref{alg:rbc}.
+
+\begin{algorithm}[h]
+    \begin{algorithmic}
+        \State $a \gets (\text{solar} - \text{load})/6.4$ \Comment{Difference scaled to units of battery capacity}
+        \If{$11 \leq \text{hour} \leq 15$}
+            \State $a \gets \max(0.24, a)$ \Comment{Slowly charge battery}
+        \EndIf
+        \Ensure $-1 \leq a \leq +1$ \\
+        \Return $a$
+    \end{algorithmic}
+    \caption{The Rule-Based Controller's Policy always stores excess solar power. Additionally, it tries to charge the battery. After that, it tries to satisfy demand from the battery.}
+    \label{alg:rbc}
+\end{algorithm}
+
+This hand-engineered policy is not perfectly optimized. There are certain insights it does not make use of. It does not directly minimize carbon emissions, though the overall reduced demand for grid electricity leads to a reduction in emissions.
+The policy also does not incorporate the change in price between weekdays.
+There are some days on which there is so little excess demand during the day that it would not be worth charging the battery.
+Finally, the policy does not make use of weather forecasts, which predict solar electricity production.
+
+Overall, the policy serves as a useful benchmark of what a thoughtful human can do when knowing some of the system's dynamics.
+
+\subsection{Discretization} \label{sec:discretization}
+UA-DQN and DQN require a discrete action space.
+In CityLearn, the action is a continuous number between -1 (releasing energy) and +1(storing energy).
+The goal of this pre-experiment is to determine a suitable subdivision of the continuous action space.
+A larger discrete action space means the algorithm learns slower, but a smaller discrete action space means the algorithm can't act as precisely, capping the possible performance.
+The goal therefore is to find the smallest number of subdivisions that does not incur a significant performance penalty.
+
+In order to measure the importance of different subdivisions, the hand-engineered RBC is run on versions of the environment with differently discretized action spaces.
+Its performance on the discretized action spaces is then contrasted with its performance on the continuous case.
+This experiment uses the full 2022 CityLearn challenge public dataset of 5 buildings and one year.
+
+\subsection{Hyperparameter Tuning}
+All tested Deep Reinforcement Learning agents and the optimizer, Adam, expose hyperparameters that need to be tuned for optimal performance.
+Adam's tuned hyperparameters are the learning rate and the parameter $\epsilon$.
+I also tuned the batch size and the update frequency of the target networks.
+All other hyperparameters I set to default values as noted in table \ref{tab:tuning}.
+
+\begin{table}
+    \centering
+    \caption{Hyperparameters, their tuning ranges or untuned values.}
+    \label{tab:tuning}
+    \begin{tabular}{l|c}
+        Hyperparameter & Value \\ \hline
+        Learning Rate  & Tuned:  $(0.1, 0.07, 0.03, 0.01, \dots, 0.00001)$                               \\
+        Batch Size     & Tuned: $(1,2,4,8,\dots ,256)$                             \\
+        Adam's $\epsilon$ & Tuned: $(1\times 10^{-1}, 1\times 10^{-2}, \dots, 1\times 10^{-9})$                           \\
+        \makecell[l]{Target Network \\ Update Frequency} & Tuned: $(4, 8, 16, 32)$ \\ \hline
+        Replay Buffer Size & 10,000 \\
+        Discount Rate $\gamma$ & 0.99 \\ %should this be here? TODO
+        Network Weight scale & $\sqrt{2}$ \\
+        $\epsilon$-greedy DQN: $\epsilon$ & Decay from 0.1 to 0.02 over 1,000 steps \\
+        UA-DQN: Quantile Huber Loss $\kappa$ & 10 \\
+        UA-DQN: aleatoric factor & 0 \\
+        UA-DQN: epistemic factor & 1 \\
+    \end{tabular}
+\end{table}
+
+The process of tuning was to randomly sample 200 combinations of hyperparameters from the sets given in table \ref{tab:tuning} for each DQN variant, and 100 for UA-DQN.
+The DQN variants ran for 100 episodes, UA-DQN ran for 50 episodes.
+All runs used the same random seed.
+Data used for this experiment was the whole year of building 1.
+
+The performance measure for this experiment was the collected total reward in the last episode.
+
+\subsection{Comparison of Tuned Algorithms}
+For each algorithm, I selected the best run of hyperparameters and repeated the experiment with 10 different random seeds, all else equal.
+
 
