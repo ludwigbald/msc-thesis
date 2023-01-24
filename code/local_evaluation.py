@@ -72,7 +72,7 @@ def evaluate():
 
             if done:
                 episodes_completed += 1
-                metrics_t = env.evaluate_1st_building()
+                metrics_t = env.evaluate()
                 metrics = {"price_cost": metrics_t[0], "emmision_cost": metrics_t[1]}
                 if np.any(np.isnan(metrics_t)):
                     raise ValueError("Episode metrics are nan, please contant organizers")

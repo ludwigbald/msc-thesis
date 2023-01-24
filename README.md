@@ -1,12 +1,12 @@
 # Uncertainty-Aware Reinforcement Learning for Demand Response in Energy Systems
 _M.Sc. thesis by Ludwig Bald_
+
 Supervised by [Nicole Ludwig](https://www.mlsustainableenergy.com/), 2022-2023 at Uni Tübingen, Germany
 
+- [📖 Thesis (pdf)](thesis/paper.pdf)
+- [💻 Slides (pdf)](thesis-talk.pdf)
+
 This repository contains all code, experiments, results, figures, and necessary sources for my master's thesis.
-
-[📖 Thesis (pdf)](thesis/paper.pdf)
-[💻 Slides (pdf)](thesis-talk.pdf)
-
 It contains modified data and code from the [2022 CityLearn challenge](https://www.aicrowd.com/challenges/neurips-2022-citylearn-challenge) and from the research paper [Estimating Risk and Uncertainty in Deep Reinforcement Learning](https://arxiv.org/abs/1905.09638), which proposes the UA-DQN algorithm.
 
 In order to run an experiment, you need to install the packages from `requirements.txt`.
