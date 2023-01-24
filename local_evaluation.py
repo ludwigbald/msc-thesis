@@ -72,7 +72,7 @@ def evaluate():
 
             if done:
                 episodes_completed += 1
-                metrics_t = env.evaluate()
+                metrics_t = env.evaluate_1st_building()
                 metrics = {"price_cost": metrics_t[0], "emmision_cost": metrics_t[1]}
                 if np.any(np.isnan(metrics_t)):
                     raise ValueError("Episode metrics are nan, please contant organizers")
@@ -111,6 +111,7 @@ def evaluate():
         print("Average Price Cost:", np.mean([e['price_cost'] for e in episode_metrics]))
         print("Average Emmision Cost:", np.mean([e['emmision_cost'] for e in episode_metrics]))
         print("Average of both costs:", (np.mean([e['price_cost'] for e in episode_metrics]) + np.mean([e['emmision_cost'] for e in episode_metrics]))/2)
+        print([e['price_cost'] for e in episode_metrics])
     print(f"Total time taken by agent: {agent_time_elapsed}s")
     
 

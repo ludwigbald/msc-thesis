@@ -1,0 +1,95 @@
+{'agent': 'UADQN', 'action_selection': 'softmax', 'seed': 1, 'episodes': 50, 'data_path': 'data/citylearn_challenge_2022_phase_1', 'dry_run': False, 'n_discrete': 9, 'update_target': 8, 'lr': 0.07, 'batch_size': 64, 'adam_epsilon': 1e-10, 'epsilon_final': 0.02, 'run_id': 441}
+{'Notes': 'This is a tuning run, executed on a single building.',
+ 'adam_epsilon': 1e-10,
+ 'aleatoric_factor': 0,
+ 'biased_aleatoric': False,
+ 'env': '<NormalizeObservation<OneHotHour<DiscreteSingle<CityLearnEnv '
+        'instance>>>>',
+ 'epistemic_factor': 1,
+ 'gamma': 0.99,
+ 'learning_rate': 0.07,
+ 'minibatch_size': 64,
+ 'n_quantiles': 20,
+ 'network': 'MLP(\n'
+            '  (layers): Sequential(\n'
+            '    (0): Linear(in_features=29, out_features=128, bias=True)\n'
+            '    (1): ReLU()\n'
+            '    (2): Linear(in_features=128, out_features=128, bias=True)\n'
+            '    (3): ReLU()\n'
+            '    (4): Linear(in_features=128, out_features=180, bias=True)\n'
+            '  )\n'
+            ')',
+ 'noise_scale': 1,
+ 'replay_buffer_size': 10000,
+ 'replay_start_size': 64,
+ 'seed': 1,
+ 'train_steps': 438000,
+ 'update_frequency': 1,
+ 'update_target_frequency': 8,
+ 'weight_scale': 1.4142135623730951}
+Timestep : 8758, score : -14741.054383206923, Time : 70.749 s
+Timestep : 17517, score : -15088.624464239052, Time : 70.335 s
+Timestep : 26276, score : -14410.325131957143, Time : 70.886 s
+Timestep : 35035, score : -13418.384732368897, Time : 72.508 s
+Timestep : 43794, score : -13473.439633947753, Time : 73.386 s
+Timestep : 52553, score : -13632.889978540348, Time : 73.505 s
+Timestep : 61312, score : -13696.723756551059, Time : 72.867 s
+Timestep : 70071, score : -13865.31162931789, Time : 72.554 s
+Timestep : 78830, score : -14582.42882944402, Time : 72.474 s
+Timestep : 87589, score : -13985.539261684127, Time : 72.561 s
+Timestep : 96348, score : -15345.351324884992, Time : 72.663 s
+Timestep : 105107, score : -16359.248041837942, Time : 72.685 s
+Timestep : 113866, score : -15928.034722564, Time : 72.592 s
+Timestep : 122625, score : -15890.030955993294, Time : 72.619 s
+Timestep : 131384, score : -15730.288175345282, Time : 72.614 s
+Timestep : 140143, score : -15158.295190695826, Time : 72.606 s
+Timestep : 148902, score : -15049.875095642594, Time : 72.904 s
+Timestep : 157661, score : -14176.9125953787, Time : 72.948 s
+Timestep : 166420, score : -13325.047043869068, Time : 73.028 s
+Timestep : 175179, score : -13492.749955505205, Time : 74.541 s
+Timestep : 183938, score : -13613.695586147573, Time : 74.532 s
+Timestep : 192697, score : -13208.02294372741, Time : 72.877 s
+Timestep : 201456, score : -13093.895269061817, Time : 73.614 s
+Timestep : 210215, score : -12537.33154537827, Time : 72.842 s
+Timestep : 218974, score : -12677.21967678552, Time : 72.454 s
+Timestep : 227733, score : -13566.167429647481, Time : 72.42 s
+Timestep : 236492, score : -12762.370697396764, Time : 72.388 s
+Timestep : 245251, score : -12723.075526423083, Time : 72.47 s
+Timestep : 254010, score : -12155.590321683165, Time : 74.542 s
+Timestep : 262769, score : -12788.993491463945, Time : 73.281 s
+Timestep : 271528, score : -13313.556404249583, Time : 73.295 s
+Timestep : 280287, score : -14469.928925774177, Time : 73.477 s
+Timestep : 289046, score : -13718.190051136655, Time : 74.451 s
+Timestep : 297805, score : -12879.532847299037, Time : 73.554 s
+Timestep : 306564, score : -13573.99155195996, Time : 72.403 s
+Timestep : 315323, score : -12316.901054572925, Time : 72.403 s
+Timestep : 324082, score : -13811.547503316222, Time : 72.424 s
+Timestep : 332841, score : -14245.096124022064, Time : 72.773 s
+Timestep : 341600, score : -13555.324211318395, Time : 72.56 s
+Timestep : 350359, score : -12365.825427430478, Time : 72.454 s
+Timestep : 359118, score : -12908.558460334214, Time : 72.403 s
+Timestep : 367877, score : -13224.499714958903, Time : 72.482 s
+Timestep : 376636, score : -11018.722995912685, Time : 72.443 s
+Timestep : 385395, score : -10413.391338754518, Time : 72.4 s
+Timestep : 394154, score : -12299.415102817147, Time : 72.449 s
+Timestep : 402913, score : -13002.663796430294, Time : 72.459 s
+Timestep : 411672, score : -12084.640543204223, Time : 72.23 s
+Timestep : 420431, score : -12165.823794487354, Time : 71.705 s
+Timestep : 429190, score : -11409.821108726159, Time : 72.414 s
+Timestep : 437949, score : -11296.649725859665, Time : 72.568 s
+Starting local evaluation
+Num Steps: 1000, Num episodes: 0
+Num Steps: 2000, Num episodes: 0
+Num Steps: 3000, Num episodes: 0
+Num Steps: 4000, Num episodes: 0
+Num Steps: 5000, Num episodes: 0
+Num Steps: 6000, Num episodes: 0
+Num Steps: 7000, Num episodes: 0
+Num Steps: 8000, Num episodes: 0
+Episode complete: 1 | Latest episode metrics: {'price_cost': 1.2682890233507202, 'emmision_cost': 1.293409475386253}
+[-0.57497429] -0.5749742898955356
+Average Price Cost: 1.2682890233507202
+Average Emmision Cost: 1.293409475386253
+Average of both costs: 1.2808492493684867
+Total time taken by agent: 11.430038562277332s
+DONE!
