@@ -5,11 +5,17 @@
 Roughly 1/3 of thesis}
 
 \todo[inline]{
-0. Short summary of the whole experiment.
+Opening paragraph: Short summary of the whole approach.
     - restate the research question, and how I set out to answer it.
     - Mention goal, algorithms, methodology.
     - Make the connection from work mentioned in background chapter.
 }
+This is a short paragraph that outlines my approach.
+It also talks more about motivation.
+The goal is:
+
+- Follow the analysis in the UA-DQN paper to validate the algorithm on a real-data task
+
 
 \todo[inline]{    - !!! where does uncertainty come from in CityLearn !!!,
 - forecasting problems:
@@ -23,37 +29,17 @@ Roughly 1/3 of thesis}
 - reward uncertainty:
     - uncertainty about the consequences of actions
     - the observed reward might be imprecise
-    - the observed reward might not be the actual desired reward ???
+    - the observed reward might not be the intended reward ???
     
 Which uncertainties need to be specially treated?
 }
-\todo[inline]{What advantages would an uncertainty-aware strategy have?}
+\todo[inline]{Motivation: What advantages would an uncertainty-aware strategy have?
 - better risk management (possibly)
 - better performance (possibly)
 - better interpretability and robustness (possibly)
-
-\section{Uncertainty-Aware Deep Q-Network} % the new method I want to evaluate. Maybe this should be in the background section too!
-\todo[inline]{
-1. Introduce and explain UA-DQN
-    - High-level idea, and significance
-        - Very good performance in original paper
-        - With energy, you need to make risk-aware decisions
-    - Explain idea, compared to DQN
-        - Start with Learning the Distribution instead of Q-Values
-        - There are two uncertainties: aleatoric and epistemic.
-            - explain their significance
-        - How to estimate uncertainties
-        - How does action selection work?
-        - Explain algorithm parameters:
-            - "Risk aversion" exposes the exploration vs exploitation dilemma directly
-    - Implementation Details:
-        - Implementation taken from the original paper
-            - Mention Network size
-            - Weight Scale changed
-            - Initialization fixed
-        - Mention all tricks used by the algorithm
-            - replay buffer etc.
 }
+
+
 
 \section{Environment}
 The Reinforcement Learning environment used by the experiments in this thesis is based on the 2022 CityLearn Challenge.\todo{cite}
@@ -69,7 +55,7 @@ At it's core, it supplies real-world per-building measurements of electricity us
 These are coupled with weather variables (Outdoor Temperature, Relative Humidity, Diffuse and Direct Solar Radiation).
 Future weather data is also provided as part of the data, with an offset of 6, 12 and 24 hours into the future.
 The data also contains carbon intensity and price of electricity provided by the grid.
-Time variables included are hour of the day, day of the week, month and whether there is a holiday.
+Time variables included are hour of the day, day of the week and month.
 The source for the non-building data is unfortunately not given by the challenge organizers.
 
 \todo[inline]{
@@ -84,7 +70,7 @@ The source for the non-building data is unfortunately not given by the challenge
 For this research, I make available a subset of the provided dimensions, given in table \ref{tab:observations}. Observations are dynamically normalized to zero mean and unit variance.
 
 \begin{table}[h]
-    \caption{The observation space available in the experiments} \label{tab:observations}
+    \caption{The observed variables available in the experiments. Observations are dynamically normalized to the same scale.} \label{tab:observations}
     \centering
     \begin{tabular}{l|c}
         Variable & Unit \\ \hline
@@ -125,14 +111,46 @@ The software environment for all experiments uses Python 3.10.9, PyTorch 1.13.0,
 
 The hardware used was a 2020 Macbook Air M1 for the discretization pre-experiment. Tuning and subsequent evaluation runs used the ML-Cloud\todo{how do I describe this?} Slurm cluster, using CUDA on a single Nvidia GTX 2080 GPU per run. The Slurm job scheduling file is included in the attached code repository.
 
-\section{Experiments} % How I plan to evaluate it
-\todo[inline]{
-TODO:
-2. Explain the experiment details
-    - Experiment goal: Test UA-DQN against DQN and my baseline in this environment.
-    - Metrics: Number of Episodes until convergence, performance at convergence.
-    - introduce challenge setup and data split used in this experiment
-}
+
+\section{Algorithm}
+
+\subsection{Uncertainty-Aware DQN}
+1. Mention UA-DQN, no need to explain it here again in detail
+    - Explain why I choose it:
+        - Very good performance in original paper
+        - With energy, you need to make risk-aware decisions under uncertainty
+    - Testing against DQN
+    - risk neutral setting
+
+\subsection{DQN}
+2. DQN variants
+    - based on the UA-DQN paper
+    - e-greedy
+    - Softmax for a different take on action selection (TODO cite)
+
+    - Mention all tricks used by the algorithm
+        - replay buffer
+
+    \cite{cruz2018ActionSelectionMethods} compare different action selection strategies, some of which dynamically adapt \todo{cite one of them}
+
+\subsection{Implementation Details}
+- Implementation Details:
+    - shared implementation details:
+        - Implementation taken from the original paper
+        - Mention Network size
+        - Initialization unified
+        - Weight Scale changed cite!
+        - Adam optimizer
+    - UADQN implementation details
+        - Loss function
+    - DQN implementation details
+        - Loss function
+        - e-greedy and softmax
+    - Logging
+    - Exposing Hyperparameters
+
+
+
 \subsection{Baseline Rule-Based-Controller}
 In order to be able to evaluate the performance of the Reinforcement Learning agent, I establish a rule-based controller as baseline.
 Using insights gained from exploratory data analysis, I construct a simple control policy with the goal of minimizing dollar cost.
@@ -148,6 +166,8 @@ The environment does not allow the agent to sell electricity for a profit.
 This means any produced solar electricity should either be directly used or stored, since any excess is simply wasted. Directly using solar electricity is more efficient than storing and releasing it at a later time.
 Putting these basic ideas together, I arrive at a policy that first uses available solar electricity to meet demand.
 It always stores excess solar electricity, and additionally buys just enough cheap electricity in order to fill up the battery for the more expensive afternoon.
+
+Because the policy has to make a decision based on the past hour's solar production and electricity consumption, it simply assumes there's no change and tries to store the amount of excess electricity observed before.
 
 This strategy leaves open one question:
 When exactly should the battery be charged with electricity from the grid?
@@ -165,18 +185,27 @@ The final policy is described in algorithm \ref{alg:rbc}.
         \Ensure $-1 \leq a \leq +1$ \\
         \Return $a$
     \end{algorithmic}
-    \caption{The Rule-Based Controller's Policy always stores excess solar power. Additionally, it tries to charge the battery. After that, it tries to satisfy demand from the battery.}
+    \caption{The Rule-Based Controller's Policy always stores observed excess solar power. Additionally, it ensures to charge the battery in the afternoon. After that, it tries to satisfy demand from the battery.}
     \label{alg:rbc}
 \end{algorithm}
 
-This hand-engineered policy is not perfectly optimized. There are certain insights it does not make use of. It does not directly minimize carbon emissions, though the overall reduced demand for grid electricity leads to a reduction in emissions.
+This hand-engineered policy is not perfectly optimized.
+There are certain insights it does not make use of.
+It does not directly minimize carbon emissions, though the overall reduced demand for grid electricity leads to a reduction in emissions.
 The policy also does not incorporate the change in price between weekdays.
 There are some days on which there is so little excess demand during the day that it would not be worth charging the battery.
 Finally, the policy does not make use of weather forecasts, which predict solar electricity production.
 
 Overall, the policy serves as a useful benchmark of what a thoughtful human can do when knowing some of the system's dynamics.
 
-\subsection{Discretization} \label{sec:discretization}
+
+\section{Experiments} % How I plan to evaluate it
+\todo[inline]{
+TODO:
+Explain in more detail: What am I measuring, how will I evaluate the results?
+}
+
+\subsection{Establishing a Baseline} \label{sec:discretization}
 UA-DQN and DQN require a discrete action space.
 In CityLearn, the action is a continuous number between -1 (releasing energy) and +1(storing energy).
 The goal of this pre-experiment is to determine a suitable subdivision of the continuous action space.
@@ -186,6 +215,8 @@ The goal therefore is to find the smallest number of subdivisions that does not 
 In order to measure the importance of different subdivisions, the hand-engineered RBC is run on versions of the environment with differently discretized action spaces.
 Its performance on the discretized action spaces is then contrasted with its performance on the continuous case.
 This experiment uses the full 2022 CityLearn challenge public dataset of 5 buildings and one year.
+
+\todo[inline]{How do I evaluate the rule-based policy?}
 
 \subsection{Hyperparameter Tuning}
 All tested Deep Reinforcement Learning agents and the optimizer, Adam, expose hyperparameters that need to be tuned for optimal performance.
@@ -221,6 +252,14 @@ Data used for this experiment was the whole year of building 1.
 The performance measure for this experiment was the collected total reward in the last episode.
 
 \subsection{Comparison of Tuned Algorithms}
-For each algorithm, I selected the best run of hyperparameters and repeated the experiment with 10 different random seeds, all else equal.
+Finally, in order to evaluate algorithm performance, I 
+For each algorithm, I select the best combination of hyperparameters and repeat the experiment with 10 different random seeds.
+- why
+- setup: The exact same setup as before.
 
+- I measure:
+    - Average performance compared to the baseline
+    - Variance per algorithm.
+
+\todo[inline]{expand on this section!}
 

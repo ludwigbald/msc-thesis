@@ -2,7 +2,7 @@
 % Grundlagen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Background}
+\chapter{Background and related work}
   \todo[inline]{Give all the necessary background that is needed to justify and understand the problem and the approach.
   - comment on employed hardware and software
   - describe methods and techniques that build the basis of your work
@@ -84,7 +84,7 @@ As a result, the share of electricity powered by natural gas has risen along wit
 \begin{figure}
     \centering
     \includegraphics[width = \figurewidth]{figures/flexible_renewables.png}
-    \caption{Renewable electricity is intermittent and hard to predict precisely. As the share of renewable electricity increases, other sources of electricity need to respond flexibly to meet demand.}
+    \caption{Renewable electricity is intermittent and hard to predict precisely. As the share of renewable electricity increases, the electrical grid needs to respond flexibly to meet demand.}
     \label{fig:flexibility}
 \end{figure}
 
@@ -219,8 +219,10 @@ In reality, state transitions often depend on outside influences or are non-stat
 In complex problems, the desired behavior is not obvious. Therefore, designing the reward function is often non-trivial.
 
 \todo{Mention a few RL applications that can be used as examples}
+\todo{Mention exploration/exploitation-dilemma here}
 
 % 2. Towards DQN
+\subsection{Q-Learning}
 % - Value Learning
 Some environment states are preferable to others.
 Value Learning is a class of RL algorithms that builds on this intuition.
@@ -236,52 +238,102 @@ For the optimal policy $\pi_*$, the greedy policy induced by $q_{\pi_*}$ is $\pi
 For more detail on how the optimal policy can be approximated, please refer to \cite{sutton2018ReinforcementLearningIntroduction}.
 
 %explain (e-greedy) action selection
-To iteratively improve an initial Q-function, the greedy policy induced by it can be used to generate new trajectories to learn from.
-It intuitively serves as an approximation to $\pi_*$.
-However, a slight modification needs to be made: To make sure all states are visited, the $\epsilon$-greedy policy is used instead, which acts randomly with a small probability of $\epsilon$, and acts greedily otherwise.
-
-% - Deep Q-Learning
-\subsection{Deep Q-Networks}
-\cite{mnih2015HumanlevelControlDeep} propose the Deep Q-Network algorithm (DQN), which is able to learn and play many video games better than humans.
-DQN is a Q-Learning algorithm.
-It approximates the Q-function using a deep convolutional neural network, which is able to store complex information like video game dynamics.
-
-
-In order to arrive at an efficient algorithm that shows stable performance in practice, they employ additional tricks.
-Firstly, a replay buffer stores past trajectories
-
-- Experience Replay
-- Target Q-Network
-
-
-This progress stems mainly from the ability of neural networks to accurately model highly complex functions like environment dynamics.
-
+%explain Q-Learning
+A process that iteratively improves an initial Q-function is Q-Learning.
+Its basic idea is that the Q-function can induce a better greedy policy than the one with which it was generated.
+A Q-Learning step consists of taking an action $a$ in state $s$ according to the current greedy policy and performing a Bellman update on $q(s,a)$, using $\max_a{q(s',a)}$.
+However, a slight modification needs to be made: To make sure all possible trajectories are explored, the $\epsilon$-greedy policy is used instead, which acts randomly with a small probability of $\epsilon$, and acts greedily otherwise.
 
 \todo[inline]{
-    2. Related Work
-        1. Uncertainty-Aware Reinforcement Learning: Related Work
-            - Uncertainty-Aware Machine Learning Methods: Distributions instead of estimators
-                - Explicitly model input uncertainty.
-                    - Assume a distribution, model parameters
-                    - e.g. Discrete distribution, normal distribution, beta distribution, or general distribution parameterized by quantiles.
-                    - Example in RL: POMDP
-                    - Algorithms: Bayesian NN, Gaussian Processes, Variational Autoencoders (uncertainty about deep representation)
-                    - Advantages: More robust
-                    - Disadvantages: More expensive, need to model data generation process
-                - Explicitly model output uncertainty.
-                    - In classification: Confidence score (discrete distribution), class probabilities
-                    - In regression: Again, model distribution and parameters
-                    - Examples: Bayesian NN, Ensemble models, Distribution Learning, *UA-DQN*
-                    - Advantages: More trustworthy and more useful for risk-aware decision-making, more robust, can be more sample-efficient
-                    - Disadvantages: more expensive, more complex, less robust
-            - Examples of Uncertainty-aware RL applications:
-                - TODO
-        2. Reinforcement Learning for Consumer Building Demand Response
-            1. Mention Frameworks, available data, including CityLearn, real-life applications
-            2. Mention related work: applied algorithms and their results
-                - 
+    Focus less on the idea of value learning.
+    Instead, explain Tabular Q-Learning better
 }
 
+% - Deep Q-Learning
+\subsection{Deep Q-Network}
+\cite{mnih2015HumanlevelControlDeep} propose the Deep Q-Network algorithm (DQN), which is able to learn and play many video games better than humans.
+DQN is a Q-Learning algorithm that acts according to an $\epsilon$-greedy policy.
+It approximates the Q-function using a deep convolutional neural network, which is able to store complex information like video game dynamics.
+The deep Q-network is optimized during every optimization step using stochastic gradient descent.
+
+In order to arrive at a stable and efficient algorithm, DQN makes use of two notable modifications to standard online Q-Learning:
+The first one, Experience Replay, stores past trajectories in a replay buffer.
+During every optimization step, a minibatch of transitions $(s, a, r, s')$ is sampled from the replay buffer and used to compute the loss and gradient for the optimizer step.
+
+The second modification is the use of a separate target Q-network.
+The loss that is minimized is
+$$ ((R_j + \gamma \max_a{\hat{q}(s',a)}) - q(s,a))^2$$
+Instead of using the Q-network $q(s',a)$ as the target Q-value, DQN uses $\hat{q}(s',a)$.
+$hat{q}$ is a lagging copy of the Q-network that is updated after several optimization steps.
+This improves the stability of the algorithm.
+
+
+
+% Uncertainty, Exploration vs Exploitation
+\subsection{Uncertainty}
+\todo[inline]{
+    - Introduce epistemic and aleatoric Uncertainty and their significance for action selection.
+        - mathematically define them (variance of the Q estimator?)
+    - Talk about how DQN treats uncertainty. (With epsilon-decay)
+        - What does epsilon mean in terms of the uncertainties?
+}
+
+Reinforcement Learning algorithms need to solve the Exploration/Exploitation-Dilemma.
+When interacting with the environment, they need to balance between the value of gathering new information and the value of acting greedily according to their current knowledge.
+The $\epsilon$-greedy policy exposes the parameter $\epsilon$ as a direct way to control this trade off.
+Because the algorithm has the most to learn at the beginning, $\epsilon$ is commonly set to a high value in the beginning and then decayed over time.
+Most Reinforcement Learning algorithms don't provide an explicit measure of uncertainty, which could be used to dynamically adapt this practice to the environment at hand.
+
+% UA-DQN
+\subsection{Uncertainty-Aware Deep Q-Network} % the new method I want to evaluate.
+\todo[inline]{
+1. Introduce and explain UA-DQN
+    - Significance: Very good performance in original paper (cite), beating DQN by exploring better. How?
+    - Idea:
+        - Explore according to uncertainty estimates.
+        - Detangle epistemic and aleatoric uncertainty.
+    - Explain how it works, compared to DQN
+        - Start with Learning the Distribution instead of Q-Values
+        - How does policy evaluation happen? (Learning?)
+            - distribution is learned by a network, building on the author's prior work distributional RL.
+        - How does prediction happen? (Action Selection)
+            - There are two uncertainties: aleatoric and epistemic. (cite something here)
+                - explain their significance
+            - How to estimate uncertainties
+
+        - Explain algorithm parameters:
+            - "Risk aversion" exposes the exploration vs exploitation dilemma directly
+}
+
+\section{Reinforcement Learning for Building Demand Response}
+\todo[inline]{
+- Motivation: RL is a class of control algorithms that has been successfully applied to DR.
+- Why is building DR a particularly good fit for RL?
+- Mention prior work: When has RL been applied to building demand response?
+    - paper 1:
+    - paper 2:
+    - paper 3:
+
+    - (Mention related work: applied algorithms and their results)
+    - (Other Frameworks and available data, including CityLearn, real-life applications)
+}
+
+\subsection{CityLearn} % The basis for the environment.
+\todo[inline]{
+    1. Introduce and Explain CityLearn (cite)
+        - What is it?
+            - A simulation framework for constructing demand response environments for RL
+        - What are its main contributions?
+            - Provide an accessible entry point for RL researchers for DR (cite 2021 challenge paper)
+            - Validate the usefulness for RL methods
+            - Can use Real-World Data
+            - Limited application as Benchmark suite
+    2. CityLearn has previously been approached in a number of ways.
+        - paper 1
+        - paper 2
+        - paper 3
+}
+One particularly interesting framework for RL in demand response is CityLearn.
 
 
 
@@ -301,156 +353,86 @@ This progress stems mainly from the ability of neural networks to accurately mod
 
 
 
+% \todo[inline]{
+%     2. Related Work
+%         1. Uncertainty-Aware Reinforcement Learning: Related Work
+%             - Uncertainty-Aware Machine Learning Methods: Distributions instead of estimators
+%                 - Explicitly model input uncertainty.
+%                     - Assume a distribution, model parameters
+%                     - e.g. Discrete distribution, normal distribution, beta distribution, or general distribution parameterized by quantiles.
+%                     - Example in RL: POMDP
+%                     - Algorithms: Bayesian NN, Gaussian Processes, Variational Autoencoders (uncertainty about deep representation)
+%                     - Advantages: More robust
+%                     - Disadvantages: More expensive, need to model data generation process
+%                 - Explicitly model output uncertainty.
+%                     - In classification: Confidence score (discrete distribution), class probabilities
+%                     - In regression: Again, model distribution and parameters
+%                     - Examples: Bayesian NN, Ensemble models, Distribution Learning, *UA-DQN*
+%                     - Advantages: More trustworthy and more useful for risk-aware decision-making, more robust, can be more sample-efficient
+%                     - Disadvantages: more expensive, more complex, less robust
+%             - Examples of Uncertainty-aware RL applications:
+%                 - TODO
+% }
 
 
 
 
 
+% \clearpage
+% ------- Erster Entwurf below ------
 
 
+% \section{Uncertainty in Reinforcement Learning}
+% \todo[inline]{Introduce Uncertainty terms and formalisms from different perspectives. Then apply to RL.}
+% There is a rich body of work on uncertainty. Mathematical and statistical notions of uncertainty, perspectives from economics for decision making under uncertainty.
 
+% Notes:
 
+% - Motivation: Most information is uncertain to some extent. Making good decisions under uncertainty requires an awareness of the uncertainty.
+% - Uncertainty vs Risk: Uncertainty is a measure of the information content of a random variable or an observation???, Risk is the cost associated with different situations.
+% - formal framework (maybe borrow from Econ: When to buy or sell a given asset?)
+% - Decision making under uncertainty
+%     - which objective (Expected value vs risk metrics)
+% - different types of uncertainty (e.g. aleatoric vs epistemic)
+%     - there are different types of uncertainty: Some uncertainty can be reduced by learning more about the problem, other uncertainty can not.
+%     - this stems from the formulation of RL as a stochastic MDP
+%     - for example, a biased coin. You will be able to learn something about it, but not actually predict the outcome ???
 
-
-
-
-
-\clearpage
-------- Erster Entwurf below ------
-
-\subsection{Flexibility (/Demand Response)}
-\todo[inline]{This section introduces the notion of flexibility and therefore motivates demand response.
-It should also maybe talk about conflicts of interest, and incentives.
-
-need to be defined before this section:
-- conventional power
-- renewable power
-- supply/demand vs production/use}
-
-
-- flexibility is needed both in the market layer and in the physical layer
-
-Renewable electricity is less flexible than conventional electricity production, therefore there is a need for more flexibility elsewhere in the system.
-Electricity production and electricity use must always match. If there is more or less electricity used than is available, the entire grid is no longer stable.
-Partly, this coordination problem between producers and consumers is solved by the electricity market:
-An electricity producer will produce and feed to the grid only as much electricity as they can sell.
-This system works fine if the electricity producer can freely regulate how much power they produce based on the market.
-
-This is not true for renewable energy, where production capacity is both determined by external factors and harder to predict.
-Renewable sources of electricity are therefore less flexible.
-In order to keep production and consumption in balance, there needs to be a system component with enough flexibility to respond to sudden changes in electricity supply and demand.
-This can be a hydroelectric or grid-scale battery storage system which can both produce and consume electricity.
-It can also be a conventional power plant that's kept in spinning reserve\todo{define}, to take over when there's less renewable electricity than needed. This causes carbon emissions.
-Often, renewable power plants can't feed all of their production into the grid, because they can't find a flexible buyer for unexpected production.
-This motivates the need for flexibility on the demand side.
-
-
-
-\subsection{Demand Response}
-- a scheme to operate the grid more efficiently as demand rises quickly.
-- breaks with one of the central guarantees: electricity is freely available, accepting that renewable energy is much less reliable.
-- Mechanism: Incentivize consumers to use electricity when there's capacity.
-- implementations: TODO examples (Large-scale AC cuts, incentive programs, etc.)
-- already in place for large industrial consumers who buy electricity on the markets. (TODO: Is that true?)
-    - some industrial consumers are paid for providing flexibility, they can stop their processes if there's not enough electricity being produced.
-- more difficult for private consumers, who don't want to think about efficiency all the time. Solution: Automate where possible.
-
-
-\section{Reinforcement Learning}
-
-\subsection{Fundamentals: Markov Decision Process}
-Many animals are able to learn complex behaviors by performing an action, observing the results and - if the action got them closer to their goal - repeating the action when facing a similar situation.
-For example, consider a food-dispensing lever in a hamster's cage. At first, the hamster might not notice the lever. But sooner or later, by accident or out of curiosity, the hamster will push the lever, dispensing an item of food. After a few repetitions, the hamster will know to walk towards the lever, and push the lever when it wants food.
-Our hamster uses a biological implementation of \textit{Reinforcement Learning (RL)}.
-In an RL environment, an \textit{agent} is able to repeatedly perform an \textit{action}, observe the consequences and be rewarded or punished.
-RL therefore is an adaptive approach to solve feedback-based control problems.
-
-Formally, RL environments are \textit{Markov Decision Processes (MDP)}:
-$$ \text{MDP} = (S, A, p)$$
-where $S$ is the set of possible states the environment can be in, $A$ is the set of actions available to the agent,
-and the transition distribution $p(s', r \mid s, a)$ specifies the environment dynamics, giving the joint probability of transitioning from state $s \in S$ to state $s'\in S$ after performing action $a \in A$, and getting reward $r \in \mathbb{R}$.
-
-Interacting with the MDP, an agent first observes the environment's state $s$, then takes an action $a$, and then the next state $s'$ of the environment is sampled from $p$.
-There are no further restrictions placed on the structure of state and action spaces. They can be merely labelled or ordered, finite or infinite, single- or multidimensional.
-Usually the agent observes a collection of variables and chooses an action along one or several dimensions.
-
-Crucially, the states have the \textit{Markov Property}: The probability of transitioning to state $s'$ only depends on the current state $s$ and action $a$.
-The history of past states does not matter, and there are no hidden facts that could change the probabilities.
-In practice, this is a simplifying modelling assumption.
-Returning to our hamster: In reality, the food-dispensing mechanism runs out of food after being activated a number of times. However, modelling the situation as an MDP, we do not keep track of history, so we can't tell in advance whether pushing the lever will actually produce food. Instead, we assume there's a certain probability of the action being unsuccessful, that is $p(s', \text{food} \mid s, \text{lever pushed}) < 1$.
-One generalization of the MDP that does enable us to model such hidden variables is the Partially Observable MDP, which I will cover in more detail later on \todo{cite section}.
-
-\subsection{Reinforcement Learning}
-\todo[inline]{introduce RL terms and algorithms}
-
-Let's now turn to the question how to solve a Markov Decision Process. Solving an MDP usually means finding the sequence of actions that maximize the expected total reward over all future time steps.
-
-todo:
-
-- episode
-- policy
-- value function
-- exploration vs exploitation
-- Bellmann Update
-
-
-Baseline algorithm: \todo{which one? depends on my treatment of uncertainty in the other one, so on the approach}
-- One RL algorithm, which I use as a baseline, is ???
-- Explain algorithm
-
-
-
-\section{Uncertainty in Reinforcement Learning}
-\todo[inline]{Introduce Uncertainty terms and formalisms from different perspectives. Then apply to RL.}
-There is a rich body of work on uncertainty. Mathematical and statistical notions of uncertainty, perspectives from economics for decision making under uncertainty.
-
-Notes:
-
-- Motivation: Most information is uncertain to some extent. Making good decisions under uncertainty requires an awareness of the uncertainty.
-- Uncertainty vs Risk: Uncertainty is a measure of the information content of a random variable or an observation???, Risk is the cost associated with different situations.
-- formal framework (maybe borrow from Econ: When to buy or sell a given asset?)
-- Decision making under uncertainty
-    - which objective (Expected value vs risk metrics)
-- different types of uncertainty (e.g. aleatoric vs epistemic)
-    - there are different types of uncertainty: Some uncertainty can be reduced by learning more about the problem, other uncertainty can not.
-    - this stems from the formulation of RL as a stochastic MDP
-    - for example, a biased coin. You will be able to learn something about it, but not actually predict the outcome ???
-
-Uncertainty in RL: (maybe this should already be in approach?)
-- How is Uncertainty commonly modelled?
-    - epistemic uncertainty in the observations: not explicitly modelled, somewhat represented in state-value function
-    - stochasticity in the environment dynamics (+consequences of actions): accepted in the MDP. learned as transition probabilities in model-based RL, subsumed in e.g. Q-function in model-free RL.
-    - epistemic uncertainty in the environment dynamics: modelled as transition probabilities
-    - stochasticity in the reward function: not usually explicitly modelled
-    - epistemic uncertainty in the reward function: modelled implicitly in the state-value function
-    - uncertainty about causality? - probably not really relevant? should I discuss it somewhere else?
-- Adaptations for explicit treatment of uncertainty:
-    - Formalism for non-perfect observations: POMDP (usually there are hidden variables) -> Usually solved by estimating an MDP, solving that.
-        - POMDP does not assume the Markov property on observations, but does assume a hidden MDP
-    - ???
-    - RL from human preferences? (for learning a reward function)
-- Benefits of explicit treatment of uncertainty/Motivation:
-    - Risk-aware strategies
-    - better performance (maybe? TODO: Test this)
-    - more robustness (possibly? TODO: support this or not)
-    - better interpretability (possibly?)
-    - TODO: other
-- Drawbacks:
-    - more complex models require more training data
-    - less efficient algorithms
-    - not as well understood theoretically
-    - might perform worse than just learning everything implicitly!
+% Uncertainty in RL: (maybe this should already be in approach?)
+% - How is Uncertainty commonly modelled?
+%     - epistemic uncertainty in the observations: not explicitly modelled, somewhat represented in state-value function
+%     - stochasticity in the environment dynamics (+consequences of actions): accepted in the MDP. learned as transition probabilities in model-based RL, subsumed in e.g. Q-function in model-free RL.
+%     - epistemic uncertainty in the environment dynamics: modelled as transition probabilities
+%     - stochasticity in the reward function: not usually explicitly modelled
+%     - epistemic uncertainty in the reward function: modelled implicitly in the state-value function
+%     - uncertainty about causality? - probably not really relevant? should I discuss it somewhere else?
+% - Adaptations for explicit treatment of uncertainty:
+%     - Formalism for non-perfect observations: POMDP (usually there are hidden variables) -> Usually solved by estimating an MDP, solving that.
+%         - POMDP does not assume the Markov property on observations, but does assume a hidden MDP
+%     - ???
+%     - RL from human preferences? (for learning a reward function)
+% - Benefits of explicit treatment of uncertainty/Motivation:
+%     - Risk-aware strategies
+%     - better performance (maybe? TODO: Test this)
+%     - more robustness (possibly? TODO: support this or not)
+%     - better interpretability (possibly?)
+%     - TODO: other
+% - Drawbacks:
+%     - more complex models require more training data
+%     - less efficient algorithms
+%     - not as well understood theoretically
+%     - might perform worse than just learning everything implicitly!
     
-Risk-aware strategies:
-    - can either specify a risk tolerance at time of inference or during training
-    - during training: change reward function
-    - at time of inference: requires model of the environment (I think) or a Q-function
-    - more robust: can hand over control to e.g. humans when uncertain
+% Risk-aware strategies:
+%     - can either specify a risk tolerance at time of inference or during training
+%     - during training: change reward function
+%     - at time of inference: requires model of the environment (I think) or a Q-function
+%     - more robust: can hand over control to e.g. humans when uncertain
     
-Uncertainty in Multi-Agent Learning: (maybe exclude this completely)
-    - Multi-Agent Environments are characterized by simultaneous actions by multiple agents, who each learn and act according to their own rewards.
-    - More realistic and resilient than centralized control
-    - absent trust, might be stuck in a suboptimal equilibrium
+% Uncertainty in Multi-Agent Learning: (maybe exclude this completely)
+%     - Multi-Agent Environments are characterized by simultaneous actions by multiple agents, who each learn and act according to their own rewards.
+%     - More realistic and resilient than centralized control
+%     - absent trust, might be stuck in a suboptimal equilibrium
 
 
 
