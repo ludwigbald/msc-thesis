@@ -391,7 +391,7 @@ class UADQN:
             self.logger.add_scalar('Q0', mean_action_values[0], self.timestep)
             self.logger.add_scalar('Q1', mean_action_values[1], self.timestep)
 
-        if action != mean_action_values.argmax().item():
+        if action != mean_action_values.argmax().item() and self.logging:
             self.non_greedy_actions += 1
         
         return action

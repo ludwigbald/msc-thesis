@@ -78,7 +78,17 @@ def evaluate():
                     raise ValueError("Episode metrics are nan, please contant organizers")
                 episode_metrics.append(metrics)
                 print(f"Episode complete: {episodes_completed} | Latest episode metrics: {metrics}", )
-                print(np.mean(rewards, axis=0)/2, np.mean(rewards)/2)
+                #print(np.mean(rewards, axis=0)/2, np.mean(rewards)/2)
+                print("Building 1 total reward:", np.sum(rewards, axis=0)[0])
+                print("Building 1 no battery cost", env.buildings[0].net_electricity_consumption_without_storage_price.clip(min=0).sum())
+                print("Building 1 no battery carbon", env.buildings[0].net_electricity_consumption_without_storage_emission.clip(min=0).sum())
+                print("Building 1 actual cost", np.sum(np.clip(env.buildings[0].net_electricity_consumption_price, a_min=0, a_max=None)))
+                print("Building 1 stupid cost", np.sum(env.buildings[0].net_electricity_consumption_price))
+                print("Building 1 actual carbon", np.sum(np.clip(env.buildings[0].net_electricity_consumption_emission, a_min=0, a_max=None)))
+                
+                print("Building 1 cost metric", np.sum(np.clip(env.buildings[0].net_electricity_consumption_price, a_min=0, a_max=None))/ env.buildings[0].net_electricity_consumption_without_storage_price.clip(min=0).sum())
+                print("Building 1 carbon metric", np.sum(np.clip(env.buildings[0].net_electricity_consumption_emission, a_min=0, a_max=None))/ env.buildings[0].net_electricity_consumption_without_storage_emission.clip(min=0).sum())
+                
 
                 np.savetxt("soc.csv", env.buildings[0].electrical_storage.soc, delimiter=",")
                 np.savetxt("actions.csv", actionss, delimiter=",")

@@ -302,7 +302,7 @@ class DQN:
                     r = r-weight
                     
         # track non-greedy fraction
-        if action != self.predict(state.to(self.device)):
+        if action != self.predict(state.to(self.device)) and self.logging:
             self.non_greedy_actions += 1
 
         return action
