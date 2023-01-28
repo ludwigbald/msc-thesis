@@ -8,8 +8,7 @@
 Through the experiments described in the previous chapters, I evaluated the Uncertainty-Aware Deep Q Network algorithm on a custom building-scale energy-management environment based on the 2022 CityLearn challenge.
 Compared to two versions of the simpler DQN algorithm, tuned UA-DQN requires fewer interactions with the environment to arrive at a good performance.
 However, it does not reliably exceed the performance of a baseline rule-based control policy.
-In this chapter, I discuss the collected evidence and limitations of the experiment.
-I explore in which cases both the algorithm and CityLearn can be applied. \todo{double-check this summary}
+In this chapter, I discuss the collected evidence and limitations of the experiment and point out several possible ways of further improving the algorithm's performance.
 
 \section{Preparation}
 % Rule-Based Agent
@@ -18,7 +17,7 @@ The baseline rule-based policy was manually derived from simple patterns observe
 Its performance is compared to the performance of an idle policy, which does not make use the battery at all.
 It enables substantial savings in electricity cost and carbon emissions.
 % Interpret results
-Compared to the idle policy, more of the generated solar electricity is used. \todo{report this stat: How much solar electricity is used in both cases, how much electricity is purchased in both cases?}
+Compared to the idle policy, more of the generated solar electricity is used. \todo{maybe: report this stat: How much solar electricity is used in both cases, how much electricity is purchased in both cases?}
 Therefore, overall, less electricity is purchased from the grid.
 The policy also shifted the time of electricity purchase to an earlier time of day.
 Especially during peak hours, when both price and carbon intensity are high, the policy achieves a substantial reduction in building electricity demand.
@@ -38,7 +37,6 @@ Figure \ref{fig:discretization} shows a large dependency of the rule-based polic
 As expected, a higher discretization resolution approaches the continuous case and leads to better performance.
 However, the policy's performance is particularly impacted by the fact that its minimum charging action of 0.24 in the hours before the high-price period starts is discretized into more or less useful values that for example don't fully charge the battery.
 
-For the following reinforcement learning experiments, I selected 9 as the lowest resolution that showed comparable performance to the continuous action space while still providing a 0 action that allows the agent to explicitly do nothing.
 
 \section{RL Algorithms}
 % Second Experiment: Tuning
@@ -51,63 +49,43 @@ The results of the tuning runs, presented in figure \ref{fig:tuning_results}, sh
 Comparing the algorithms, UA-DQN performs better for a wider range of hyperparameter choices.
 For each algorithm, the most important hyperparameters are reported in \ref{tab:hyperparameters}. Across all algorithms, the learning rate is the most important hyperparameter as measured by correlation with the final score.
 On average, a smaller learning rate leads to a better performance.
+Adam's $\epsilon$ did not have a large effect on UA-DQN and DQN-Softmax, but tuning mattered on $\epsilon$-greedy DQN.
 
-- Adam's $\epsilon$ did not have a large effect on UA-DQN and DQN-softmax
-- The target network update frequency
-
-- DQN-e-greedy performance could have been improved with a more sophisticated and tuned schedule for epsilon.
-
-
-- discuss hyperparameter correlations
-
-- e-greedy DQN might also be influenced by the small batch size and larger target network update frequency, when compared to the other algorithms.
 
 % general robustness
 Some tuning runs failed. All UA-DQN runs with a batch size of 1 failed because the quantile Huber loss function needs a batch size of at least 2, but all other runs seemed to converge.
-The DQN-softmax algorithm failed to complete some runs with a batch size of 8. Even the tuned variant only completed 9/10 runs. This suggests some instability of the algorithm. \todo{can I find a citation here? We only have convergence guarantees for e-greedy, right?}
-
-% general performance
-Figure \ref{fig:tuning_validation} shows that UA-DQN improves its performance much faster than the other algorithms.
-- Why? Hypotheses:
-  - it explores more effectively.
-  - it integrates information better, learning more from the same information
-
+The DQN-Softmax algorithm failed to complete some runs with a batch size of 8. Even the tuned variant only completed 9/10 runs. This suggests some instability of the algorithm. \todo{can I find a citation here? We only have convergence guarantees for e-greedy, right?}
 
 % action selection
 Figure \ref{fig:non_greedy_fraction} shows the fraction of non-greedy actions taken by the tuned algorithms.
 A non-greedy action is an action that was taken in order to explore the environment rather than exploit current knowledge.
 UA-DQN explores more throughout the whole run than the other strategies.
-Since UA-DQN still achieves a better performance, especially early on.
+$\epsilon$-greedy DQN explores much less than the other strategies.
+A more sophisticated and tuned schedule for the exploration rate $\epsilon$ could improve the algorithm's performance at the added cost of requiring more tuning.
 
-- together with above: a high rate of exploration is correlated with fast improvement
-
+% general performance
+Figure \ref{fig:tuning_validation} shows that UA-DQN improves its performance much faster than the other algorithms.
+Especially in the first 5 episodes, when UA-DQN explores less than DQN-Softmax, UA-DQN performance improves much faster.
+The reason for this could be either that tuned UA-DQN takes more useful exploratory actions, or that it integrates observed information more effectively, or a combination of both.
 
 % Limitations of the experiment:
-- did not tune epsilon -> e-greedy performance could have been better
-- selected best tuning run, but validation variance suggests that this is probably not actually the optimal hyperparameter choice.  -> all algorithms maybe could have been better
-  A more rigorous approach to hyperparameter tuning might have been able to provide better hyperparameters.
-- did not initialize UA-DQN networks differently, even though it might have been useful. -> algorithms could have been better
-
-- Feature selection was maybe not as good as possible. -> algorithms could have been better by learning more complex relationships.
-  - Access to weather forecasts would allow for better performance.
-  - Discretization of the action space favored the hand-engineered policy. It prevented the other policies from learning more exact control.
+% Problems caused by tuning setup
+The used tuning method favors risky hyperparameter choices.
+Because every combination of hyperparameters is tried only once, accepting the single best tuning run probably means accepting an outlier performance for this combination of hyperparameters.
+For example, the best performing runs of UA-DQN and DQN-Softmax share a low target network update frequency, which causes both faster learning and instability. Similarly, the best performing run of $\epsilon$-greedy DQN uses a small batch size of 4.
+Therefore, the hyperparameters selected by the tuning process are biased towards being less reliable.
+This effect might have helped UA-DQN, which was tuned for half as many runs as the other algorithms, so there was less opportunity for outliers to outperform more robust hyperparameters.
+A different tuning procedure might have favored more reliable algorithms with a better mean performance.
+One further possible source of bias is the networks' initialization, which was the same for all algorithms during tuning.
 
 % Short summary
-
-
-
+In summary, the experiment shows the potential of UA-DQN, which is able to take more useful exploratory actions.
+The experiment suffers from multiple potential sources of bias, and a tuning procedure that favors unstable hyperparameters.
+UA-DQN approaches the performance of the rule-based baseline and learns much faster than simpler DQN variants.
 
 
 \section{General Discussion}
 % Limitations of the custom environment (external validity)
-%- The environment has a much lower time resolution than would be possible in real life
-%- The environment lacks data that would predict human behavior, but is easily accessible in real life
-%- The environment does not have real weather forecasts with real uncertainty, this changes the planning problem.
-%- Data is localized to a California residential building, would be interesting to see other climate zones and building types, which have different usage patterns.
-% - I do not model coordination goals at all
-%   - Electricity can not be sold to the grid, which is unrealistic, but overall only increases the usefulness of per-building storage
-%   - this means that flexibility can only be provided to the building, not as a service to the grid.
-
 The custom environment based on the 2022 CityLearn challenge presents a planning and control task based on real-world data.
 Some of the experiment's findings can be expected to generalize to real-world applications of the algorithms.
 Particularly, the environment requires the agent to learn patterns in electricity price and carbon intensity, and domestic electricity usage and production.
@@ -116,9 +94,8 @@ It depends on long-term, aggregate data and patterns on the scale of multiple ho
 In contrast, a part of the rule-based policy's idea is to store precisely the amount of excess electricity generated, which is nearly impossible to do in CityLearn, but easy to implement in a real-world building energy system.
 This limits the effectiveness of a good long-term plan.
 
-
-The environment used in the experiments only provided a subset of CityLearn's data as observations.
-For example, it included only one weather forecast variable, no information on day of the week or month, and no price forecasts.
+The environment used in the experiments only provided a subset of CityLearn's data as observed features.
+For example, features included only one weather forecast variable, no information on day of the week or month, and no price forecasts.
 Real-world weather forecasts are uncertain, which requires a different strategy for acting under uncertainty.
 In a real-world application, a smart home system might also have access to occupant behavioral data, like knowing if someone is home or not, which can lead to significantly better plans.
 
@@ -128,44 +105,22 @@ In fact, coordination strategies such as dynamic pricing are another goal not ad
 A real-world system could likely buy and sell electricity to and from the grid, providing flexibility not only to the building.
 
 % CityLearn in general
-%- The battery model is unrealistic and still buggy
-% - However, CityLearn still seems like a useful model for testing RL algorithms on a different environment.
-% - CityLearn is computationally efficient.
-% - CityLearn enables comparison of different approaches as a benchmark.
-
-% - CityLearn presents a planning task that involves both prediction and control.
-% - CityLearn should play to its strengths and work on providing a more realistic prediction task, especially w.r.t. uncertain weather data, cooperation goals. Given good predictions, the control task is computationally expensive and trivial to solve.
-
-In general, CityLearn provides a useful framework for testing the application of RL planning algorithms to building energy control tasks.
+The CityLearn framework is useful for developing experiments that test the application of RL planning algorithms to building energy control tasks.
 It's an efficient environment that models important parts of a building and can incorporate real-world data.
-In the current version, it does not serve as a realistic model for the full task.
+However, in the current version, it does not serve as a realistic model for the full task.
 Applying RL for building energy control is an area of ongoing research, and \cite{nweye2022RealworldChallengesMultiagent} name a number of challenges to be overcome when applying RL to grid-integrated buildings.
 
-
 % General discussion: Can we answer the research questions?
-- Is UA-DQN a useful algorithm for building demand response?
-  - UA-DQN learns faster than both tuned DQN variants, because it explores more efficiently.
-  - UA-DQN has larger resource requirements
+The experiment described in this thesis shows that UA-DQN can explore a simple environment more efficiently than other RL algorithms.
+This provides further evidence for the usefulness of uncertainty-aware RL methods when acting in high-stakes environments.
+However, in this experiment, UA-DQN did not outperform the rule-based policy.
+A real-life building energy demand response task might be more complex, which might favor a machine learning approach.
+
+% Further research: See Conclusion
+
+
+\todo[inline]{Maybe: Things I have not yet mentioned:
+- UA-DQN needs a discrete action space.
 - Talk about need for data: Interaction between replay buffer size and batch size.
-
 - What would a good setting for the risk-aversion parameter even be?
-
-% Further research
-
-
-- Discuss limitations
-- Internal Validity: Does the experiment support the conclusion?
-  - Experiment was not thorough enough
-  - Absence of good performance does not mean good performance is impossible, maybe I just did it wrong
-  - Data was not fully used
-- External Validity: Does the conclusion generalize to real life?
-  - Model limitations: Does CityLearn represent the real life application?
-    - The real life application of such a system depends on technical and regulatory details
-    - Data is real life, but other data might be available.
-    - A real life application could have different goals than only price and CO2, like coordination goals and communication requirements.
-  - 
-- Is the question important?
-  - what should such a system even be judged on in application?
-- Further Research
-- Application in a real life system
-- 
+}

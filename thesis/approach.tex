@@ -1,20 +1,10 @@
 \chapter{Methods and Approach}
     \label{approach}
-    
-\todo[inline]{
-Roughly 1/3 of thesis}
 
-\todo[inline]{
-Opening paragraph: Short summary of the whole approach.
-    - restate the research question, and how I set out to answer it.
-    - Mention goal, algorithms, methodology.
-    - Make the connection from work mentioned in background chapter.
-}
-This is a short paragraph that outlines my approach.
-It also talks more about motivation.
-The goal is:
-
-- Follow the analysis in the UA-DQN paper to validate the algorithm on a real-data task
+I evaluate the Uncertainty-Aware Deep Q-Network (UA-DQN) algorithm empirically for the task of building energy control.
+The experiment is realized by using CityLearn to construct the reinforcement learning environment, using data from the 2022 CityLearn challenge.
+As a baseline, I establish a rule-based policy based on patterns in the data.
+Finally, I compare UA-DQN against the baseline and two versions of the DQN algorithm that differ in their action selection.
 
 
 \todo[inline]{    - !!! where does uncertainty come from in CityLearn !!!,
@@ -113,20 +103,36 @@ The hardware used was a 2020 Macbook Air M1 for the discretization pre-experimen
 
 
 \section{Algorithm}
+\subsection{Uncertainty-Aware Deep Q-Network} % the new method I want to evaluate.
+\todo[inline]{
+1. Introduce and explain UA-DQN
+    - Significance and motivation:
+        - With energy, you need to make risk-aware decisions, and exploration is expensive.
+        - UA-DQN has very good performance in original paper (cite), beating DQN by exploring better. How?
+    - Idea:
+        - Learn distributions instead of only mean Q value.
+        - Thompson sampling from these distributions.
+        - Detangle epistemic and aleatoric uncertainty. How?
+        - 
+    
+    - Explain how it works, compared to DQN
+        - How does policy evaluation happen? (Learning?)
+            - distribution is learned by a network, building on the author's prior work distributional RL.
+        - How does prediction happen? (Action Selection)
+            - There are two uncertainties: aleatoric and epistemic. (cite something here)
+                - explain their significance
+            - How to estimate uncertainties
 
-\subsection{Uncertainty-Aware DQN}
-1. Mention UA-DQN, no need to explain it here again in detail
-    - Explain why I choose it:
-        - Very good performance in original paper
-        - With energy, you need to make risk-aware decisions under uncertainty
-    - Testing against DQN
-    - risk neutral setting
+        - Explain algorithm parameters:
+            - "Risk aversion" exposes the exploration vs exploitation dilemma directly
+}
 
 \subsection{DQN}
 2. DQN variants
     - based on the UA-DQN paper
     - e-greedy
     - Softmax for a different take on action selection (TODO cite)
+    - Boltzmann exploration (is the fancy name for Softmax)
 
     - Mention all tricks used by the algorithm
         - replay buffer
@@ -199,28 +205,29 @@ Finally, the policy does not make use of weather forecasts, which predict solar 
 Overall, the policy serves as a useful benchmark of what a thoughtful human can do when knowing some of the system's dynamics.
 
 
-\section{Experiments} % How I plan to evaluate it
+\section{Experiment} % How I plan to evaluate it
 \todo[inline]{
 TODO:
 Explain in more detail: What am I measuring, how will I evaluate the results?
 }
 
-\subsection{Establishing a Baseline} \label{sec:discretization}
+\subsection{Discretization} \label{sec:discretization}
 UA-DQN and DQN require a discrete action space.
 In CityLearn, the action is a continuous number between -1 (releasing energy) and +1(storing energy).
-The goal of this pre-experiment is to determine a suitable subdivision of the continuous action space.
+Therefore, I subdivide the continuous action space into multiple discrete actions.
+The goal of this pre-experiment is to determine a suitable resolution of subdivision of the continuous action space.
 A larger discrete action space means the algorithm learns slower, but a smaller discrete action space means the algorithm can't act as precisely, capping the possible performance.
-The goal therefore is to find the smallest number of subdivisions that does not incur a significant performance penalty.
+The goal therefore is to find the smallest number of subdivisions that does not produce a significant drop in performance.
 
-In order to measure the importance of different subdivisions, the hand-engineered RBC is run on versions of the environment with differently discretized action spaces.
-Its performance on the discretized action spaces is then contrasted with its performance on the continuous case.
-This experiment uses the full 2022 CityLearn challenge public dataset of 5 buildings and one year.
+In order to measure the importance of different subdivisions, I run the baseline rule-based policy on versions of the environment with differently discretized action spaces.
+The environment uses the entire 2022 CityLearn challenge public dataset of 5 buildings and one year.
 
-\todo[inline]{How do I evaluate the rule-based policy?}
+I measure the performance as calculated by CityLearn, both cost and carbon metrics.
+The performance on the discretized action spaces is compared with the policy's performance on the continuous action space.
 
 \subsection{Hyperparameter Tuning}
 All tested Deep Reinforcement Learning agents and the optimizer, Adam, expose hyperparameters that need to be tuned for optimal performance.
-Adam's tuned hyperparameters are the learning rate and the parameter $\epsilon$.
+Adam's tuned hyperparameters are the learning rate and the parameter $\epsilon$. \todo{find the citation that says tuning epsilon is important}
 I also tuned the batch size and the update frequency of the target networks.
 All other hyperparameters I set to default values as noted in table \ref{tab:tuning}.
 
@@ -252,14 +259,10 @@ Data used for this experiment was the whole year of building 1.
 The performance measure for this experiment was the collected total reward in the last episode.
 
 \subsection{Comparison of Tuned Algorithms}
-Finally, in order to evaluate algorithm performance, I 
-For each algorithm, I select the best combination of hyperparameters and repeat the experiment with 10 different random seeds.
-- why
-- setup: The exact same setup as before.
+For each algorithm, I select the best combination of hyperparameters during tuning.
 
-- I measure:
-    - Average performance compared to the baseline
-    - Variance per algorithm.
+Following the analysis of \cite{clements2020EstimatingRiskUncertainty}, I measure the fraction of non-greedy actions for each algorithm across a training run.
+This will illustrate the difference in how the algorithms balance exploitation and exploration as they learn.
 
-\todo[inline]{expand on this section!}
-
+Finally, I repeat the previous experiment with 10 different random seeds in order to be able to measure the repeatability of each algorithm.
+I evaluate each algorithm by its mean performance compared to the baseline and by its variance.

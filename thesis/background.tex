@@ -10,57 +10,7 @@
   - roughly 1/3 of thesis
   }
 
-% \todo[inline]{
-%     - flesh out beginning from introduction, support general argument
-
-%     1. supply side rigidity (plot of different energieträger over time)
-%     2. status quo demand side rigidity
-%     3. ansatzpunkte für Flexibilität in Demand Side mit RL oder so, konkrete Beispiele
-    
-%     4. RL ...
-
-% }
-
 \section{The Electrical Grid and Flexibility}
-% \done[inline]{
-%     1. Describe the goals and the structure of the Electrical Grid
-%         - Provide reliable energy to consumers and industry
-%         - Describe the changes caused by the energy transition
-%         - History: Only fossil fuels and Water has been used, later nuclear.
-%     2. Describe Challenges posed by the energy transition
-%         - Electrification of processes causes more load, but building more transmission lines is costly
-%             - But Cars can also be used as flexible electricity storage
-%         - Specifically, last-mile grids are not built to handle peak solar production (is this true?)
-%         - Phasing out reliable fossil fuel and nuclear plants causes less reliability
-%         - Building renewable energy plants causes intermittent and unreliable energy supply
-%         - Give number for how much flexibility we need (maybe ?)
-%         - Grid storage
-%             - Spinning reserve
-%             - Pumped Water Storage
-%             - Large-scale Battery storage systems
-%             - Hydrogen
-%             --> all together, not enough (support claim!)
-%     3. Demand Side Flexibility
-%         - Incentive-based demand reduction in industry
-%             - (shutoffs in case of severe grid instability)
-%         - Incentive-based demand shifting
-%             - Shifting industrial processes
-%             - private consumers (day/night-tariffs, flexible pricing)
-%                 - Challenge: Electricity is cheap and reliable, incentives need to be very large, mental load
-%                     - Consumers are unflexible in their use of appliances like kitchen stoves and lighting.
-%                     - examples for incentive programs!
-%                 - solar producing prosumers already sometimes care. (because of the "pricing model". They get their own solar power at cost, basically for free.)
-%         - Smart Electrification makes more flexibility and efficiency available:
-%             - Electric cars and home batteries can intelligently decide when to charge
-%             - Electric (heat-pump) Heating and cooling can somewhat flexibly happen when electricity is cheap
-%             - This amounts to a control problem and a coordination problem.
-%             - Mention ways in which this problem has been tried to solve:
-%                 - Rule-based controllers
-%                 - Market mechanisms
-%                 - RL
-%                 - ...?
-% }
-
 % 1. Describe the goals and the structure of the Electrical Grid
 The electrical grid is basic infrastructure that enables the function of our modern society.
 It connects electricity consumers, from private consumers to heavy industry, with producers.
@@ -112,29 +62,6 @@ As flexibility in electricity supply decreases, and centralized storage faciliti
 
 \section{Demand Response}
 % 3. Demand Side Flexibility
-% \todo[inline]{       
-% - Demand side flexibility is a good idea.
-% - what does demand respond to?
-
-% - Incentive-based demand reduction in industry
-% - (shutoffs in case of severe grid instability)
-% - Incentive-based demand shifting
-% - Shifting industrial processes
-% - private consumers (day/night-tariffs, flexible pricing)
-%     - Challenge: Electricity is cheap and reliable, incentives need to be very large, mental load
-%         - Consumers are unflexible in their use of appliances like kitchen stoves and lighting.
-%         - examples for incentive programs!
-%     - solar producing prosumers already sometimes care. (because of the "pricing model". They get their own solar power at cost, basically for free.)
-% - Smart Electrification makes more flexibility and efficiency available:
-% - Electric cars and home batteries can intelligently decide when to charge
-% - Electric (heat-pump) Heating and cooling can somewhat flexibly happen when electricity is cheap
-% - This amounts to a control problem and a coordination problem.
-% - Mention ways in which this problem has been tried to solve:
-%     - Rule-based controllers
-%     - Market mechanisms
-%     - RL
-%     - ...?
-% }
 Both the inflexibility of renewable power generation and the limited capacity for centralized flexible energy storage leave one component of the electric system: In a renewable-dominated grid, demand needs to flexibly respond to changes in available supply.
 In order to stabilize the grid, grid operators employ schemes to curb demand in case of exceptionally large pressure on the grid.
 Large industrial consumers are paid in advance for shutting off their processes if needed.
@@ -270,12 +197,25 @@ This improves the stability of the algorithm.
 
 
 % Uncertainty, Exploration vs Exploitation
-\subsection{Uncertainty}
+\subsection{The Reward Distribution}
 \todo[inline]{
-    - Introduce epistemic and aleatoric Uncertainty and their significance for action selection.
-        - mathematically define them (variance of the Q estimator?)
+    - Introduce the idea of Thompson sampling
+        - requires a distribution instead of an expected Q-Value.
+            - give formula for the q-distribution
+    - Learn distributions: QR-DQN and \cite{azizzadenesheli2018EfficientExplorationBayesian}
+    - 
+    - If you do not have uncertainty, what can you do?
+    - decay epsilon
+    - use boltzmann sampling
     - Talk about how DQN treats uncertainty. (With epsilon-decay)
-        - What does epsilon mean in terms of the uncertainties?
+
+    - Introduce epistemic and aleatoric Uncertainty and their significance for action selection.
+        - The uncertainty in the learned return distribution is caused both by inherent stochasticity of the environment and epistemic uncertainty.
+        - Optimal action selection depends only on the epistemic uncertainty. If the goal remains to maximize the expected return overall, risk-averse things should happen too.
+        - mathematically define them (variance of the Q estimator?)
+        - \cite{hullermeier2021AleatoricEpistemicUncertainty} explain the concept.
+        - 
+
 }
 
 Reinforcement Learning algorithms need to solve the Exploration/Exploitation-Dilemma.
@@ -284,35 +224,15 @@ The $\epsilon$-greedy policy exposes the parameter $\epsilon$ as a direct way to
 Because the algorithm has the most to learn at the beginning, $\epsilon$ is commonly set to a high value in the beginning and then decayed over time.
 Most Reinforcement Learning algorithms don't provide an explicit measure of uncertainty, which could be used to dynamically adapt this practice to the environment at hand.
 
-% UA-DQN
-\subsection{Uncertainty-Aware Deep Q-Network} % the new method I want to evaluate.
-\todo[inline]{
-1. Introduce and explain UA-DQN
-    - Significance: Very good performance in original paper (cite), beating DQN by exploring better. How?
-    - Idea:
-        - Explore according to uncertainty estimates.
-        - Detangle epistemic and aleatoric uncertainty.
-    - Explain how it works, compared to DQN
-        - Start with Learning the Distribution instead of Q-Values
-        - How does policy evaluation happen? (Learning?)
-            - distribution is learned by a network, building on the author's prior work distributional RL.
-        - How does prediction happen? (Action Selection)
-            - There are two uncertainties: aleatoric and epistemic. (cite something here)
-                - explain their significance
-            - How to estimate uncertainties
-
-        - Explain algorithm parameters:
-            - "Risk aversion" exposes the exploration vs exploitation dilemma directly
-}
 
 \section{Reinforcement Learning for Building Demand Response}
 \todo[inline]{
 - Motivation: RL is a class of control algorithms that has been successfully applied to DR.
 - Why is building DR a particularly good fit for RL?
 - Mention prior work: When has RL been applied to building demand response?
-    - paper 1:
-    - paper 2:
-    - paper 3:
+    - paper 1: 
+    - paper 2: 
+    - paper 3: 
 
     - (Mention related work: applied algorithms and their results)
     - (Other Frameworks and available data, including CityLearn, real-life applications)

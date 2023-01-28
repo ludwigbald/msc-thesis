@@ -15,10 +15,11 @@
 
 \section{Rule-Based Controller}
 \todo[inline]{
+  Maybe:
   - How does it perform on the continuous action space?
   - On how many days does it needlessly fill the battery?
 }
-\todo{report this stat: How much solar electricity is used in both cases, how much electricity is purchased in both cases?}
+\todo[inline]{maybe: report this stat: How much solar electricity is used in both cases, how much electricity is purchased in both cases?}
 
 
 \section{Discretization}
@@ -85,8 +86,20 @@ Both DQN algorithms show a peak at around -5000, which corresponds to strategies
 \end{figure}
 
 \section{Comparison of Tuned Algorithms}
+\begin{figure}
+  \centering
+  \includegraphics[width=\figurewidth]{figures/non-greedy-fraction.png}
+  \caption{This graphic shows the exploration rate of tuned algorithms throughout the training process. It highlights the different action selection strategies employed by the different algorithms. UA-DQN keeps exploring for longer than the other strategies.}
+  \label{fig:non_greedy_fraction}
+\end{figure}
+To illustrate the difference in exploration between the algorithms, figure \ref{fig:non_greedy_fraction} shows the fraction of selected non-greedy actions per episode.
+All algorithms start out exploring more and then gradually decrease their exploration rate.
+DQN-softmax and UA-DQN explore more than $\epsilon$-greedy DQN, which quickly reaches an exploration rate of $\epsilon = 0.02$.
+UA-DQN keeps exploring more than the other algorithms.
+
+
 Figure \ref{fig:tuning_validation} shows the episode rewards of the selected hyperparameters for each algorithm during training.
-Tuned UA-DQN converges faster than the other algorithms, and it converges to a better mean performance, as stated in table \ref{tab:tuned_results}. The hand-engineered rule-based agent outperforms the tuned reinforcement learning algorithms on both metrics.
+Tuned UA-DQN converges faster than the other algorithms, and it converges to a better mean performance, as shown in table \ref{tab:tuned_results}. The hand-engineered rule-based agent outperforms the tuned reinforcement learning algorithms on both metrics.
 
 When repeated with 10 different seeds, a single run of DQN-softmax failed, compared to no failures from the other algorithms.
 
@@ -104,24 +117,10 @@ When repeated with 10 different seeds, a single run of DQN-softmax failed, compa
   \label{tab:tuned_results}
   \begin{tabular}{l|ccccc}
     Agent                 & Dollar Cost & Carbon Emission & Average \\ \hline
-    Control (No Battery)   & 1    & 1    & \textbf{1}    \\
-    DQN-Softmax           & 0.83 & 0.93 & \textbf{0.88} \\
-    DQN $\epsilon$-greedy & 0.83 & 0.94 & \textbf{0.88} \\
-    UA-DQN                & 0.82 & 0.91 & \textbf{0.87} \\
+    Control (Idle)   & 1    & 1    & \textbf{1}    \\
+    DQN $\epsilon$-greedy & 0.83 & 0.94 & $\mu = \mathbf{0.88}, SD = 0.017$ \\
+    DQN-Softmax           & 0.83 & 0.93 & $\mu = \mathbf{0.88}, SD = 0.019$ \\
+    UA-DQN                & 0.82 & 0.91 & $\mu = \mathbf{0.87}, SD = 0.010$ \\
     Discrete Rule-Based   & 0.80 & 0.88 & \textbf{0.84}
   \end{tabular}
 \end{table}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\figurewidth]{figures/non-greedy-fraction.png}
-  \caption{This graphic shows the fraction of selected actions that do not correspond to the highest expected value. It highlights the different action selection strategies employed by the different algorithms. UA-DQN keeps exploring for longer than the other strategies.}
-  \label{fig:non_greedy_fraction}
-\end{figure}
-
-To illustrate the difference in exploration between the algorithms, figure \ref{fig:non_greedy_fraction} shows the fraction of selected non-greedy actions per episode.
-All algorithms start out exploring more and then gradually decrease their exploration rate.
-DQN-softmax and UA-DQN explore more than $\epsilon$-greedy DQN, which quickly reaches an exploration rate of $\epsilon = 0.02$.
-UA-DQN keeps exploring more than the other algorithms.
-
-\clearpage
