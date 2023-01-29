@@ -2,7 +2,7 @@
 
 Refer to the random agent (`random_agent.py`) and rule based agent (`rbc_agent.py`) examples and create your agents in the same format
 
-## What's OrderEnforicingWrapper?
+## What's OrderEnforcingWrapper?
 
 This is a reference wrapper to allow compatibilty with pettingzoo baselines. You can change the `compute_action` function if you want. Please make sure the order of actions matches the observations.
 
