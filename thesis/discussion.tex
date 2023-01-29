@@ -51,10 +51,9 @@ For each algorithm, the most important hyperparameters are reported in \ref{tab:
 On average, a smaller learning rate leads to a better performance.
 Adam's $\epsilon$ did not have a large effect on UA-DQN and DQN-Softmax, but tuning mattered on $\epsilon$-greedy DQN.
 
-
 % general robustness
 Some tuning runs failed. All UA-DQN runs with a batch size of 1 failed because the quantile Huber loss function needs a batch size of at least 2, but all other runs seemed to converge.
-The DQN-Softmax algorithm failed to complete some runs with a batch size of 8. Even the tuned variant only completed 9/10 runs. This suggests some instability of the algorithm. \todo{can I find a citation here? We only have convergence guarantees for e-greedy, right?}
+The DQN-Softmax algorithm failed to complete some runs with a batch size of 8. Even the tuned variant only completed 9/10 runs. This suggests some instability of the algorithm.
 
 % action selection
 Figure \ref{fig:non_greedy_fraction} shows the fraction of non-greedy actions taken by the tuned algorithms.
@@ -81,7 +80,7 @@ One further possible source of bias is the networks' initialization, which was t
 % Short summary
 In summary, the experiment shows the potential of UA-DQN, which is able to take more useful exploratory actions.
 The experiment suffers from multiple potential sources of bias, and a tuning procedure that favors unstable hyperparameters.
-UA-DQN approaches the performance of the rule-based baseline and learns much faster than simpler DQN variants.
+UA-DQN approaches the performance of the rule-based baseline and learns from fewer environment interactions than simpler DQN variants, but has much larger resource demands (see table \ref{tab:resources}).
 
 
 \section{General Discussion}

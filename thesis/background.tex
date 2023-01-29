@@ -99,27 +99,27 @@ Several adaptive control algorithms have been proposed for use in demand respons
 
 \section{Reinforcement Learning}
 
-\todo[inline]{
-    1. Explain RL Fundamentals
-        1. Markov Decision Process
-            1. Highlight stochasticity of transition and Reward functions
-            2. Reward function?
-            3. Mention generalizations: POMDP, (Multi-Agent MDP?), Non-stationary MDP
-        2. Value Learning
-            - Introduce the notion of a state value
-            - Bellman updates
-            - Q-Learning
-            - Mention Policy Gradient methods
-        3. Deep Q-Learning
-            - introduce Fundamentals of Deep Learning? Deep RL is somewhat like using a POMDP?
-            - Introduce further tricks employed by DQN
-                - Replay Buffer
-                - Dueling Q-Networks?
-                - TD-Learning / Target Network
-        4. Importance of Action Selection and Exploration strategies
-            - Exploration vs. Exploitation Dilemma
-            - Convergence guarantees
-}
+% \todo[inline]{
+%     1. Explain RL Fundamentals
+%         1. Markov Decision Process
+%             1. Highlight stochasticity of transition and Reward functions
+%             2. Reward function?
+%             3. Mention generalizations: POMDP, (Multi-Agent MDP?), Non-stationary MDP
+%         2. Value Learning
+%             - Introduce the notion of a state value
+%             - Bellman updates
+%             - Q-Learning
+%             - Mention Policy Gradient methods
+%         3. Deep Q-Learning
+%             - introduce Fundamentals of Deep Learning? Deep RL is somewhat like using a POMDP?
+%             - Introduce further tricks employed by DQN
+%                 - Replay Buffer
+%                 - Dueling Q-Networks?
+%                 - TD-Learning / Target Network
+%         4. Importance of Action Selection and Exploration strategies
+%             - Exploration vs. Exploitation Dilemma
+%             - Convergence guarantees
+% }
 
 
 % 1. RL Fundamentals
@@ -145,8 +145,14 @@ When modeling a real-world control problem, an MDP necessarily is a simplifying 
 In reality, state transitions often depend on outside influences or are non-stationary for other reasons.
 In complex problems, the desired behavior is not obvious. Therefore, designing the reward function is often non-trivial.
 
-\todo{Mention a few RL applications that can be used as examples}
+\todo{Maybe: Mention a few RL applications that can be used as examples}
 \todo{Mention exploration/exploitation-dilemma here}
+% Reinforcement Learning algorithms need to solve the Exploration/Exploitation-Dilemma.
+% When interacting with the environment, they need to balance between the value of gathering new information and the value of acting greedily according to their current knowledge.
+% The $\epsilon$-greedy policy exposes the parameter $\epsilon$ as a direct way to control this trade off.
+% Because the algorithm has the most to learn at the beginning, $\epsilon$ is commonly set to a high value in the beginning and then decayed over time.
+% Most Reinforcement Learning algorithms don't provide an explicit measure of uncertainty, which could be used to dynamically adapt this practice to the environment at hand.
+
 
 % 2. Towards DQN
 \subsection{Q-Learning}
@@ -157,12 +163,13 @@ From a trajectory of state-action-observation-reward tuples that were generated 
 
 $$v_\pi(s) = \mathbb{E}[G_t | S_t=s] = \mathbb{E}[\sum_{k=0}^{\infty}\gamma^kR_{t+k+1} | S_t = s], \text{for all } s \in S$$
 
-Similarly, one can define the value of taking an action in a certain state:
-$$ q_\pi(s,a) = \mathbb{E}[G_t | S_t=s, A_t = a] = \mathbb{E}[\sum_{k=0}^{\infty}\gamma^kR_{t+k+1} | S_t = s, A_t = a]$$
+Similarly, one can define the value of taking an action $a$ in a given state $s$:
+\begin{equation} \label{eq:qfunction}
+    q_\pi(s,a) = \mathbb{E}[G_t | S_t=s, A_t = a] = \mathbb{E}[\sum_{k=0}^{\infty}\gamma^kR_{t+k+1} | S_t = s, A_t = a]
+\end{equation}
 
 This Action-Value Function or Q-function induces a greedy policy by evaluating $q(s,a)$ for the current state and all possible actions, and selecting the highest-expected reward action.
 For the optimal policy $\pi_*$, the greedy policy induced by $q_{\pi_*}$ is $\pi_*$ itself.
-For more detail on how the optimal policy can be approximated, please refer to \cite{sutton2018ReinforcementLearningIntroduction}.
 
 %explain (e-greedy) action selection
 %explain Q-Learning
@@ -172,6 +179,7 @@ A Q-Learning step consists of taking an action $a$ in state $s$ according to the
 However, a slight modification needs to be made: To make sure all possible trajectories are explored, the $\epsilon$-greedy policy is used instead, which acts randomly with a small probability of $\epsilon$, and acts greedily otherwise.
 
 \todo[inline]{
+    Q = Quality of an action
     Focus less on the idea of value learning.
     Instead, explain Tabular Q-Learning better
 }
@@ -189,40 +197,40 @@ During every optimization step, a minibatch of transitions $(s, a, r, s')$ is sa
 
 The second modification is the use of a separate target Q-network.
 The loss that is minimized is
-$$ ((R_j + \gamma \max_a{\hat{q}(s',a)}) - q(s,a))^2$$
-Instead of using the Q-network $q(s',a)$ as the target Q-value, DQN uses $\hat{q}(s',a)$.
-$hat{q}$ is a lagging copy of the Q-network that is updated after several optimization steps.
+$$ [R_j + \gamma \max_a{\hat{q}(s',a)} - q(s,a)]^2$$
+Instead of using the Q-network $q(s',a)$ itself as the target Q-value to be predicted, DQN uses $\hat{q}(s',a)$.
+$\hat{q}$ is a lagging copy of the Q-network that is updated after several optimization steps.
 This improves the stability of the algorithm.
 
 
 
 % Uncertainty, Exploration vs Exploitation
-\subsection{The Reward Distribution}
-\todo[inline]{
-    - Introduce the idea of Thompson sampling
-        - requires a distribution instead of an expected Q-Value.
-            - give formula for the q-distribution
-    - Learn distributions: QR-DQN and \cite{azizzadenesheli2018EfficientExplorationBayesian}
-    - 
-    - If you do not have uncertainty, what can you do?
-    - decay epsilon
-    - use boltzmann sampling
-    - Talk about how DQN treats uncertainty. (With epsilon-decay)
 
-    - Introduce epistemic and aleatoric Uncertainty and their significance for action selection.
-        - The uncertainty in the learned return distribution is caused both by inherent stochasticity of the environment and epistemic uncertainty.
-        - Optimal action selection depends only on the epistemic uncertainty. If the goal remains to maximize the expected return overall, risk-averse things should happen too.
-        - mathematically define them (variance of the Q estimator?)
-        - \cite{hullermeier2021AleatoricEpistemicUncertainty} explain the concept.
-        - 
 
-}
+\subsection{Distributional Reinforcement Learning}
+The Q-function as defined in equation \ref{eq:qfunction} is a point estimate for the expected value of total discounted return, given a state, an action, and a policy.
+Instead of only estimating the expected value, which is the mean of a probability distribution, one can also approximate the entire distribution $Z_\pi(s,a)$ of total discounted return.
 
-Reinforcement Learning algorithms need to solve the Exploration/Exploitation-Dilemma.
-When interacting with the environment, they need to balance between the value of gathering new information and the value of acting greedily according to their current knowledge.
-The $\epsilon$-greedy policy exposes the parameter $\epsilon$ as a direct way to control this trade off.
-Because the algorithm has the most to learn at the beginning, $\epsilon$ is commonly set to a high value in the beginning and then decayed over time.
-Most Reinforcement Learning algorithms don't provide an explicit measure of uncertainty, which could be used to dynamically adapt this practice to the environment at hand.
+\begin{equation} \label{eq:zfunction}
+    Z_\pi(s,a) = p(G_t | S_t=s, A_t = a) = p\left(\sum_{k=0}^{\infty}\gamma^kR_{t+k+1} \mid S_t = s, A_t = a\right)
+\end{equation}
+
+$Z_\pi(s,a)$ can be modelled in multiple ways, for example as a Gaussian distribution \citep{azizzadenesheli2018EfficientExplorationBayesian} or as parameterized by quantiles \citep{dabney2018DistributionalReinforcementLearning}.
+The exact approximation procedure depends on the chosen model.
+
+The benefit of maintaining an estimate of the entire reward distribution means the algorithm can use Thompson sampling \citep{thompson1933LikelihoodThatOne} in order to explore more efficiently.
+This amounts to selecting each action with the probability of it being the best action and has shown promising performance in some problems \citep{osband2013MoreEfficientReinforcement}.
+Thompson sampling is efficient because it quickly leads to a reduction in uncertainty for promising actions, while only rarely wasting an environment interaction on unpromising actions.
+
+However, maintaining and approximating a full estimate of the reward distribution is resource intensive, so other methods can be used to explore more efficiently.
+An example is to use a fixed or tuned decay schedule for the exploration rate of an $\epsilon$-greedy strategy.
+The $\epsilon$-greedy strategy prioritizes only the action currently expected to be the best one, but leaves room for exploration in the beginning, when uncertainty about action values is still high.
+Boltzmann sampling is another action selection strategy that prefers actions with higher Q-values, but does not solely focus on the single best action, by sampling according to the softmax distribution of their Q-values.
+
+
+
+\todo[inline]{\cite{cruz2018ActionSelectionMethods} compare different action selection strategies, some of which dynamically adapt. cite one of them}
+
 
 
 \section{Reinforcement Learning for Building Demand Response}
@@ -257,7 +265,27 @@ One particularly interesting framework for RL in demand response is CityLearn.
 
 
 
-
+\todo[inline]{    - !!! where does uncertainty come from in CityLearn !!!,
+- forecasting problems:
+    - uncertainty about future occupant behavior (electricity demand)
+    - uncertainty about future solar power production (weather forecasts)
+    - uncertainty about future costs (price forecasts)
+- measurement uncertainty:
+    - observations might be imprecise
+- coordination uncertainty:
+    - uncertainty about other actors' strategy and current actions
+- reward uncertainty:
+    - uncertainty about the consequences of actions
+    - the observed reward might be imprecise
+    - the observed reward might not be the intended reward ???
+    
+Which uncertainties need to be specially treated?
+}
+\todo[inline]{Motivation: What advantages would an uncertainty-aware strategy have?
+- better risk management (possibly)
+- better performance (possibly)
+- better interpretability and robustness (possibly)
+}
 
 
 

@@ -99,6 +99,17 @@
   file = {/Users/ludwig/Zotero/storage/8D4ED7ZL/Christiano et al. - 2017 - Deep Reinforcement Learning from Human Preferences.pdf}
 }
 
+@inproceedings{chua2018DeepReinforcementLearning,
+  title = {Deep {{Reinforcement Learning}} in a {{Handful}} of {{Trials}} Using {{Probabilistic Dynamics Models}}},
+  booktitle = {Advances in {{Neural Information Processing Systems}}},
+  author = {Chua, Kurtland and Calandra, Roberto and McAllister, Rowan and Levine, Sergey},
+  year = {2018},
+  volume = {31},
+  publisher = {{Curran Associates, Inc.}},
+  abstract = {Model-based reinforcement learning (RL) algorithms can attain excellent sample efficiency, but often lag behind the best model-free algorithms in terms of asymptotic performance. This is especially true with high-capacity parametric function approximators, such as deep networks. In this paper, we study how to bridge this gap, by employing uncertainty-aware dynamics models. We propose a new algorithm called probabilistic ensembles with trajectory sampling (PETS) that combines uncertainty-aware deep network dynamics models with sampling-based uncertainty propagation. Our comparison to state-of-the-art model-based and model-free deep RL algorithms shows that our approach matches the asymptotic performance of model-free algorithms on several challenging benchmark tasks, while requiring significantly fewer samples (e.g. 8 and 125 times fewer samples than Soft Actor Critic and Proximal Policy Optimization respectively on the half-cheetah task).},
+  file = {/Users/ludwig/Zotero/storage/LEPH5ULG/Chua et al. - 2018 - Deep Reinforcement Learning in a Handful of Trials.pdf}
+}
+
 @misc{clements2020EstimatingRiskUncertainty,
   title = {Estimating {{Risk}} and {{Uncertainty}} in {{Deep Reinforcement Learning}}},
   author = {Clements, William R. and Van Delft, Bastien and Robaglia, Beno{\^i}t-Marie and Slaoui, Reda Bahi and Toth, S{\'e}bastien},
@@ -127,6 +138,23 @@
   abstract = {Reinforcement learning allows an agent to learn a new task while autonomously exploring its environment. For this aim, the agent chooses an action to perform among the available ones for a certain state. Nonetheless, a common problem for a reinforcement learning agent is to find a proper balance between exploration and exploitation of actions in order to achieve an optimal behavior. This paper compares multiple approaches to the exploration/exploitation dilemma in reinforcement learning and, moreover, it implements an exemplary reinforcement learning task within the domain of domestic robotics to show the performance of different exploration policies on it. We perform the domestic task using {$\epsilon$}-greedy, softmax, VDBE, and VDBE-Softmax with online and offline temporal-difference learning. The obtained results show that the agent is able to collect larger and faster reward by using the VDBE-Softmax exploration strategy with both Q-learning and SARSA.},
   keywords = {Boltzmann distribution,Decision making,Informatics,Markov processes,Reinforcement learning,Robots,Task analysis},
   file = {/Users/ludwig/Zotero/storage/5Q7VM9IZ/Cruz et al. - 2018 - Action Selection Methods in a Robotic Reinforcemen.pdf;/Users/ludwig/Zotero/storage/TWN8D4VJ/8625243.html}
+}
+
+@article{dabney2018DistributionalReinforcementLearning,
+  title = {Distributional {{Reinforcement Learning With Quantile Regression}}},
+  author = {Dabney, Will and Rowland, Mark and Bellemare, Marc and Munos, R{\'e}mi},
+  year = {2018},
+  month = apr,
+  journal = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume = {32},
+  number = {1},
+  issn = {2374-3468},
+  doi = {10.1609/aaai.v32i1.11791},
+  abstract = {In reinforcement learning (RL), an agent interacts with the environment by taking actions and observing the next state and reward. When sampled probabilistically, these state transitions, rewards, and actions can all induce randomness in the observed long-term return. Traditionally, reinforcement learning algorithms average over this randomness to estimate the value function. In this paper, we build on recent work advocating a distributional approach to reinforcement learning in which the distribution over returns is modeled explicitly instead of only estimating the mean. That is, we examine methods of learning the value distribution instead of the value function. We give results that close a number of gaps between the theoretical and algorithmic results given by Bellemare, Dabney, and Munos (2017). First, we extend existing results to the approximate distribution setting. Second, we present a novel distributional reinforcement learning algorithm consistent with our theoretical formulation. Finally, we evaluate this new algorithm on the Atari 2600 games, observing that it significantly outperforms many of the recent improvements on DQN, including the related distributional algorithm C51.},
+  copyright = {Copyright (c)},
+  langid = {english},
+  keywords = {temporal difference learning},
+  file = {/Users/ludwig/Zotero/storage/CL8VRCS7/Dabney et al. - 2018 - Distributional Reinforcement Learning With Quantil.pdf}
 }
 
 @article{deltetto2021ExploringPotentialitiesDeep,
@@ -513,13 +541,15 @@
   file = {/Users/ludwig/Zotero/storage/A9RGRQI2/Narayanamurthy et al. - Grid Integration of Zero Net Energy Communities.pdf}
 }
 
-@article{narayanamurthyGridIntegrationZero,
-  title = {Grid {{Integration}} of {{Zero Net Energy Communities}}},
-  author = {Narayanamurthy, Ram and Handa, Rachna and Tumilowicz, Nick and Herro, C R and Shah, Sunil},
-  pages = {12},
-  abstract = {Zero Net Energy (ZNE) homes will be the standard for residential construction in California by 2020. The Electric Power Research Institute (EPRI) worked with builder Meritage Homes, the California Public Utilities Commission (CPUC), Southern California Edison (SCE), and BIRAenergy, to design, construct, sell, and monitor a neighborhood of ZNE homes in Fontana, CA. These homes saturated two distribution transformers, to simulate the expected scenario of 2020 when every home would be ZNE. These homes were built to the California code specification of zero TDV (Time Dependent Value) Energy. They utilized electric heating and water heating, with an eye to meeting long term GHG goals through electrification. ZNE homes do not translate to zero energy use on a monthly, daily or hourly basis, and could actually increase the investments required in the transmission and distribution system. Their load profiles mimic the ``duck curve'', and at volume upset grid balancing with excess generation during the mid-morning hours and steep evening ramps. The research conducted evaluates potential of controllable loads and energy storage to balance the distribution grid at the transformer, feeder and substation levels. The initial results indicate that grid planning, traditionally based on cooling would need to increase wiring and transformers to accommodate ZNE with newer loads like heat pumps and electric vehicles. The analysis indicated more energy efficiency within ZNE assists both the grid and the builder, while PV is non-coincident. A load aggregation platform that connects and controls loads, battery storage, and PV generation can potentially reduce electrical infrastructure.},
+@inproceedings{nikolov2022InformationDirectedExplorationDeep,
+  title = {Information-{{Directed Exploration}} for {{Deep Reinforcement Learning}}},
+  booktitle = {International {{Conference}} on {{Learning Representations}}},
+  author = {Nikolov, Nikolay and Kirschner, Johannes and Berkenkamp, Felix and Krause, Andreas},
+  year = {2022},
+  month = feb,
+  abstract = {Efficient exploration remains a major challenge for reinforcement learning. One reason is that the variability of the returns often depends on the current state and action, and is therefore heteroscedastic. Classical exploration strategies such as upper confidence bound algorithms and Thompson sampling fail to appropriately account for heteroscedasticity, even in the bandit setting. Motivated by recent findings that address this issue in bandits, we propose to use Information-Directed Sampling (IDS) for exploration in reinforcement learning. As our main contribution, we build on recent advances in distributional reinforcement learning and propose a novel, tractable approximation of IDS for deep Q-learning. The resulting exploration strategy explicitly accounts for both parametric uncertainty and heteroscedastic observation noise. We evaluate our method on Atari games and demonstrate a significant improvement over alternative approaches.},
   langid = {english},
-  file = {/Users/ludwig/Zotero/storage/AA8K8EJF/Narayanamurthy et al. - Grid Integration of Zero Net Energy Communities.pdf}
+  file = {/Users/ludwig/Zotero/storage/9HFQ5ERU/Nikolov et al. - 2022 - Information-Directed Exploration for Deep Reinforc.pdf}
 }
 
 @article{norouzi2022ReviewSociotechnicalBarriers,
@@ -552,6 +582,16 @@
   langid = {english},
   keywords = {Benchmarking,Grid-interactive buildings,Reinforcement learning},
   file = {/Users/ludwig/Zotero/storage/8YFTLDP2/Nweye et al. - 2022 - Real-world challenges for multi-agent reinforcemen.pdf;/Users/ludwig/Zotero/storage/VRRTBCXR/S2666546822000489.html}
+}
+
+@inproceedings{osband2013MoreEfficientReinforcement,
+  title = {({{More}}) {{Efficient Reinforcement Learning}} via {{Posterior Sampling}}},
+  booktitle = {Advances in {{Neural Information Processing Systems}}},
+  author = {Osband, Ian and Russo, Daniel and Van Roy, Benjamin},
+  year = {2013},
+  volume = {26},
+  publisher = {{Curran Associates, Inc.}},
+  file = {/Users/ludwig/Zotero/storage/TH72TPE4/Osband et al. - 2013 - (More) Efficient Reinforcement Learning via Poster.pdf}
 }
 
 @article{perera2020QuantifyingImpactsClimate,
@@ -693,6 +733,17 @@
   file = {/Users/ludwig/Zotero/storage/Q49T6DJF/Saxe et al. - 2014 - Exact solutions to the nonlinear dynamics of learn.pdf;/Users/ludwig/Zotero/storage/5FHCSCZG/1312.html}
 }
 
+@article{saxe2014ExactSolutionsNonlineara,
+  title = {Exact Solutions to the Nonlinear Dynamics of Learning in Deep Linear Neural Networks},
+  author = {Saxe, A. and McClelland, J. and Ganguli, S.},
+  year = {2014},
+  journal = {Proceedings of the International Conference on Learning Represenatations 2014},
+  publisher = {{International Conference on Learning Represenatations 2014}},
+  abstract = {Despite the widespread practical success of deep learning methods, our theoretical understanding of the dynamics of learning in deep neural networks remains quite sparse. We attempt to bridge the gap between the theory and practice of deep learning by systematically analyzing learning dynamics for the restricted case of deep linear neural networks. Despite the linearity of their input-output map, such networks have nonlinear gradient descent dynamics on weights that change with the addition of each new hidden layer. We show that deep linear networks exhibit nonlinear learning phenomena similar to those seen in simulations of nonlinear networks, including long plateaus followed by rapid transitions to lower error solutions, and faster convergence from greedy unsupervised pretraining initial conditions than from random initial conditions. We provide an analytical description of these phenomena by finding new exact solutions to the nonlinear dynamics of deep learning. Our theoretical analysis also reveals the surprising finding that as the depth of a network approaches infinity, learning speed can nevertheless remain finite: for a special class of initial conditions on the weights, very deep networks incur only a finite, depth independent, delay in learning speed relative to shallow networks. We show that, under certain conditions on the training data, unsupervised pretraining can find this special class of initial conditions, while scaled random Gaussian initializations cannot. We further exhibit a new class of random orthogonal initial conditions on weights that, like unsupervised pre-training, enjoys depth independent learning times. We further show that these initial conditions also lead to faithful propagation of gradients even in deep nonlinear networks, as long as they operate in a special regime known as the edge of chaos.},
+  langid = {english},
+  file = {/Users/ludwig/Zotero/storage/IJQ9NS96/Saxe et al. - 2014 - Exact solutions to the nonlinear dynamics of learn.pdf}
+}
+
 @article{schreiber2020ApplicationTwoPromising,
   title = {Application of Two Promising {{Reinforcement Learning}} Algorithms for Load Shifting in a Cooling Supply System},
   author = {Schreiber, Thomas and Eschweiler, S{\"o}ren and Baranski, Marc and M{\"u}ller, Dirk},
@@ -756,6 +807,20 @@
   file = {/Users/ludwig/Zotero/storage/GC7LFKEW/Talha - 2022 - Optimal Management of community Demand Response.pdf;/Users/ludwig/Zotero/storage/HYSRZS52/6882.html}
 }
 
+@article{thompson1933LikelihoodThatOne,
+  title = {On the {{Likelihood}} That {{One Unknown Probability Exceeds Another}} in {{View}} of the {{Evidence}} of {{Two Samples}}},
+  author = {Thompson, William R.},
+  year = {1933},
+  journal = {Biometrika},
+  volume = {25},
+  number = {3/4},
+  pages = {285--294},
+  publisher = {{[Oxford University Press, Biometrika Trust]}},
+  issn = {0006-3444},
+  doi = {10.2307/2332286},
+  file = {/Users/ludwig/Zotero/storage/EMPDF6VQ/Thompson - 1933 - On the Likelihood that One Unknown Probability Exc.pdf}
+}
+
 @article{tolovski2020AdvancingRenewableElectricity,
   title = {Advancing {{Renewable Electricity Consumption With Reinforcement Learning}}},
   author = {Tolovski, Filip},
@@ -774,7 +839,7 @@
 @article{vazquez-canteli2019CityLearnV1OpenAI,
   title = {{{CityLearn}} v1.0: {{An OpenAI Gym Environment}} for {{Demand Response}} with {{Deep Reinforcement Learning}}},
   shorttitle = {{{CityLearn}} v1.0},
-  editor = {{V{\'a}zquez-Canteli}, Jos{\'e} and K{\"a}mpf, J{\'e}r{\^o}me and Henze, Gregor and Nagy, Zolt{\'a}n},
+  author = {{V{\'a}zquez-Canteli}, Jos{\'e} and K{\"a}mpf, J{\'e}r{\^o}me and Henze, Gregor and Nagy, Zolt{\'a}n},
   year = {2019},
   journal = {Proceedings of the 6th ACM International Conference on Systems for Energy-Efficient Buildings, Cities, and Transportation},
   publisher = {{ACM}},

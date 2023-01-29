@@ -36,10 +36,6 @@ In the pre-experiment on the effect of discretization, the rule-based agent perf
 
 
 \section{Hyperparameter Tuning}
-\todo{
-- How much computational power did the tuning take?
-  - if I can find it. If not, just omit.
-}
 All 200 runs of $\epsilon$-greedy DQN completed successfully.
 10/100 runs of UA-DQN, all runs with a batch size of 1, failed.
 18/200 runs of DQN-softmax failed, all of which share a batch size of 8.
@@ -64,11 +60,11 @@ Both DQN algorithms show a peak at around -5000, which corresponds to strategies
            & Batch Size                                   & 128 &  0.28\\
            & Adam's $\epsilon$                            & 1e-07 & -0.03\\
            & \makecell{Target Network \\ Update Frequency}& 4 & -0.11\\ \hline
-    DQN-softmax & Learning Rate                                 & 3e-4 & \bf{-0.36} \\
+    DQN-Softmax & Learning Rate                                 & 3e-4 & \bf{-0.36} \\
                 & Batch Size                                    & 128 & -0.18\\
                 & Adam's $\epsilon$                             & 1e-05 & -0.02\\
                 & \makecell{Target Network \\ Update Frequency} & 4 &  0.16\\ \hline
-    DQN-$\epsilon$-greedy & Learning Rate                       & 7e-05 & \bf{-0.33}\\
+    $\epsilon$-greedy DQN & Learning Rate                       & 7e-05 & \bf{-0.33}\\
                 & Batch Size                                    & 4 & -0.19\\
                 & Adam's $\epsilon$                             & 1e-08 &  0.10\\
                 & \makecell{Target Network \\ Update Frequency} & 16 &  0.14
@@ -113,12 +109,24 @@ When repeated with 10 different seeds, a single run of DQN-softmax failed, compa
 
 \begin{table}
   \centering
+  \caption{This table shows the mean time per training episode for each of the tuned algorithms.}
+  \label{tab:resources}
+  \begin{tabular}[pos]{c|c}
+    Agent & Mean Time per Training Episode \\ \hline           
+    UA-DQN   & 95.3s \\
+    DQN-Softmax  &27.2s \\
+    $\epsilon$-greedy DQN &20.7s \\
+  \end{tabular}
+\end{table}
+
+\begin{table}
+  \centering
   \caption{This table shows the mean performance of tuned algorithms when evaluated using their respective action selection policy for one episode on Building 1.}
   \label{tab:tuned_results}
   \begin{tabular}{l|ccccc}
     Agent                 & Dollar Cost & Carbon Emission & Average \\ \hline
     Control (Idle)   & 1    & 1    & \textbf{1}    \\
-    DQN $\epsilon$-greedy & 0.83 & 0.94 & $\mu = \mathbf{0.88}, SD = 0.017$ \\
+    $\epsilon$-greedy DQN & 0.83 & 0.94 & $\mu = \mathbf{0.88}, SD = 0.017$ \\
     DQN-Softmax           & 0.83 & 0.93 & $\mu = \mathbf{0.88}, SD = 0.019$ \\
     UA-DQN                & 0.82 & 0.91 & $\mu = \mathbf{0.87}, SD = 0.010$ \\
     Discrete Rule-Based   & 0.80 & 0.88 & \textbf{0.84}

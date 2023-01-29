@@ -7,27 +7,6 @@ As a baseline, I establish a rule-based policy based on patterns in the data.
 Finally, I compare UA-DQN against the baseline and two versions of the DQN algorithm that differ in their action selection.
 
 
-\todo[inline]{    - !!! where does uncertainty come from in CityLearn !!!,
-- forecasting problems:
-    - uncertainty about future occupant behavior (electricity demand)
-    - uncertainty about future solar power production (weather forecasts)
-    - uncertainty about future costs (price forecasts)
-- measurement uncertainty:
-    - observations might be imprecise
-- coordination uncertainty:
-    - uncertainty about other actors' strategy and current actions
-- reward uncertainty:
-    - uncertainty about the consequences of actions
-    - the observed reward might be imprecise
-    - the observed reward might not be the intended reward ???
-    
-Which uncertainties need to be specially treated?
-}
-\todo[inline]{Motivation: What advantages would an uncertainty-aware strategy have?
-- better risk management (possibly)
-- better performance (possibly)
-- better interpretability and robustness (possibly)
-}
 
 
 
@@ -41,7 +20,7 @@ The simulation framework used by both the challenge and this thesis is CityLearn
 
 \subsection{Data}
 The Dataset provided for the 2022 CityLearn challenge setup contains a year of hourly observations of a number of variables that describe the energy system of a building.
-At it's core, it supplies real-world per-building measurements of electricity use and photovoltaic solar power generation from five model buildings set up by the Electric Power Research Institute (EPRI) in Fontana, California as part of the research described in \cite{narayanamurthyGridIntegrationZero}.
+At it's core, it supplies real-world per-building measurements of electricity use and photovoltaic solar power generation from five model buildings set up by the Electric Power Research Institute (EPRI) in Fontana, California as part of the research described in \cite{narayanamurthy2016GridIntegrationZero}.
 These are coupled with weather variables (Outdoor Temperature, Relative Humidity, Diffuse and Direct Solar Radiation).
 Future weather data is also provided as part of the data, with an offset of 6, 12 and 24 hours into the future.
 The data also contains carbon intensity and price of electricity provided by the grid.
@@ -85,13 +64,13 @@ I discretize the action space into a number of discrete actions. The number of d
 \subsubsection{Reward Function}
 The reward function is designed to match the initial challenge objective as closely as possible.
 The per-building reward at time step $t$ is given by
-$$r_t = - \frac{\text{cost}_t}{\text{cost}_\text{no battery total}}
-    - \frac{\text{carbon emissions}_t}{\text{carbon emissions}_\text{no battery total}} \cdot 8760,$$
+$$r_t = - \left(\frac{\text{cost}_t}{\text{cost}_\text{no battery total}}
+    + \frac{\text{carbon emissions}_t}{\text{carbon emissions}_\text{no battery total}}\right) \cdot 8760,$$
 where $\text{cost}_\text{no battery total}$ and $\text{carbon emissions}_\text{no battery total}$ are the total dollar cost and carbon emissions observed over one year in a control situation where the battery is never used.
 The reward is always negative.
 
 \subsection{Implementation Details}
-During the 2022 CityLearn Challenge, I contributed to the CityLearn environment.
+During the 2022 CityLearn Challenge, I contributed work to the CityLearn framework.
 I found and proposed a fix for an implementation error that meant that the environment would recompute the entire episode history at every time step $t$.
 My fix\footnote{\url{https://github.com/intelligent-environments-lab/CityLearn/pull/23}} instead reuses the result of the preceding time step $t-1$, which changes the per-step complexity from $O(t^2)$ to $O(1)$, roughly leading to a 100x-speedup over the course of an episode.
 I also contributed to finding a bug\footnote{\url{https://github.com/intelligent-environments-lab/CityLearn/issues/37}} in the battery model.
@@ -104,58 +83,40 @@ The hardware used was a 2020 Macbook Air M1 for the discretization pre-experimen
 
 \section{Algorithm}
 \subsection{Uncertainty-Aware Deep Q-Network} % the new method I want to evaluate.
-\todo[inline]{
-1. Introduce and explain UA-DQN
-    - Significance and motivation:
-        - With energy, you need to make risk-aware decisions, and exploration is expensive.
-        - UA-DQN has very good performance in original paper (cite), beating DQN by exploring better. How?
-    - Idea:
-        - Learn distributions instead of only mean Q value.
-        - Thompson sampling from these distributions.
-        - Detangle epistemic and aleatoric uncertainty. How?
-        - 
-    
-    - Explain how it works, compared to DQN
-        - How does policy evaluation happen? (Learning?)
-            - distribution is learned by a network, building on the author's prior work distributional RL.
-        - How does prediction happen? (Action Selection)
-            - There are two uncertainties: aleatoric and epistemic. (cite something here)
-                - explain their significance
-            - How to estimate uncertainties
+In RL, it is important to distinguish between epistemic uncertainty, which is caused by limited data, and aleatoric uncertainty, which is caused by stochasticity in the environment \citep{hullermeier2021AleatoricEpistemicUncertainty}.
+Efficient exploration aims to reduce epistemic uncertainty for promising actions, but can't reduce aleatoric uncertainty.
+\cite{nikolov2022InformationDirectedExplorationDeep} propose to estimate aleatoric uncertainty using the variance of the estimated reward distribution.
+However, \cite{chua2018DeepReinforcementLearning} highlight that this approach fails for novel, out-of-distribution data, when epistemic uncertainty is high.
 
-        - Explain algorithm parameters:
-            - "Risk aversion" exposes the exploration vs exploitation dilemma directly
-}
+The UA-DQN algorithm proposed by \cite{clements2020EstimatingRiskUncertainty} learns a distribution of expected rewards, and simultaneously provides estimates for epistemic and aleatoric uncertainties.
+These uncertainties are used to adjust the expected value and variance for each action, before using Thompson sampling to select an action.
+This leads to an algorithm that can efficiently explore.
+Depending on its hyperparameters, the algorithm can be more or less risk-averse.
+
+Efficient exploration and risk-aware strategies are most important when the costs and risks associated with an environment interaction are high, as they are in a real-world energy setting.
+Therefore, I test the performance of the UA-DQN algorithm on the battery control environment, replicating the experiments described in \cite{clements2020EstimatingRiskUncertainty}.
+
+\todo[inline]{maybe:
+more details:
+- which networks?
+- which further tricks? (Target nets, Experience replay)
+- how are the uncertainties estimated?}
 
 \subsection{DQN}
-2. DQN variants
-    - based on the UA-DQN paper
-    - e-greedy
-    - Softmax for a different take on action selection (TODO cite)
-    - Boltzmann exploration (is the fancy name for Softmax)
-
-    - Mention all tricks used by the algorithm
-        - replay buffer
-
-    \cite{cruz2018ActionSelectionMethods} compare different action selection strategies, some of which dynamically adapt \todo{cite one of them}
+In order to study the benefit of an explicit uncertainty treatment, I evaluate the performance of two variants of the standard DQN algorithm.
+Like in \cite{clements2020EstimatingRiskUncertainty}, one DQN variant acts according to an $\epsilon$-greedy policy, which linearly decays $\epsilon$ from 1.0 to 0.02 in the first 1000 steps.
+The second variant, referred to throughout the thesis as "DQN-Softmax" uses Boltzmann sampling on the estimated Q-values.
 
 \subsection{Implementation Details}
-- Implementation Details:
-    - shared implementation details:
-        - Implementation taken from the original paper
-        - Mention Network size
-        - Initialization unified
-        - Weight Scale changed cite!
-        - Adam optimizer
-    - UADQN implementation details
-        - Loss function
-    - DQN implementation details
-        - Loss function
-        - e-greedy and softmax
-    - Logging
-    - Exposing Hyperparameters
+The implementation for all three Reinforcement Learning agents is based on the implementation provided with \cite{clements2020EstimatingRiskUncertainty} with minimal changes.
+All neural networks have two hidden layers with 128 neurons each and ReLU activation functions.
+They are randomly initialized with an orthogonal matrix as described by \cite{saxe2014ExactSolutionsNonlinear}, with a weight scale factor of $\sqrt{2}$.
 
+All algorithms use the Adam optimizer, with tuned $\epsilon$ and learning rate parameters.
+All algorithms use experience replay and a periodically updated target Q-network.
 
+UA-DQN is set to be risk-neutral, with the aleatoric factor fixed to 0 and the epistemic factor fixed to 1.
+Loss functions are Mean Squared Error for DQN, and Quantile Huber Loss for UA-DQN.
 
 \subsection{Baseline Rule-Based-Controller}
 In order to be able to evaluate the performance of the Reinforcement Learning agent, I establish a rule-based controller as baseline.
@@ -202,13 +163,14 @@ The policy also does not incorporate the change in price between weekdays.
 There are some days on which there is so little excess demand during the day that it would not be worth charging the battery.
 Finally, the policy does not make use of weather forecasts, which predict solar electricity production.
 
-Overall, the policy serves as a useful benchmark of what a thoughtful human can do when knowing some of the system's dynamics.
+Overall, the policy is a useful benchmark of expert human performance.
 
 
 \section{Experiment} % How I plan to evaluate it
 \todo[inline]{
 TODO:
-Explain in more detail: What am I measuring, how will I evaluate the results?
+- Explain in more detail: What am I measuring, how will I evaluate the results?
+- Implementation details: runscript, slurm scheduling, etc.
 }
 
 \subsection{Discretization} \label{sec:discretization}
@@ -243,8 +205,8 @@ All other hyperparameters I set to default values as noted in table \ref{tab:tun
         \makecell[l]{Target Network \\ Update Frequency} & Tuned: $(4, 8, 16, 32)$ \\ \hline
         Replay Buffer Size & 10,000 \\
         Discount Rate $\gamma$ & 0.99 \\ %should this be here? TODO
-        Network Weight scale & $\sqrt{2}$ \\
-        $\epsilon$-greedy DQN: $\epsilon$ & Decay from 0.1 to 0.02 over 1,000 steps \\
+        Initialization Weight scale & $\sqrt{2}$ \\
+        $\epsilon$-greedy DQN: $\epsilon$ & Decay from 1 to 0.02 over 1,000 steps \\
         UA-DQN: Quantile Huber Loss $\kappa$ & 10 \\
         UA-DQN: aleatoric factor & 0 \\
         UA-DQN: epistemic factor & 1 \\
@@ -264,5 +226,6 @@ For each algorithm, I select the best combination of hyperparameters during tuni
 Following the analysis of \cite{clements2020EstimatingRiskUncertainty}, I measure the fraction of non-greedy actions for each algorithm across a training run.
 This will illustrate the difference in how the algorithms balance exploitation and exploration as they learn.
 
-Finally, I repeat the previous experiment with 10 different random seeds in order to be able to measure the repeatability of each algorithm.
+Finally, I repeat the previous experiment with 10 different random seeds in order to be able to measure the repeatability and resource demands of each algorithm.
 I evaluate each algorithm by its mean performance compared to the baseline and by its variance.
+I also measure the time per training episode.
