@@ -3,71 +3,56 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Introduction}\label{Introduction}
-\todo[inline]{Start with a comprehensive introduction about the questions of your thesis. 1-2 pages:}
-\todo[inline]{When proofreading: Check that all terms and abbreviations are introduced here}
-
 %- Because of climate change we switch the grid to renewable energies
 Climate Change is the global challenge of our lifetime. Carbon introduced into the atmosphere when burning fossil fuels for human needs causes global warming, destabilizing the climate, ecosystems, and societies around the world.
-In the Paris Agreement of ...\todo{cite} governments have committed to an ambitious goal of drastically reducing carbon emissions to keep global warming from increasing beyond 2°C, compared to ...
-The latest IPCCC report\todo{cite} urges governments to take stronger actions, or their previous commitment will not be reached.
+In the Paris Agreement of 2015, governments have committed to an ambitious goal of drastically reducing carbon emissions to keep global warming from increasing beyond 2 °C, compared to 1990.
+The latest report by the Intergovernmental Panel on Climate Change  urges governments to take stronger actions, or their previous commitment will not be reached \citep{portner2022ClimateChange2022}.
 A key strategy for reducing carbon emissions from a range of sources is the combination of two measures: The first step is to electrify current processes that use fossil fuels, like replacing gas-fired furnaces with heat pumps. The second step is to replace carbon-intensive electricity generation with renewable options like solar and wind power.
 
 %- renewable energies are less flexible than conventional energy supply
-While much better for the natural environment, renewable sources of energy pose a challenge for a grid built for fossil fuels: Unlike fossil-fuelled power plants, renewable power production depends on the weather, and it can not react flexibly to changes in demand.
-
-As the share of installed renewable sources of electricity continues to grow from today's...\%\todo{cite}, the reliability of the electricity supply goes down.
-
-\todo{talk about reacting to less reliability in renewable production, not only reacting to demand}
+While much better for the natural environment, renewable sources of energy pose a challenge for a grid built for fossil fuels:
+Unlike fossil-fuelled power plants, renewable power production depends on the weather, and it can not react flexibly to changes in demand.
+As the share of installed renewable sources of electricity continues to grow, the reliability of the electricity supply will go down.
 
 %- for a stable system, we need flexibility somewhere: supply, demand, or grid storage
 In order to keep the grid stable, supply and demand must always be in balance. Before the green transition, this was achieved by flexible power generation: When demand was high, electricity producers were able to react and increase production.
 This was incentivized by a complex and tightly regulated market constructed on top of the physical layer.
 %    - supply doesn't work, so we need flexibility in demand and/or grid storage.
-As the share of renewable power increases, fossil-fuelled plants remain the only market participants that can flexibly react to changes in demand.
+As the share of renewable power increases, fossil-fuelled plants remain the only market participants that can flexibly react to changes renewable production and demand for electricity.
 When phasing out fossil-fuelled power generation, this flexibility needs to be provided by different parts of the system.
 
 %    - in this thesis, I focus on demand-side flexibility.
 There are dedicated electricity storage facilities that can react very quickly to stabilize the grid by storing and releasing energy as needed.
-However, consumer electricity demand can flexibly react to changes in supply, a scheme called Demand Response.
-Grid-scale storage in Europe mainly consists of hydropower, which has been installed where mountainous geography allows, and capacity has reached its natural limit.\todo{cite}
+Grid-scale storage in Europe mainly consists of hydropower, which has been installed where mountainous geography allows, and capacity is limited \cite{gimeno-gutierrez2015AssessmentEuropeanPotential}.
 More expensive battery-powered storage facilities are slowly being built, but are largely not cost-efficient in the current economic setting.
-
-In this thesis, I focus on an opportunity to make consumer electricity demand more flexible.
+Therefore, there is a need for \emph{Demand Response}, or the ability of demand to flexibly respond to available electricity supply.
 
 %- buildings are responsible for x\% of energy use
-Buildings require energy mainly for heating and cooling the air and the water supply. Today, they are responsible for ...\% of total energy demand\todo{cite}. On the other hand, buildings often contribute to electricity production through photovoltaic panels. New buildings often come with a battery, which enables them to more efficiently use their solar electricity.
-
 %- it makes sense for buildings to be able to react flexibly to changing conditions
-Building's electricity consumption is already largely automated and is therefore a prime candidate for automated demand response.\todo{mention incentive-based human DR}
-\todo{list other automated control algorithms and their goals}
+Buildings use energy mainly for heating and cooling air and water supply.
+Today, they are responsible for 17.5\% of global carbon emissions \cite{ritchie2020COGreenhouseGas}.
+On the other hand, buildings often contribute to electricity production through photovoltaic panels. New buildings are often equipped with a battery, which enables them to more efficiently use their solar electricity.
+Building electricity consumption is already largely automated and is therefore a prime candidate for automated demand response.
 
 %- I use RL, an adaptive control algorithm, to provide this demand-side flexibility
 %- cite RL in Demand Response
-The Reinforcement Learning family of control algorithms has successfully been applied for control of the battery of simulated buildings. \todo{cite algorithms}. A popular simulation framework for this purpose is CityLearn\todo{cite CityLearn}.
-In this thesis, I set out to test Uncertainty-Aware Deep Q-Networks \todo{cite algorithm} on CityLearn. UA-DQN is an uncertainty-aware adaptation of Deep Q-Learning\todo{cite DQN}.
+The \emph{Reinforcement Learning} (RL) family of control algorithms has shown promising performance in many control tasks, most notably video games (for example \cite{mnih2015HumanlevelControlDeep}), robotics \citep{latifi2020ModelFreeControlDynamicField} or wind power generation.% \citep{zhang2020ResearchAGCPerformance}.
+RL is also being studied for controlling energy systems in buildings.
+A popular simulation framework for this purpose is CityLearn \cite{vazquez-canteli2020CityLearnStandardizingResearch} introduce CityLearn, which proved a popular simulation framework for applying RL algorithms to building energy storage control.
+
+\cite{wang2020ReinforcementLearningBuilding} find that the demand for data is a key challenge for applying RL for building control.
+\cite{clements2020EstimatingRiskUncertainty} introduce \emph{Uncertainty-Aware Deep Q-Networks} (UA-DQN), a distributional RL algorithm based on DQN \citep{mnih2015HumanlevelControlDeep} that uses explicit uncertainty estimates for approximate Thompson sampling.
+On a video game task, they show that this allows the algorithm to explore more efficiently, reducing the need for data.
+In this thesis, I set out to test UA-DQN on a battery control task implemented with CityLearn.
 
 %- my contribution is to apply uncertainty-aware RL, in the hopes of getting
 %    - better performance 
 %    - more robustness 
 %    - risk-aware strategies
-The algorithm's better treatment of uncertainty should lead to overall better performance with less need for data, better robustness for novel data, and can even be leveraged for differently risk-aware charging and discharging strategies.
-\todo[inline]{talk about results!}
 %- this contributes to our goal (flexibility in demand side).
-These aspects are important for a demand response algorithm, which provides flexibility to the grid while reliably meeting building demands for energy. \todo{rephrase}
+The algorithm's better treatment of uncertainty should lead to overall better performance with less need for data, better robustness for novel data, and can even be leveraged for differently risk-aware charging and discharging strategies, all of which are important for building energy management.
 
-This thesis is structured as follows: In the following chapter, I motivate in more detail the need for Automated Demand Response. I introduce the theory of Reinforcement Learning and lay the foundations for the uncertainty-aware algorithm.
-In chapter~\ref{approach}, I present the uncertainty-aware algorithm, as well as a detailed description of the experimental setup.
-I present the results in chapter~\ref{results}. A discussion and a short outlook conclude the thesis.
-
-
- 
- \todo[inline]{
-    Things to add in introduction:
-    - Einordnung in die bestehende Literatur. Was ist an meinem Ansatz anders als an bisherigen Ansätzen?
-    - Little bit of Results (abstrakt success vs failure) (technical, numbers)
-
-    Terms to check:
-        - Demand Response vs. Demand Side Management
-        - Reinforcement Learning
-        - Electrical Grid
- }
+This thesis is structured as follows: In chapter \ref{chap:background}, I motivate in more detail the need for Automated Demand Response. I introduce the theory of Reinforcement Learning and lay the foundations for the uncertainty-aware algorithm.
+In chapter \ref{approach}, I present the uncertainty-aware algorithm, as well as a detailed description of the experimental setup.
+I present the results in chapter \ref{results}.
+A discussion and a short outlook conclude the thesis.

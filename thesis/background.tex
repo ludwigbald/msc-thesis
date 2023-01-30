@@ -2,21 +2,14 @@
 % Grundlagen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Background and related work}
-  \todo[inline]{Give all the necessary background that is needed to justify and understand the problem and the approach.
-  - comment on employed hardware and software
-  - describe methods and techniques that build the basis of your work
-  - review related work(!)
-  - roughly 1/3 of thesis
-  }
-
+\chapter{Background and related work} \label{chap:background}
 \section{The Electrical Grid and Flexibility}
 % 1. Describe the goals and the structure of the Electrical Grid
 The electrical grid is basic infrastructure that enables the function of our modern society.
 It connects electricity consumers, from private consumers to heavy industry, with producers.
-Historically, the entire system has been built for reliable large-scale power generation, overwhelmingly fuelled by coal and natural gas, together accounting for 67\% of Germany's electricity consumption in 1985, with 27\% provided by nuclear energy \cite{ritchie2022Energy}.
+Historically, the entire system has been built for reliable large-scale power generation, overwhelmingly fuelled by coal and natural gas, together accounting for 67\% of Germany's electricity consumption in 1985, with 27\% provided by nuclear energy \citep{ritchie2022Energy}.
 
-Climate change and the exit from nuclear power require a radical increase in the share of renewable electricity. As of 2021, renewable energy accounts for 40\% of electricity consumption in Germany \cite{ritchie2022Energy}.
+Climate change and the exit from nuclear power require a radical increase in the share of renewable electricity. As of 2021, renewable energy accounts for 40\% of electricity consumption in Germany \citep{ritchie2022Energy}.
 An overview of the historical development is shown in figure \ref{fig:electricity_mix}
 
 \begin{figure}
@@ -40,25 +33,26 @@ As a result, the share of electricity powered by natural gas has risen along wit
 
 
 % 2. Describe Challenges posed by the energy transition
-Another aspect of the energy transition is the electrification of many processes which previously used fossil fuels directly.
+Electricity demand additionally increases because of the electrification of many processes which previously used fossil fuels directly.
 Internal combustion engine cars are being replaced by more efficient battery-powered electric cars and heating units that use natural gas or oil are being replaced by much more efficient electric heat pumps.
 Many heat pumps can also be run in reverse to cool a building, which climate change makes more and more necessary, but this enables additional electricity demand in the summer.
 
 The ongoing energy transition puts a lot of pressure on the grid.
-On the one hand, the electricity supply is becoming less reactive, while on the other hand, many polluting processes are being electrified, causing additional demand.\todo{maybe give specific number}
+On the one hand, the electricity supply is becoming less reactive, while on the other hand, many polluting processes are being electrified, causing additional demand.
 During large future demand spikes, the total load on the grid could exceed current capacity. To cope, new transmission lines are being built, a costly and complicated process.
 
 In order to both reduce reliance on fossil fuels and to keep the total load below grid capacity, there is a need for additional flexibility in the system.
 A traditional source of flexibility has been pumped hydropower storage.
 When there's unused electricity, it can be stored by pumping water uphill.
 When needed, water can be released and used to generate electricity. 
-Hydropower depends almost entirely on geography. There is almost no potential to develop more hydropower storage.
+Hydropower capacity depends almost entirely on geography.
+There is almost no potential to develop more hydropower storage.
 
-A different large-scale method of energy storage is batteries, which have only found limited use due to their cost. Hydrogen can also be used as a way to store and even transport energy, with several chemical processes currently being explored.
-However, this method is also costly, and any produced hydrogen is probably worth more as a crucial chemical than as pure electricity storage.\todo{rephrase, cite}
+A different large-scale method of energy storage is batteries, which have only found limited use due to their cost.
+Hydrogen can also be used as a way to store and even transport energy, with several chemical processes currently being explored.
+However, hydrogen production capacity is needed for industrial applications first, replacing hydrogen generated as a byproduct of the fossil fuel industry.
 
-As flexibility in electricity supply decreases, and centralized storage facilities remain too expensive, electricity demand needs to become more flexible.
-
+As flexibility in electricity supply decreases, and large-scale centralized storage facilities remain prohibitively expensive, electricity demand needs to become more flexible.
 
 \section{Demand Response}
 % 3. Demand Side Flexibility
@@ -69,7 +63,7 @@ As a matter of last resort, rolling blackouts are introduced to curb demand when
 An electric grid designed for renewable energy needs more fine-grained coordination across a larger fraction of demand.
 
 In order to implement demand response, electricity consumers need to be incentivized and able to adapt their processes to available supply.
-Proposed incentive schemes for demand response include market-based solutions that feature a flexible electricity price and solutions of centralized control that pay out flat rewards for participation, as well as combinations of the two. \todo{cite}
+Proposed incentive schemes for demand response include market-based solutions that feature a flexible electricity price and solutions of centralized control that pay out flat rewards for participation, as well as combinations of the two \citep{khajavi2011RoleIncentiveBased}.
 In order to be able to react to changes in demand, electricity-consuming processes need to be aware of the current and future available supply.
 This can be a human in the loop, deciding to shift a process to a time with cheaper electricity, or this can be automated.
 For example, a private prosumer that produces solar electricity might prefer to run their washing machine only on sunny days when electricity is free to them.
@@ -79,23 +73,11 @@ As stated before, the process of heating is being electrified.
 While this increases the load on the electric grid, it is also a chance to provide flexibility:
 When equipped with an intelligent and connected control system, the heating system can flexibly react to changes in price, using hot water tanks or the building itself as heat storage.
 Similarly, when intelligently automated, the charging process of an electric car or a home battery can somewhat react to market conditions.
-\todo{somehow mention coordination goals}
 
 Technologically, this amounts to a control problem:
 The controller's goals are to meet certain demands (like ensuring a comfortable living temperature) while minimizing cost. In the context of the larger system, there is the shared goal of coordination between different electricity-consuming processes.
 This involves both an understanding of the dynamics of the controlled system and an understanding of how prices are likely to change.
-Different technological approaches can be employed for this.
-When system dynamics are known and prices change predictably, for example with fixed rates per time of day, an optimal rule-based controller can be derived. \todo{cite and make sure this is true!}
-A rule-based controller has the advantage of being transparent and reliable, but it's not flexible enough to react to changing system and pricing dynamics.
-Several adaptive control algorithms have been proposed for use in demand response. \todo{List some and cite}
-\missingfigure{illustrate control problem}
-\todo[inline]{
-    notes on this section:
-        - focus more on buildings
-        - use the following review paper:
-        - \cite{li2021EnergyFlexibilityResidential}, a review paper about energy flexibility in residential buildings
-}
-
+Different technological approaches can be employed for this, for example Rule-Based Controllers or Model Predictive Control \citep{li2021EnergyFlexibilityResidential}.
 
 \section{Reinforcement Learning}
 
@@ -126,7 +108,8 @@ Several adaptive control algorithms have been proposed for use in demand respons
 \subsection{Reinforcement Learning Fundamentals}
 Reinforcement Learning (RL) is a feedback-based learning paradigm derived from behavior learning in animals.
 This section serves as a brief introduction to the topic.
-Unless otherwise stated, this section is based on the textbook \cite{sutton2018ReinforcementLearningIntroduction}.
+Unless where it's stated otherwise, this section is based on \cite{sutton2018ReinforcementLearningIntroduction}.
+
 In Reinforcement Learning, there is a clear distinction between the learning agent and the environment.
 The agent is able to observe the state of the environment and perform an action.
 In turn, the environment is affected by the action and transitions into a new state according to its stochastic transition dynamics.
@@ -139,14 +122,15 @@ Formally, it is a discounted Markov Decision Process (MDP):
 $$ \text{MDP} = (S, A, R, \gamma, p),$$
 where $S$ is the set of possible states, $A$ is the set of possible actions, $R$ is the set of possible rewards, $\gamma$ is the discount rate and $p(s', r|s,a)$ is the probability distribution that specifies the environment dynamics.
 It is important to note that an MDP has the Markov Property, i.e. the dynamics depend entirely on the state and action, there is no hidden state.
-The state space can therefore also be called the observation space.
+The state space is therefore also the entire observation space.
 
 When modeling a real-world control problem, an MDP necessarily is a simplifying assumption.
 In reality, state transitions often depend on outside influences or are non-stationary for other reasons.
-In complex problems, the desired behavior is not obvious. Therefore, designing the reward function is often non-trivial.
+The reward function shapes the agent's behavior.
+In complex problems, the desired behavior is not obvious.
+Therefore, designing the reward function is often non-trivial.
 
-\todo{Maybe: Mention a few RL applications that can be used as examples}
-\todo{Mention exploration/exploitation-dilemma here}
+
 % Reinforcement Learning algorithms need to solve the Exploration/Exploitation-Dilemma.
 % When interacting with the environment, they need to balance between the value of gathering new information and the value of acting greedily according to their current knowledge.
 % The $\epsilon$-greedy policy exposes the parameter $\epsilon$ as a direct way to control this trade off.
@@ -156,33 +140,38 @@ In complex problems, the desired behavior is not obvious. Therefore, designing t
 
 % 2. Towards DQN
 \subsection{Q-Learning}
-% - Value Learning
-Some environment states are preferable to others.
-Value Learning is a class of RL algorithms that builds on this intuition.
-From a trajectory of state-action-observation-reward tuples that were generated while following a policy $\pi$, a Value Learning algorithm assigns each state the expected future discounted reward that will be received when the agent, in state $s$, continues to act according to $\pi$:
-
-$$v_\pi(s) = \mathbb{E}[G_t | S_t=s] = \mathbb{E}[\sum_{k=0}^{\infty}\gamma^kR_{t+k+1} | S_t = s], \text{for all } s \in S$$
-
-Similarly, one can define the value of taking an action $a$ in a given state $s$:
+Given an MDP, one algorithm for learning a policy is \emph{Q-Learning}.
+Q-Learning is a type of Value Learning algorithm.
+From observed environment interactions, the algorithm builds up an internal representation of action values $q(s,a)$, called \emph{Q-function}.
+Formally, the Q-function is the expected value of total discounted reward $G_t$, when starting in state $s$, taking action $a$, and then following a policy $\pi$.
+% Q-Function approximation target
 \begin{equation} \label{eq:qfunction}
-    q_\pi(s,a) = \mathbb{E}[G_t | S_t=s, A_t = a] = \mathbb{E}[\sum_{k=0}^{\infty}\gamma^kR_{t+k+1} | S_t = s, A_t = a]
+    q_\pi(s,a) = \mathbb{E}_\pi\left[G_t | S_t=s, A_t = a\right] = \mathbb{E}_\pi\left[\sum_{k=0}^{\infty}\gamma^kR_{t+k+1} \mid S_t = s, A_t = a\right]
+\end{equation}
+The goal is to approximate the optimal Q-function $q_*$, which describes the expected return when taking an action and then following the optimal policy $\pi_*$.
+
+% Bellmann update
+On the optimal Q-function $q_\pi$, the Bellman optimality condition must hold:
+\begin{equation} \label{eq:bellman}
+    q_*(s,a) = \mathbb{E}\left[R_{t+1} + \gamma \max_{a'}q_*(S_{t+1}, a') | S_t = s, A_t = a \right]
 \end{equation}
 
-This Action-Value Function or Q-function induces a greedy policy by evaluating $q(s,a)$ for the current state and all possible actions, and selecting the highest-expected reward action.
-For the optimal policy $\pi_*$, the greedy policy induced by $q_{\pi_*}$ is $\pi_*$ itself.
+% Getting a policy
+Given a Q-function, a greedy policy can be derived:
+\begin{equation} \label{eq:greedy}
+    \pi(s) = \max_a(q_*(s,a))
+\end{equation}
 
-%explain (e-greedy) action selection
-%explain Q-Learning
-A process that iteratively improves an initial Q-function is Q-Learning.
-Its basic idea is that the Q-function can induce a better greedy policy than the one with which it was generated.
-A Q-Learning step consists of taking an action $a$ in state $s$ according to the current greedy policy and performing a Bellman update on $q(s,a)$, using $\max_a{q(s',a)}$.
-However, a slight modification needs to be made: To make sure all possible trajectories are explored, the $\epsilon$-greedy policy is used instead, which acts randomly with a small probability of $\epsilon$, and acts greedily otherwise.
+Putting the pieces together, it can be shown that the Bellman condition can be turned into an update rule which leads to iterative improvement of $q$, given an environment interaction:
+\begin{equation} \label{eq:bellman_update}
+    q'(s,a) := (1-\alpha) q(s,a) + \alpha \left(R_{t+1} + \gamma \max_{a'}q_*(s', a') \right),
+\end{equation}
+where $\alpha$ is the learning rate.
 
-\todo[inline]{
-    Q = Quality of an action
-    Focus less on the idea of value learning.
-    Instead, explain Tabular Q-Learning better
-}
+In order to generate all the needed environment interactions, one can use the $\epsilon$-greedy policy, which acts greedily with probability $(1-\epsilon)$, and randomly selects an action with probability $\epsilon$.
+
+% Exploration vs exploitation
+The $\epsilon$-greedy policy serves as an answer to the \emph{Exploration/Exploitation-Dilemma}, by exploring the environment with probability $\epsilon$, and exploiting current knowledge otherwise.
 
 % - Deep Q-Learning
 \subsection{Deep Q-Network}
@@ -197,15 +186,12 @@ During every optimization step, a minibatch of transitions $(s, a, r, s')$ is sa
 
 The second modification is the use of a separate target Q-network.
 The loss that is minimized is
-$$ [R_j + \gamma \max_a{\hat{q}(s',a)} - q(s,a)]^2$$
+\begin{equation}
+    \left(R_j + \gamma \max_a{\hat{q}(s',a)} - q(s,a)\right)^2
+\end{equation}
 Instead of using the Q-network $q(s',a)$ itself as the target Q-value to be predicted, DQN uses $\hat{q}(s',a)$.
 $\hat{q}$ is a lagging copy of the Q-network that is updated after several optimization steps.
 This improves the stability of the algorithm.
-
-
-
-% Uncertainty, Exploration vs Exploitation
-
 
 \subsection{Distributional Reinforcement Learning}
 The Q-function as defined in equation \ref{eq:qfunction} is a point estimate for the expected value of total discounted return, given a state, an action, and a policy.
@@ -227,65 +213,39 @@ An example is to use a fixed or tuned decay schedule for the exploration rate of
 The $\epsilon$-greedy strategy prioritizes only the action currently expected to be the best one, but leaves room for exploration in the beginning, when uncertainty about action values is still high.
 Boltzmann sampling is another action selection strategy that prefers actions with higher Q-values, but does not solely focus on the single best action, by sampling according to the softmax distribution of their Q-values.
 
-
-
-\todo[inline]{\cite{cruz2018ActionSelectionMethods} compare different action selection strategies, some of which dynamically adapt. cite one of them}
-
-
-
 \section{Reinforcement Learning for Building Demand Response}
-\todo[inline]{
-- Motivation: RL is a class of control algorithms that has been successfully applied to DR.
-- Why is building DR a particularly good fit for RL?
-- Mention prior work: When has RL been applied to building demand response?
-    - paper 1: 
-    - paper 2: 
-    - paper 3: 
+\cite{wang2020ReinforcementLearningBuilding} list three challenges that need to be overcome before applying RL for building control:
+First, the training process is too time-consuming and data demanding.
+Second, RL control is not secure and robust enough.
+And third, RL controllers need to generalize better.
+Consequently, research into RL for building control is rarely done in real-world situations.
 
-    - (Mention related work: applied algorithms and their results)
-    - (Other Frameworks and available data, including CityLearn, real-life applications)
-}
-
-\subsection{CityLearn} % The basis for the environment.
-\todo[inline]{
-    1. Introduce and Explain CityLearn (cite)
-        - What is it?
-            - A simulation framework for constructing demand response environments for RL
-        - What are its main contributions?
-            - Provide an accessible entry point for RL researchers for DR (cite 2021 challenge paper)
-            - Validate the usefulness for RL methods
-            - Can use Real-World Data
-            - Limited application as Benchmark suite
-    2. CityLearn has previously been approached in a number of ways.
-        - paper 1
-        - paper 2
-        - paper 3
-}
-One particularly interesting framework for RL in demand response is CityLearn.
+\cite{vazquez-canteli2020CityLearnStandardizingResearch} introduce CityLearn, a simulation environment for the application of RL for building energy storage control.
+The public CityLearn Challenges, held yearly from 2020-2022 invited numerous applications of different RL algorithms to the framework, for example \cite{deltetto2021ExploringPotentialitiesDeep}, \cite{pinto2022EnhancingEnergyManagement} or \cite{schreiber2020ApplicationTwoPromising}.
+Therefore, CityLearn to some extent serves as a benchmark for applying RL algorithms to building energy storage control.
 
 
-
-\todo[inline]{    - !!! where does uncertainty come from in CityLearn !!!,
-- forecasting problems:
-    - uncertainty about future occupant behavior (electricity demand)
-    - uncertainty about future solar power production (weather forecasts)
-    - uncertainty about future costs (price forecasts)
-- measurement uncertainty:
-    - observations might be imprecise
-- coordination uncertainty:
-    - uncertainty about other actors' strategy and current actions
-- reward uncertainty:
-    - uncertainty about the consequences of actions
-    - the observed reward might be imprecise
-    - the observed reward might not be the intended reward ???
+% \todo[inline]{    - !!! where does uncertainty come from in CityLearn !!!,
+% - forecasting problems:
+%     - uncertainty about future occupant behavior (electricity demand)
+%     - uncertainty about future solar power production (weather forecasts)
+%     - uncertainty about future costs (price forecasts)
+% - measurement uncertainty:
+%     - observations might be imprecise
+% - coordination uncertainty:
+%     - uncertainty about other actors' strategy and current actions
+% - reward uncertainty:
+%     - uncertainty about the consequences of actions
+%     - the observed reward might be imprecise
+%     - the observed reward might not be the intended reward ???
     
-Which uncertainties need to be specially treated?
-}
-\todo[inline]{Motivation: What advantages would an uncertainty-aware strategy have?
-- better risk management (possibly)
-- better performance (possibly)
-- better interpretability and robustness (possibly)
-}
+% Which uncertainties need to be specially treated?
+% }
+% \todo[inline]{Motivation: What advantages would an uncertainty-aware strategy have?
+% - better risk management (possibly)
+% - better performance (possibly)
+% - better interpretability and robustness (possibly)
+% }
 
 
 

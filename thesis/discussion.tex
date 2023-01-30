@@ -17,7 +17,7 @@ The baseline rule-based policy was manually derived from simple patterns observe
 Its performance is compared to the performance of an idle policy, which does not make use the battery at all.
 It enables substantial savings in electricity cost and carbon emissions.
 % Interpret results
-Compared to the idle policy, more of the generated solar electricity is used. \todo{maybe: report this stat: How much solar electricity is used in both cases, how much electricity is purchased in both cases?}
+Compared to the idle policy, more of the generated solar electricity is used.
 Therefore, overall, less electricity is purchased from the grid.
 The policy also shifted the time of electricity purchase to an earlier time of day.
 Especially during peak hours, when both price and carbon intensity are high, the policy achieves a substantial reduction in building electricity demand.
@@ -35,7 +35,8 @@ The experiment tests the performance of the rule-based policy on different resol
 % Discuss findings
 Figure \ref{fig:discretization} shows a large dependency of the rule-based policy on resolution of the action space.
 As expected, a higher discretization resolution approaches the continuous case and leads to better performance.
-However, the policy's performance is particularly impacted by the fact that its minimum charging action of 0.24 in the hours before the high-price period starts is discretized into more or less useful values that for example don't fully charge the battery.
+However, the policy's performance is particularly impacted because it relies on a fixed number as minimum charging action of 0.24 in the hours before the high-price period starts.
+This number is discretized into more or less useful values that for example don't fully charge the battery.
 
 
 \section{RL Algorithms}
@@ -47,13 +48,16 @@ I then rerun the tuned algorithms with multiple random seeds to get an estimate 
 % sensitivity to hyperparameters
 The results of the tuning runs, presented in figure \ref{fig:tuning_results}, show that the performance of all algorithms depends on hyperparameter choice.
 Comparing the algorithms, UA-DQN performs better for a wider range of hyperparameter choices.
-For each algorithm, the most important hyperparameters are reported in \ref{tab:hyperparameters}. Across all algorithms, the learning rate is the most important hyperparameter as measured by correlation with the final score.
+For each algorithm, the most important hyperparameters are reported in \ref{tab:hyperparameters}.
+Across all algorithms, the learning rate is the most important hyperparameter as measured by correlation with the final score.
 On average, a smaller learning rate leads to a better performance.
-Adam's $\epsilon$ did not have a large effect on UA-DQN and DQN-Softmax, but tuning mattered on $\epsilon$-greedy DQN.
+This is mainly due to the fact that a high learning rate destabilizes the algorithm.
+Adam's $\epsilon$ did not have a large effect on either algorithm.
 
 % general robustness
-Some tuning runs failed. All UA-DQN runs with a batch size of 1 failed because the quantile Huber loss function needs a batch size of at least 2, but all other runs seemed to converge.
-The DQN-Softmax algorithm failed to complete some runs with a batch size of 8. Even the tuned variant only completed 9/10 runs. This suggests some instability of the algorithm.
+Some tuning runs failed. All UA-DQN runs with a batch size of 1 failed because the quantile Huber loss function needs a batch size of at least 2, but for correct hyperparameters the algorithm proved robust.
+The DQN-Softmax algorithm failed to converge on some runs with a batch size of 8. Even the tuned variant only completed 9/10 runs. This suggests some inherent instability of the algorithm.
+
 
 % action selection
 Figure \ref{fig:non_greedy_fraction} shows the fraction of non-greedy actions taken by the tuned algorithms.
@@ -73,7 +77,8 @@ The used tuning method favors risky hyperparameter choices.
 Because every combination of hyperparameters is tried only once, accepting the single best tuning run probably means accepting an outlier performance for this combination of hyperparameters.
 For example, the best performing runs of UA-DQN and DQN-Softmax share a low target network update frequency, which causes both faster learning and instability. Similarly, the best performing run of $\epsilon$-greedy DQN uses a small batch size of 4.
 Therefore, the hyperparameters selected by the tuning process are biased towards being less reliable.
-This effect might have helped UA-DQN, which was tuned for half as many runs as the other algorithms, so there was less opportunity for outliers to outperform more robust hyperparameters.
+This effect might have further helped UA-DQN, which was tuned on half as many runs as the other algorithms, so there was less opportunity for risky hyperparameters to outperform more robust choices.
+However, even with fewer tuning runs, the best UA-DQN tuning run significantly outperformed the DQN variants.
 A different tuning procedure might have favored more reliable algorithms with a better mean performance.
 One further possible source of bias is the networks' initialization, which was the same for all algorithms during tuning.
 
@@ -90,7 +95,7 @@ Some of the experiment's findings can be expected to generalize to real-world ap
 Particularly, the environment requires the agent to learn patterns in electricity price and carbon intensity, and domestic electricity usage and production.
 The strategy task of when to use electricity storage is modelled well by CityLearn.
 It depends on long-term, aggregate data and patterns on the scale of multiple hours.
-In contrast, a part of the rule-based policy's idea is to store precisely the amount of excess electricity generated, which is nearly impossible to do in CityLearn, but easy to implement in a real-world building energy system.
+In contrast, a part of the rule-based policy's aim is to try to store precisely the amount of excess electricity generated. This is nearly impossible to do in CityLearn, but easy to implement in a real-world building control system.
 This limits the effectiveness of a good long-term plan.
 
 The environment used in the experiments only provided a subset of CityLearn's data as observed features.
@@ -101,7 +106,7 @@ In a real-world application, a smart home system might also have access to occup
 While the building data stems from only one building in a particular climate zone, the algorithms' effectiveness depends mostly on the daily patterns of pricing.
 More complex or dynamic pricing models might require more sophisticated planning algorithms.
 In fact, coordination strategies such as dynamic pricing are another goal not addressed by this environment.
-A real-world system could likely buy and sell electricity to and from the grid, providing flexibility not only to the building.
+A real-world system could likely not only buy, but also sell electricity to and from the grid, providing flexibility not only to the building.
 
 % CityLearn in general
 The CityLearn framework is useful for developing experiments that test the application of RL planning algorithms to building energy control tasks.
@@ -116,10 +121,3 @@ However, in this experiment, UA-DQN did not outperform the rule-based policy.
 A real-life building energy demand response task might be more complex, which might favor a machine learning approach.
 
 % Further research: See Conclusion
-
-
-\todo[inline]{Maybe: Things I have not yet mentioned:
-- UA-DQN needs a discrete action space.
-- Talk about need for data: Interaction between replay buffer size and batch size.
-- What would a good setting for the risk-aversion parameter even be?
-}

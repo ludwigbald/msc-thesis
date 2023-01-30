@@ -7,7 +7,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[oneside,12pt,a4paper]{report}
-%\usepackage{reportpage}
 \usepackage{epsf}
 \usepackage{graphics, graphicx}
 \usepackage{latexsym}
@@ -94,18 +93,45 @@ Thesis period: July 2022-January 2023
 
 
 \section*{Abstract}
+The electrical grid is increasingly dominated by renewable energy.
+Therefore, demand needs to flexibly respond to changes in the amount of available electricity.
+Buildings play a key role in this regard:
+They consume a large amount of energy for space heating and cooling as well as providing hot water.
+Intelligently controlled, they can flexibly consume energy when supply is available.
 
-Write here your abstract.
+Distributional Reinforcement Learning is a class of machine learning algorithms that can efficiently explore an RL environment and learn a control policy by explicitly modeling uncertainty.
+Among those, UA-DQN is an algorithm that explicitly estimates epistemic uncertainty, caused by a lack of data, and aleatoric uncertainty, caused by the environment's inherent stochasticity.
+
+I evaluate the performance of UA-DQN on a custom RL environment for building energy management based on the 2022 CityLearn challenge.
+After tuning the hyperparameters, I evaluate the algorithm against a rule-based baseline and two variants of DQN, using $\epsilon$-greedy and Boltzmann (Softmax) action selection.
+All three algorithms make use of the battery, but none outperforms the baseline.
+UA-DQN requires fewer environment interactions to arrive at a superior policy than both DQN variants, but demands more computational resources.
+
+% LTeX: language=de-DE
 \newpage
 \section*{Zusammenfassung}
+Da die Stromproduktion zunehmend auf erneuerbare Energien umgestellt wird, muss die Nachfrage flexibel auf Veränderungen der verfügbaren Produktionskapazität reagieren.
+Gebäude spielen in dieser Hinsicht eine wichtige Rolle:
+Sie verbrauchen einen großen Teil der Energie für Heizung und Kühlung sowie für Warmwasser.
+Intelligent gesteuert können sie flexibel dann Energie verbrauchen, wenn sie verfügbar ist.
 
-Bei einer englischen Masterarbeit muss zus\"atzlich eine deutsche Zusammenfassung verfasst werden.
+Distributional Reinforcement Learning ist eine Klasse von Algorithmen des maschinellen Lernens, die durch explizite Modellierung von Unsicherheit eine RL-Umgebung effizient erkunden und eine Steuerungspolitik erlernen können.
+UA-DQN ist ein Algorithmus, der explizit die epistemische Unsicherheit, die durch einen Mangel an Daten verursacht wird, und die aleatorische Unsicherheit, die durch die inhärente Stochastizität der Umgebung verursacht wird, schätzt.
 
+Ich bewerte die Leistung von UA-DQN in einer benutzerdefinierten RL-Umgebung für das Energiemanagement von Gebäuden auf der Grundlage der CityLearn Challenge 2022.
+Ich evaluiere den Algorithmus mit optimierten Hyperparametern im Vergleich zu einer regelbasierten Baseline und zwei Varianten von DQN, die $\epsilon$-greedy und Boltzmann (Softmax) zur Aktionsauswahl verwenden.
+Alle drei Algorithmen nutzen den Stromspeicher, aber keiner übertrifft die Baseline.
+UA-DQN benötigt weniger Interaktionen mit der Umgebung, um zu einer den DQN-Varianten überlegenen Strategie zu gelangen, erfordert aber mehr Rechenressourcen.
 
+% LTeX: language=en-US
 \newpage
 \section*{Acknowledgements}
+First and foremost, I would like to express my gratitude to Nicole Ludwig for being a very approachable, kind and helpful supervisor.
+I would also like to thank Francesco Chini for sharing his knowledge of the dark art of Reinforcement Learning.
 
-Write here your acknowledgements.
+I am grateful to the entire MLSES group for providing such a welcoming and social atmosphere.
+I want to thank my officemates and friends for keeping me sane througout the sometimes stressful phases of this project.
+Finally, of course, I want to thank Toni for everything!
 
 \cleardoublepage
 

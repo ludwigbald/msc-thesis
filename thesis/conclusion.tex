@@ -4,31 +4,24 @@
 
 \chapter{Conclusion and Outlook}
   \label{conclusion}
+% Summary
+UA-DQN is a Reinforcement Learning algorithm based on the DQN algorithm.
+It learns the reward distribution and provides estimates for both epistemic and aleatoric uncertainty.
+This allows it to explore more efficiently, and act according to a risk-aware strategy.
+In this thesis, I apply the UA-DQN algorithm to a custom task for building energy management implemented in CityLearn.
+I find that tuned UA-DQN outperforms two variants of DQN, reaching comparable performance with fewer environment interactions.
+However, this added efficiency comes at a cost: UA-DQN has roughly three times as much computational cost as the simpler algorithms.
+None of the tuned algorithms outperform an optimized rule-based control policy.
 
-\todo[inline]{
-- 1 page
-- summarize again what your paper did, but now emphasize more the results, and comparisons
-- write conclusions that can be drawn from the results found and the discussion presented in the paper
-- future work (be very brief, explain what, but not much how)
+% Conclusions
+Like other algorithms that explicitly represent uncertainty in addition to point estimates, UA-DQN is able to make use of this additional information.
+Application of UA-DQN and similar algorithms should therefore be considered in problems where additional observations are expensive or bad decisions are costly.
+Additionally, UA-DQN might perform particularly well on non-stationary problems, when local weather patterns or occupant behavior changes.
+Future work can also generalize the method behind UA-DQN to a continuous action space.
 
-
-Summary:
-- I evaluate UA-DQN on a custom task using CityLearn.
-- Tuned UA-DQN requires fewer environment interactions than variants of DQN to learn a good policy. This suggests that efficient exploration is beneficial, and exploration in general is useful for Q-Learning on CityLearn.
-- Tuned UA-DQN does not outperform a simple rule-based policy.
-
-Conclusions:
-- UA-DQN is a promising algorithm for environments where exploration is costly.
-
-Future Work:
-- CityLearn with integrated control
-- Coordination task
-- Uncertain Weather forecasts.
-- how does UA-DQN with a nonstationary environment? How much does a learned policy transfer to a different building, for example?
-}
-
-In this thesis, I apply the UA-DQN algorithm to a custom building energy management task implemented in CityLearn.
-I find that tuned UA-DQN outperforms DQN in order to learn a good policy. This means things are harder to get right.
-
-
-
+CityLearn is a suitable framework to model a building energy management task for Reinforcement Learning, but it remains a challenge to transfer insights into real-world applications because of modeling and data decisions.
+Future CityLearn challenges should play to its strengths and focus on longer-term planning rather than short-term control.
+% Future work
+In the context of automated Demand Response by building energy systems, there remain many exciting challenges for Uncertainty-Aware Reinforcement Learning.
+One interesting line of work is multiagent learning and coordination mechanisms, as they will allow direct optimization for grid-scale goals.
+Future work on uncertainty-aware Reinforcement Learning methods for building control should seek to incorporate uncertain data like weather forecasts or models of occupant behavior.
