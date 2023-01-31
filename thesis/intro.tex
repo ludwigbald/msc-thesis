@@ -16,42 +16,43 @@ As the share of installed renewable sources of electricity continues to grow, th
 
 %- for a stable system, we need flexibility somewhere: supply, demand, or grid storage
 In order to keep the grid stable, supply and demand must always be in balance. Before the green transition, this was achieved by flexible power generation: When demand was high, electricity producers were able to react and increase production.
-This was incentivized by a complex and tightly regulated market constructed on top of the physical layer.
+This was incentivized by a complex and tightly regulated electricity market.
 %    - supply doesn't work, so we need flexibility in demand and/or grid storage.
-As the share of renewable power increases, fossil-fuelled plants remain the only market participants that can flexibly react to changes renewable production and demand for electricity.
+As the share of renewable power increases, fossil-fuelled electricity producers remain the only market participants that can flexibly react to changes in renewable production and demand for electricity.
 When phasing out fossil-fuelled power generation, this flexibility needs to be provided by different parts of the system.
 
 %    - in this thesis, I focus on demand-side flexibility.
 There are dedicated electricity storage facilities that can react very quickly to stabilize the grid by storing and releasing energy as needed.
-Grid-scale storage in Europe mainly consists of hydropower, which has been installed where mountainous geography allows, and capacity is limited \cite{gimeno-gutierrez2015AssessmentEuropeanPotential}.
+Grid-scale storage in Europe mainly consists of hydropower, which has been installed where mountainous geography allows, and capacity is limited \citep{gimeno-gutierrez2015AssessmentEuropeanPotential}.
 More expensive battery-powered storage facilities are slowly being built, but are largely not cost-efficient in the current economic setting.
 Therefore, there is a need for \emph{Demand Response}, or the ability of demand to flexibly respond to available electricity supply.
 
 %- buildings are responsible for x\% of energy use
 %- it makes sense for buildings to be able to react flexibly to changing conditions
 Buildings use energy mainly for heating and cooling air and water supply.
-Today, they are responsible for 17.5\% of global carbon emissions \cite{ritchie2020COGreenhouseGas}.
+Today, they are responsible for 17.5\% of global carbon emissions \citep{ritchie2020COGreenhouseGas}.
 On the other hand, buildings often contribute to electricity production through photovoltaic panels. New buildings are often equipped with a battery, which enables them to more efficiently use their solar electricity.
 Building electricity consumption is already largely automated and is therefore a prime candidate for automated demand response.
 
 %- I use RL, an adaptive control algorithm, to provide this demand-side flexibility
 %- cite RL in Demand Response
-The \emph{Reinforcement Learning} (RL) family of control algorithms has shown promising performance in many control tasks, most notably video games (for example \cite{mnih2015HumanlevelControlDeep}), robotics \citep{latifi2020ModelFreeControlDynamicField} or wind power generation.% \citep{zhang2020ResearchAGCPerformance}.
+The \emph{Reinforcement Learning} (RL) family of control algorithms has shown promising performance in many control tasks, most notably video games (for example \cite{mnih2015HumanlevelControlDeep}), robotics \citep{latifi2020ModelFreeControlDynamicField} or wind power generation\citep{zhang2020ResearchAGCPerformance}.
 RL is also being studied for controlling energy systems in buildings.
-A popular simulation framework for this purpose is CityLearn \cite{vazquez-canteli2020CityLearnStandardizingResearch} introduce CityLearn, which proved a popular simulation framework for applying RL algorithms to building energy storage control.
+\cite{vazquez-canteli2020CityLearnStandardizingResearch} introduce CityLearn, which proved a popular simulation framework for applying RL algorithms to building energy storage control. Evaluated algorithms include Soft Actor-Critic \citep{pinto2021CoordinatedEnergyManagement} and DQN \citep{schreiber2020ApplicationTwoPromising}.
 
 \cite{wang2020ReinforcementLearningBuilding} find that the demand for data is a key challenge for applying RL for building control.
 \cite{clements2020EstimatingRiskUncertainty} introduce \emph{Uncertainty-Aware Deep Q-Networks} (UA-DQN), a distributional RL algorithm based on DQN \citep{mnih2015HumanlevelControlDeep} that uses explicit uncertainty estimates for approximate Thompson sampling.
 On a video game task, they show that this allows the algorithm to explore more efficiently, reducing the need for data.
-In this thesis, I set out to test UA-DQN on a battery control task implemented with CityLearn.
+UA-DQN's explicit treatment of uncertainty should lead to overall better performance with less need for data, better robustness for novel data, and can even be leveraged for differently risk-aware charging and discharging strategies, all of which are important for building energy management.
+
+In this thesis, I set out to test the performance of UA-DQN on a building battery control task implemented with CityLearn.
+I compare its performance against two variants of DQN and a rule-based baseline.
 
 %- my contribution is to apply uncertainty-aware RL, in the hopes of getting
 %    - better performance 
 %    - more robustness 
 %    - risk-aware strategies
 %- this contributes to our goal (flexibility in demand side).
-The algorithm's better treatment of uncertainty should lead to overall better performance with less need for data, better robustness for novel data, and can even be leveraged for differently risk-aware charging and discharging strategies, all of which are important for building energy management.
-
 This thesis is structured as follows: In chapter \ref{chap:background}, I motivate in more detail the need for Automated Demand Response. I introduce the theory of Reinforcement Learning and lay the foundations for the uncertainty-aware algorithm.
 In chapter \ref{approach}, I present the uncertainty-aware algorithm, as well as a detailed description of the experimental setup.
 I present the results in chapter \ref{results}.

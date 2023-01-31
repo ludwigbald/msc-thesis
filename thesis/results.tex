@@ -22,7 +22,7 @@ The rule-based agent performs comparably to the continuous case when discretizat
 
 \section{Hyperparameter Tuning}
 All 200 runs of $\epsilon$-greedy DQN completed successfully.
-10/100 runs of UA-DQN, all runs with a batch size of 1, failed.
+All 10 UA-DQN runs with a batch size of 1 failed.
 18/200 runs of DQN-Softmax failed, all of which share a batch size of 8.
 However, 17 other runs with a batch size of 8 completed successfully.
 
@@ -31,9 +31,9 @@ For each algorithm, the learning rate had the most significant correlation with 
 The $\epsilon$ parameter of the optimizer Adam showed a large effect only for $\epsilon$-greedy DQN.
 
 Figure \ref{fig:tuning_results} shows a histogram of the final performance of all successful tuning runs.
-52\% of all UADQN runs perform better than the idle policy, 40.5\% of all DQN-Softmax  runs perform better than the idle policy, and 37\% of e-greedy DQN runs perform better than the idle policy.
+52\% of all UA-DQN runs perform better than the idle policy, 40.5\% of all DQN-Softmax  runs perform better than the idle policy, and 37\% of e-greedy DQN runs perform better than the idle policy.
 
-Both DQN algorithms show a peak at around -5000, which corresponds to strategies that are close to the idle policy.
+Both DQN algorithms show a peak at around -5000 total reward in the final episode, which corresponds to strategies that are close to the idle policy.
 
 \begin{table}[h]
   \centering
@@ -79,7 +79,7 @@ DQN-Softmax and UA-DQN explore more than $\epsilon$-greedy DQN, which quickly re
 UA-DQN keeps exploring more than the other algorithms.
 
 Figure \ref{fig:tuning_validation} shows the episode rewards of the selected hyperparameters for each algorithm during training.
-Tuned UA-DQN converges faster than the other algorithms, and it converges to a better mean performance, as shown in table \ref{tab:tuned_results}. The hand-engineered rule-based agent outperforms the tuned reinforcement learning algorithms on both metrics.
+Tuned UA-DQN converges faster than the other algorithms, and it converges to a better mean performance, as shown in table \ref{tab:tuned_results}. The hand-engineered rule-based agent outperforms the tuned reinforcement learning algorithms on both emission and cost metrics.
 
 When repeated with 10 different seeds, a single run of DQN-Softmax failed, compared to no failures from the other algorithms.
 

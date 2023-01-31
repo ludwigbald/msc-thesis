@@ -2,7 +2,7 @@
 % Grundlagen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Background and related work} \label{chap:background}
+\chapter{Background and Related Work} \label{chap:background}
 \section{The Electrical Grid and Flexibility}
 % 1. Describe the goals and the structure of the Electrical Grid
 The electrical grid is basic infrastructure that enables the function of our modern society.
@@ -45,24 +45,24 @@ In order to both reduce reliance on fossil fuels and to keep the total load belo
 A traditional source of flexibility has been pumped hydropower storage.
 When there's unused electricity, it can be stored by pumping water uphill.
 When needed, water can be released and used to generate electricity. 
-Hydropower capacity depends almost entirely on geography.
-There is almost no potential to develop more hydropower storage.
+Hydropower storage capacity depends almost entirely on geography and is limited \citep{gimeno-gutierrez2015AssessmentEuropeanPotential}.
 
 A different large-scale method of energy storage is batteries, which have only found limited use due to their cost.
 Hydrogen can also be used as a way to store and even transport energy, with several chemical processes currently being explored.
-However, hydrogen production capacity is needed for industrial applications first, replacing hydrogen generated as a byproduct of the fossil fuel industry.
+However, hydrogen production capacity is needed for industrial applications first.
+There is a large need to replace hydrogen generated as a byproduct of the fossil fuel industry.
 
 As flexibility in electricity supply decreases, and large-scale centralized storage facilities remain prohibitively expensive, electricity demand needs to become more flexible.
 
 \section{Demand Response}
 % 3. Demand Side Flexibility
 Both the inflexibility of renewable power generation and the limited capacity for centralized flexible energy storage leave one component of the electric system: In a renewable-dominated grid, demand needs to flexibly respond to changes in available supply.
-In order to stabilize the grid, grid operators employ schemes to curb demand in case of exceptionally large pressure on the grid.
+In order to stabilize the grid, grid operators already employ schemes to curb demand in case of exceptionally large pressure on the grid.
 Large industrial consumers are paid in advance for shutting off their processes if needed.
 As a matter of last resort, rolling blackouts are introduced to curb demand when electricity production can not keep up with consumption.
 An electric grid designed for renewable energy needs more fine-grained coordination across a larger fraction of demand.
 
-In order to implement demand response, electricity consumers need to be incentivized and able to adapt their processes to available supply.
+In order to implement consumer demand response, electricity consumers need to be incentivized and able to adapt their processes to available supply.
 Proposed incentive schemes for demand response include market-based solutions that feature a flexible electricity price and solutions of centralized control that pay out flat rewards for participation, as well as combinations of the two \citep{khajavi2011RoleIncentiveBased}.
 In order to be able to react to changes in demand, electricity-consuming processes need to be aware of the current and future available supply.
 This can be a human in the loop, deciding to shift a process to a time with cheaper electricity, or this can be automated.
@@ -72,7 +72,7 @@ However, this means the human needs to keep track of the weather and is put unde
 As stated before, the process of heating is being electrified.
 While this increases the load on the electric grid, it is also a chance to provide flexibility:
 When equipped with an intelligent and connected control system, the heating system can flexibly react to changes in price, using hot water tanks or the building itself as heat storage.
-Similarly, when intelligently automated, the charging process of an electric car or a home battery can somewhat react to market conditions.
+Similarly, when intelligently automated, the charging process of an electric car or a home battery can react to market conditions.
 
 Technologically, this amounts to a control problem:
 The controller's goals are to meet certain demands (like ensuring a comfortable living temperature) while minimizing cost. In the context of the larger system, there is the shared goal of coordination between different electricity-consuming processes.
@@ -180,7 +180,7 @@ DQN is a Q-Learning algorithm that acts according to an $\epsilon$-greedy policy
 It approximates the Q-function using a deep convolutional neural network, which is able to store complex information like video game dynamics.
 The deep Q-network is optimized during every optimization step using stochastic gradient descent.
 
-In order to arrive at a stable and efficient algorithm, DQN makes use of two notable modifications to standard online Q-Learning:
+In order to arrive at a stable and efficient algorithm, DQN makes use of two notable modifications to basic Q-Learning:
 The first one, Experience Replay, stores past trajectories in a replay buffer.
 During every optimization step, a minibatch of transitions $(s, a, r, s')$ is sampled from the replay buffer and used to compute the loss and gradient for the optimizer step.
 

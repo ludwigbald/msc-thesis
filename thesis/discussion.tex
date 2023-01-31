@@ -5,8 +5,8 @@
 \chapter{Discussion}
   \label{Discussion}
 
-Through the experiments described in the previous chapters, I evaluated the Uncertainty-Aware Deep Q Network algorithm on a custom building-scale energy-management environment based on the 2022 CityLearn challenge.
-Compared to two versions of the simpler DQN algorithm, tuned UA-DQN requires fewer interactions with the environment to arrive at a good performance.
+Through the experiments described in the previous chapters, I evaluate the Uncertainty-Aware Deep Q Network algorithm on a custom building-scale energy-management environment based on the 2022 CityLearn challenge.
+Compared to two versions of the simpler DQN algorithm, UA-DQN requires fewer interactions with the environment to arrive at a good performance.
 However, it does not reliably exceed the performance of a baseline rule-based control policy.
 In this chapter, I discuss the collected evidence and limitations of the experiment and point out several possible ways of further improving the algorithm's performance.
 
@@ -21,7 +21,8 @@ Compared to the idle policy, more of the generated solar electricity is used.
 Therefore, overall, less electricity is purchased from the grid.
 The policy also shifted the time of electricity purchase to an earlier time of day.
 Especially during peak hours, when both price and carbon intensity are high, the policy achieves a substantial reduction in building electricity demand.
-The policy does dynamically adapt to observed solar generation and electricity use, but it can not predict the amount of excess solar production to be stored, instead simply assuming it does not change from the hour before.
+The policy does dynamically adapt to observed solar generation and electricity use, but it can not predict the amount of excess solar production to be stored.
+As an approximation, it assumes no change from the hour before in the amount of excess solar production.
 This is an obvious limitation of the policy.
 
 Overall, the rule-based policy can serve as a useful baseline for evaluating the performance of more complex algorithms.
@@ -35,9 +36,9 @@ The experiment tests the performance of the rule-based policy on different resol
 % Discuss findings
 Figure \ref{fig:discretization} shows a large dependency of the rule-based policy on resolution of the action space.
 As expected, a higher discretization resolution approaches the continuous case and leads to better performance.
-However, the policy's performance is particularly impacted because it relies on a fixed number as minimum charging action of 0.24 in the hours before the high-price period starts.
-This number is discretized into more or less useful values that for example don't fully charge the battery.
-
+However, the policy's performance is particularly impacted because it relies on a fixed number as minimum charging action of 0.24 in the hours before the high-price period starts in order to ensure the battery is fully charged.
+Depending on the resolution of discretization, this number is mapped to a less useful fixed value.
+Therefore, the chosen resolution of 9 discrete actions favors policies that work very similarly to the rule-based strategy.
 
 \section{RL Algorithms}
 % Second Experiment: Tuning
@@ -48,7 +49,7 @@ I then rerun the tuned algorithms with multiple random seeds to get an estimate 
 % sensitivity to hyperparameters
 The results of the tuning runs, presented in figure \ref{fig:tuning_results}, show that the performance of all algorithms depends on hyperparameter choice.
 Comparing the algorithms, UA-DQN performs better for a wider range of hyperparameter choices.
-For each algorithm, the most important hyperparameters are reported in \ref{tab:hyperparameters}.
+For each algorithm, the most important hyperparameters are reported in table \ref{tab:hyperparameters}.
 Across all algorithms, the learning rate is the most important hyperparameter as measured by correlation with the final score.
 On average, a smaller learning rate leads to a better performance.
 This is mainly due to the fact that a high learning rate destabilizes the algorithm.
@@ -58,14 +59,14 @@ Adam's $\epsilon$ did not have a large effect on either algorithm.
 Some tuning runs failed. All UA-DQN runs with a batch size of 1 failed because the quantile Huber loss function needs a batch size of at least 2, but for correct hyperparameters the algorithm proved robust.
 The DQN-Softmax algorithm failed to converge on some runs with a batch size of 8. Even the tuned variant only completed 9/10 runs. This suggests some inherent instability of the algorithm.
 
-
 % action selection
+As described before, the promise of UA-DQN is that it explores more efficiently than simpler algorithms.
 Figure \ref{fig:non_greedy_fraction} shows the fraction of non-greedy actions taken by the tuned algorithms.
 A non-greedy action is an action that was taken in order to explore the environment rather than exploit current knowledge.
-UA-DQN explores more throughout the whole run than the other strategies.
+In first few episodes, DQN-Softmax explores more than the other algorithms.
+UA-DQN explores more throughout the rest of the training run than the other strategies.
 $\epsilon$-greedy DQN explores much less than the other strategies.
 A more sophisticated and tuned schedule for the exploration rate $\epsilon$ could improve the algorithm's performance at the added cost of requiring more tuning.
-
 % general performance
 Figure \ref{fig:tuning_validation} shows that UA-DQN improves its performance much faster than the other algorithms.
 Especially in the first 5 episodes, when UA-DQN explores less than DQN-Softmax, UA-DQN performance improves much faster.
@@ -94,15 +95,15 @@ The custom environment based on the 2022 CityLearn challenge presents a planning
 Some of the experiment's findings can be expected to generalize to real-world applications of the algorithms.
 Particularly, the environment requires the agent to learn patterns in electricity price and carbon intensity, and domestic electricity usage and production.
 The strategy task of when to use electricity storage is modelled well by CityLearn.
-It depends on long-term, aggregate data and patterns on the scale of multiple hours.
+Success in this task depends on long-term, aggregate data and patterns on the scale of multiple hours.
 In contrast, a part of the rule-based policy's aim is to try to store precisely the amount of excess electricity generated. This is nearly impossible to do in CityLearn, but easy to implement in a real-world building control system.
-This limits the effectiveness of a good long-term plan.
+This limits the performance of a good long-term plan, as evaluated by CityLearn.
 
-The environment used in the experiments only provided a subset of CityLearn's data as observed features.
+A real-world task would have access to more data than the model environment used in the experiments. This would favor machine learning algorithms.
+The environment used in the experiments only provides a subset of CityLearn's data as observed features.
 For example, features included only one weather forecast variable, no information on day of the week or month, and no price forecasts.
 Real-world weather forecasts are uncertain, which requires a different strategy for acting under uncertainty.
 In a real-world application, a smart home system might also have access to occupant behavioral data, like knowing if someone is home or not, which can lead to significantly better plans.
-
 While the building data stems from only one building in a particular climate zone, the algorithms' effectiveness depends mostly on the daily patterns of pricing.
 More complex or dynamic pricing models might require more sophisticated planning algorithms.
 In fact, coordination strategies such as dynamic pricing are another goal not addressed by this environment.

@@ -14,13 +14,14 @@ However, this added efficiency comes at a cost: UA-DQN has roughly three times a
 None of the tuned algorithms outperform an optimized rule-based control policy.
 
 % Conclusions
-Like other algorithms that explicitly represent uncertainty in addition to point estimates, UA-DQN is able to make use of this additional information.
-Application of UA-DQN and similar algorithms should therefore be considered in problems where additional observations are expensive or bad decisions are costly.
+Like other algorithms that explicitly represent uncertainty in addition to point estimates, UA-DQN benefits from this additional information.
+Application of UA-DQN and similar algorithms should be considered in problems where additional observations are expensive or bad decisions are costly.
 Additionally, UA-DQN might perform particularly well on non-stationary problems, when local weather patterns or occupant behavior changes.
 Future work can also generalize the method behind UA-DQN to a continuous action space.
 
 CityLearn is a suitable framework to model a building energy management task for Reinforcement Learning, but it remains a challenge to transfer insights into real-world applications because of modeling and data decisions.
 Future CityLearn challenges should play to its strengths and focus on longer-term planning rather than short-term control.
+
 % Future work
 In the context of automated Demand Response by building energy systems, there remain many exciting challenges for Uncertainty-Aware Reinforcement Learning.
 One interesting line of work is multiagent learning and coordination mechanisms, as they will allow direct optimization for grid-scale goals.
